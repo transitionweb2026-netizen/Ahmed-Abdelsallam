@@ -1,0 +1,306 @@
+/* 3D glass box
+   .cell   — hover target, holds the depth layers
+   .plate  — back face of the box, offset up + toward the inline end
+   .box    — the raised glass tray (bevel: bright top/side edges, shaded
+             bottom, a thin physical lip, navy + lavender depth)
+   .inner  — the content card recessed inside the tray: image first, then text */
+
+.cell {
+  position: relative;
+  isolation: isolate;
+  height: 100%;
+  padding-top: 12px;
+  padding-inline-end: 12px;
+}
+
+.plate {
+  position: absolute;
+  top: 0;
+  bottom: 12px;
+  inset-inline-start: 12px;
+  inset-inline-end: 0;
+  z-index: 0;
+  border-radius: 30px;
+  background:
+    linear-gradient(155deg, rgba(255, 255, 255, 0.7), rgba(211, 218, 250, 0.55) 55%, rgba(168, 182, 243, 0.5));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.6),
+    0 10px 24px -16px rgba(27, 39, 91, 0.4);
+  transition: transform 0.6s var(--ease-out);
+}
+
+.box {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  height: 100%;
+  padding: 9px;
+  border-radius: 30px;
+  background:
+    radial-gradient(120% 60% at 50% 0%, rgba(255, 255, 255, 0.9), transparent 60%),
+    linear-gradient(155deg, rgba(255, 255, 255, 0.72) 0%, rgba(223, 229, 252, 0.62) 45%, rgba(168, 182, 243, 0.5) 100%);
+  box-shadow:
+    inset 0 1.5px 0 #ffffff,
+    inset 1.5px 0 0 rgba(255, 255, 255, 0.7),
+    inset -1.5px 0 0 rgba(255, 255, 255, 0.35),
+    inset 0 -2px 0 rgba(27, 39, 91, 0.08),
+    inset 0 -16px 26px -20px rgba(27, 39, 91, 0.3),
+    0 2px 0 rgba(168, 182, 243, 0.55),
+    0 3px 0 rgba(27, 39, 91, 0.06),
+    0 28px 50px -28px rgba(27, 39, 91, 0.5),
+    0 18px 50px -30px rgba(168, 182, 243, 0.95);
+  transition:
+    transform 0.6s var(--ease-out),
+    box-shadow 0.6s var(--ease-out);
+}
+
+/* Interactive gradient edge — rotates on hover. */
+.box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 1.25px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--glass-angle),
+    #ffffff,
+    rgba(168, 182, 243, 0.75) 25%,
+    rgba(27, 39, 91, 0.22) 50%,
+    rgba(168, 182, 243, 0.75) 75%,
+    #ffffff
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  transition: --glass-angle 1.4s var(--ease-out);
+}
+
+.inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 8px;
+  border-radius: 23px;
+  background:
+    radial-gradient(90% 60% at 100% 100%, rgba(211, 218, 250, 0.5), transparent 60%),
+    linear-gradient(170deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.84) 60%, rgba(241, 244, 254, 0.92) 100%);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    inset 0 0 0 1px rgba(255, 255, 255, 0.65),
+    0 1px 2px rgba(27, 39, 91, 0.08),
+    0 10px 20px -14px rgba(27, 39, 91, 0.35);
+}
+
+/* ---- Image ------------------------------------------------------------------ */
+
+.mediaWrap {
+  position: relative;
+}
+
+.media {
+  position: relative;
+  isolation: isolate;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 17px;
+  background: var(--gradient-lavender);
+  box-shadow:
+    0 1px 2px rgba(27, 39, 91, 0.12),
+    0 12px 24px -16px rgba(27, 39, 91, 0.55);
+}
+
+.image {
+  object-fit: cover;
+  transition: transform 0.9s var(--ease-out);
+}
+
+/* Brand grade + glass edge so every photo sits in the navy/lavender palette. */
+.mediaTint {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  background:
+    linear-gradient(180deg, rgba(168, 182, 243, 0.12) 0%, rgba(168, 182, 243, 0) 35%),
+    linear-gradient(0deg, rgba(27, 39, 91, 0.42) 0%, rgba(27, 39, 91, 0) 45%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+  pointer-events: none;
+}
+
+.index {
+  position: absolute;
+  top: 10px;
+  inset-inline-end: 10px;
+  z-index: 2;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--primary);
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.85), rgba(233, 237, 253, 0.65));
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  backdrop-filter: blur(10px) saturate(160%);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 6px 14px -8px rgba(11, 18, 51, 0.6);
+}
+
+/* Icon chip resting on the image's bottom edge. */
+.icon {
+  position: absolute;
+  bottom: -22px;
+  inset-inline-start: 14px;
+  z-index: 3;
+  width: 48px;
+  height: 48px;
+  border-radius: 15px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.2),
+    0 10px 22px -10px rgba(27, 39, 91, 0.7),
+    0 0 0 4px rgba(255, 255, 255, 0.85);
+  transition: transform 0.6s var(--ease-out);
+}
+
+/* ---- Text ------------------------------------------------------------------ */
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 2.1rem 0.7rem 0.6rem;
+}
+
+.title {
+  color: var(--primary);
+}
+
+.link {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Stretched link: the whole card is the click target. */
+.link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  border-radius: inherit;
+}
+
+.link:focus-visible {
+  outline: none;
+}
+
+.description {
+  font-size: 0.9375rem;
+  line-height: 1.85;
+  color: var(--text-muted);
+}
+
+.more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: auto;
+  padding-top: 0.45rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--accent-ink);
+}
+
+.moreIcon {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: var(--primary);
+  background: var(--gradient-lavender);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 6px 12px -8px rgba(27, 39, 91, 0.6);
+  transition: transform 0.5s var(--ease-out);
+}
+
+.moreIcon svg {
+  transform: scaleX(calc(var(--dir) * -1));
+}
+
+/* Thin brand accent along the bottom edge of the recessed card. */
+.accent {
+  position: absolute;
+  bottom: 0;
+  inset-inline: 24%;
+  height: 3px;
+  border-radius: 4px 4px 0 0;
+  background: linear-gradient(90deg, transparent, var(--secondary), var(--primary-soft), var(--secondary), transparent);
+  opacity: 0.7;
+  transition:
+    inset 0.6s var(--ease-out),
+    opacity 0.6s var(--ease-out);
+}
+
+/* ---- Interaction ---------------------------------------------------------- */
+
+.cell:hover .box,
+.cell:focus-within .box {
+  transform: translate3d(0, -6px, 0);
+  box-shadow:
+    inset 0 1.5px 0 #ffffff,
+    inset 1.5px 0 0 rgba(255, 255, 255, 0.75),
+    inset -1.5px 0 0 rgba(255, 255, 255, 0.4),
+    inset 0 -2px 0 rgba(27, 39, 91, 0.07),
+    inset 0 -16px 26px -20px rgba(27, 39, 91, 0.26),
+    0 2px 0 rgba(168, 182, 243, 0.6),
+    0 3px 0 rgba(27, 39, 91, 0.06),
+    0 40px 60px -30px rgba(27, 39, 91, 0.5),
+    0 26px 60px -26px rgba(168, 182, 243, 1);
+}
+
+.cell:hover .plate,
+.cell:focus-within .plate {
+  transform: translate3d(calc(var(--dir) * 5px), -5px, 0);
+}
+
+.cell:hover .box::before,
+.cell:focus-within .box::before {
+  --glass-angle: 330deg;
+}
+
+.cell:hover .image,
+.cell:focus-within .image {
+  transform: scale(1.06);
+}
+
+.cell:hover .icon,
+.cell:focus-within .icon {
+  transform: translateY(-3px) rotate(calc(var(--dir) * 6deg));
+}
+
+.cell:hover .accent,
+.cell:focus-within .accent {
+  inset-inline: 8%;
+  opacity: 1;
+}
+
+.cell:hover .moreIcon,
+.cell:focus-within .moreIcon {
+  transform: translateX(calc(var(--dir) * 4px));
+}
+
+.cell:has(.link:focus-visible) .box {
+  outline: 2px solid var(--ring);
+  outline-offset: 4px;
+}

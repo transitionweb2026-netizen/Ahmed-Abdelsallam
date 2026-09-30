@@ -1,0 +1,226 @@
+@property --cta-lift {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+/* TiltCard writes --tilt-x / --tilt-y (-1…1) and --mx / --my here. */
+.card {
+  --tilt-x: 0;
+  --tilt-y: 0;
+  --mx: 50%;
+  --my: 50%;
+  position: relative;
+}
+
+.surface {
+  --pad: clamp(1.75rem, 1rem + 3.2vw, 4rem);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: var(--pad);
+  border-radius: clamp(28px, 1.4rem + 1.3vw, 44px);
+  color: var(--text-inverse);
+  background:
+    radial-gradient(110% 90% at 100% 0%, rgba(168, 182, 243, 0.34), transparent 55%),
+    radial-gradient(90% 100% at 0% 100%, rgba(74, 91, 168, 0.6), transparent 60%),
+    linear-gradient(150deg, #2a3b82 0%, var(--primary) 48%, var(--primary-dark) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.26),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.25),
+    0 50px 100px -54px rgba(17, 26, 64, 0.75),
+    0 30px 80px -44px rgba(168, 182, 243, 0.85);
+  transform: perspective(1400px) rotateX(calc(var(--tilt-y) * -2.4deg)) rotateY(calc(var(--tilt-x) * 3deg))
+    translate3d(0, var(--cta-lift), 0);
+  transition:
+    --cta-lift 0.6s var(--ease-out),
+    box-shadow 0.6s var(--ease-out);
+}
+
+/* Gradient hairline */
+.surface::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.6), rgba(168, 182, 243, 0.35) 40%, rgba(255, 255, 255, 0.05) 75%, rgba(168, 182, 243, 0.4));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.card:hover .surface {
+  --cta-lift: -6px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.25),
+    0 60px 110px -54px rgba(17, 26, 64, 0.8),
+    0 36px 90px -40px rgba(168, 182, 243, 1);
+}
+
+/* Gradient band that glides across on hover (transition, not a loop). */
+.aurora {
+  position: absolute;
+  inset: -20%;
+  z-index: -1;
+  background: linear-gradient(115deg, transparent 22%, rgba(168, 182, 243, 0.3) 38%, rgba(195, 209, 248, 0.14) 50%, transparent 64%);
+  background-size: 220% 220%;
+  background-position: 100% 50%;
+  transition: background-position 1.8s var(--ease-out);
+  pointer-events: none;
+}
+
+.card:hover .aurora {
+  background-position: 0% 50%;
+}
+
+/* Soft light that follows the pointer. */
+.glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(520px circle at var(--mx) var(--my), rgba(168, 182, 243, 0.28), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.card:hover .glow {
+  opacity: 1;
+}
+
+.rings {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: repeating-radial-gradient(circle at 88% 12%, rgba(255, 255, 255, 0.07) 0 1px, transparent 1px 34px);
+  -webkit-mask-image: radial-gradient(60% 70% at 88% 12%, #000, transparent);
+  mask-image: radial-gradient(60% 70% at 88% 12%, #000, transparent);
+  pointer-events: none;
+}
+
+[dir="ltr"] .rings {
+  transform: scaleX(-1);
+}
+
+/* ---- Layout ---------------------------------------------------------------- */
+
+.grid {
+  position: relative;
+  display: grid;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 3rem;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.2rem;
+}
+
+.title {
+  color: #ffffff;
+}
+
+.description {
+  max-width: 33rem;
+  color: var(--text-inverse-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 479px) {
+  .actions {
+    width: 100%;
+  }
+
+  .action {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* ---- Visual ----------------------------------------------------------------- */
+
+.visual {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 260px;
+  margin-bottom: calc(var(--pad) * -1);
+}
+
+.visualDisc {
+  position: absolute;
+  bottom: -12%;
+  width: min(92%, 400px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 26%, rgba(255, 255, 255, 0.34), rgba(168, 182, 243, 0.2) 55%, rgba(168, 182, 243, 0.06) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -24px 48px -24px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.12);
+  transform: translate3d(calc(var(--tilt-x) * 8px), calc(var(--tilt-y) * 6px), 0);
+}
+
+.visualRing {
+  position: absolute;
+  bottom: -20%;
+  width: min(118%, 520px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px dashed rgba(168, 182, 243, 0.35);
+  transform: translate3d(calc(var(--tilt-x) * 4px), calc(var(--tilt-y) * 3px), 0);
+}
+
+.portrait {
+  position: relative;
+  width: min(72%, 330px);
+  transform: translate3d(calc(var(--tilt-x) * -12px), calc(var(--tilt-y) * -8px), 0);
+}
+
+@media (min-width: 768px) {
+  .portrait {
+    width: min(100%, 340px);
+  }
+}
+
+.portraitImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 24px 30px rgba(11, 18, 51, 0.45));
+  transform-origin: 50% 100%;
+  transition: transform 0.9s var(--ease-out);
+}
+
+.card:hover .portraitImage {
+  transform: scale(1.03);
+}

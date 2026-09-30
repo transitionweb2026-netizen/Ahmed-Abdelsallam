@@ -1,0 +1,122 @@
+.card {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  height: 100%;
+  padding: clamp(1rem, 0.7rem + 1.1vw, 1.6rem);
+  border-radius: 26px;
+  background:
+    radial-gradient(120% 80% at 100% 0%, rgba(211, 218, 250, 0.6), transparent 55%),
+    var(--gradient-glass);
+  box-shadow:
+    inset 0 1.5px 0 #ffffff,
+    inset 0 -2px 0 rgba(27, 39, 91, 0.06),
+    0 2px 0 rgba(168, 182, 243, 0.45),
+    0 20px 40px -26px rgba(27, 39, 91, 0.45),
+    0 14px 40px -28px rgba(168, 182, 243, 0.9);
+  transition:
+    transform 0.55s var(--ease-out),
+    box-shadow 0.55s var(--ease-out);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  padding: 1px;
+  border-radius: inherit;
+  background: var(--gradient-border);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    inset 0 1.5px 0 #ffffff,
+    inset 0 -2px 0 rgba(27, 39, 91, 0.05),
+    0 3px 0 rgba(168, 182, 243, 0.55),
+    0 28px 50px -26px rgba(27, 39, 91, 0.5),
+    0 20px 50px -24px rgba(168, 182, 243, 1);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.35rem;
+}
+
+.icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+}
+
+.index {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--secondary-dark);
+  font-variant-numeric: tabular-nums;
+}
+
+.value {
+  line-height: 1.1;
+}
+
+.number {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.03em;
+  font-size: clamp(2rem, 1.5rem + 1.6vw, 3rem);
+  font-weight: 700;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+  unicode-bidi: isolate;
+}
+
+.affix {
+  font-size: 0.62em;
+  color: var(--accent-ink);
+}
+
+.label {
+  font-size: clamp(0.84rem, 0.8rem + 0.15vw, 0.95rem);
+  line-height: 1.65;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.bar {
+  display: block;
+  height: 4px;
+  margin-top: auto;
+  border-radius: 4px;
+  overflow: hidden;
+  background: rgba(168, 182, 243, 0.28);
+}
+
+.barFill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(var(--grad-dir), var(--primary), var(--secondary-dark) 70%, var(--secondary));
+  transform: scaleX(0);
+  transform-origin: 0% 50%;
+  transition: transform 2.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[dir="rtl"] .barFill {
+  transform-origin: 100% 50%;
+}
+
+[data-counted="true"] .barFill {
+  transform: scaleX(1);
+}

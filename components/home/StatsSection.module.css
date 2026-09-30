@@ -1,0 +1,47 @@
+.grid {
+  position: relative;
+  display: grid;
+  gap: 4rem;
+  align-items: center;
+}
+
+/* Tablet up: stats and the doctor deck sit side by side. */
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(3rem, 1rem + 4vw, 5.5rem);
+  }
+}
+
+.statsCol {
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.75rem, 0.45rem + 1.1vw, 1.25rem);
+}
+
+.statsGrid > li {
+  display: flex;
+}
+
+.statsGrid > li > * {
+  flex: 1;
+}
+
+.doctorCol {
+  display: flex;
+  justify-content: center;
+  padding-block: 1rem 2.5rem;
+}

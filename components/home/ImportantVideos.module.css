@@ -1,0 +1,58 @@
+/* Mobile: a deliberate horizontal, snap-scrolling reel that bleeds to the
+   screen edges. Tablet and up: three vertical cards side by side. */
+
+.list {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2.25rem;
+  margin-inline: calc(var(--gutter) * -1);
+  margin-bottom: -1rem;
+  /* Generous block padding so card shadows fade out inside the scroller
+     instead of being cut at its edge. */
+  padding: 1.75rem var(--gutter) 3.25rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter);
+  scrollbar-width: none;
+}
+
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+.item {
+  flex: 0 0 min(76%, 300px);
+  scroll-snap-align: start;
+}
+
+.swipeHint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.swipeHint svg {
+  transform: scaleX(calc(var(--dir) * -1));
+}
+
+@media (min-width: 768px) {
+  .list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1rem, 0.2rem + 1.6vw, 2rem);
+    max-width: 1040px;
+    margin: 3.5rem auto 0;
+    padding: 0;
+    margin-bottom: 0;
+    overflow: visible;
+  }
+
+  .swipeHint {
+    display: none;
+  }
+}

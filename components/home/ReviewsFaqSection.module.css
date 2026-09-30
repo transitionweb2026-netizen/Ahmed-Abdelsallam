@@ -1,0 +1,68 @@
+.columns {
+  position: relative;
+  display: grid;
+  gap: 4.5rem;
+}
+
+@media (min-width: 1024px) {
+  .columns {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: clamp(1.5rem, 0.2rem + 2.2vw, 3rem);
+    align-items: stretch;
+  }
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  min-width: 0;
+}
+
+.reviewsGrid {
+  display: grid;
+  gap: 0.9rem;
+}
+
+@media (min-width: 640px) {
+  .reviewsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.footer {
+  margin-top: auto;
+  padding-top: 0.25rem;
+}
+
+/* Vertical hairline between the columns, with a small glass node. */
+.divider {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .divider {
+    position: relative;
+    display: block;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(168, 182, 243, 0.9) 20%, rgba(27, 39, 91, 0.16) 60%, transparent);
+  }
+
+  .dividerNode {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle at 30% 30%, #ffffff, var(--secondary));
+    box-shadow:
+      0 0 0 5px rgba(168, 182, 243, 0.25),
+      0 6px 14px -4px rgba(27, 39, 91, 0.5);
+  }
+}
+
+.cta {
+  margin-top: clamp(3rem, 2rem + 3vw, 4.5rem);
+}
