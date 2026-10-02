@@ -1,6 +1,5 @@
-import { Clock } from "lucide-react";
+import { VideoFrame } from "@/components/media/VideoFrame";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
-import { VideoPlayer } from "@/components/media/VideoPlayer";
 import { GlassRing, Orb, PlusMark } from "@/components/ui/Decor";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { Icon } from "@/components/ui/Icon";
@@ -10,7 +9,6 @@ import type { IntroContent } from "@/types/content";
 import styles from "./IntroSection.module.css";
 
 export function IntroSection({ content }: { content: IntroContent }) {
-  const { video } = content;
   return (
     <section id="intro" className="page-section" aria-labelledby="intro-title">
       <Orb className="-top-24 start-[-12rem] h-[34rem] w-[34rem]" color="lavender" />
@@ -39,24 +37,7 @@ export function IntroSection({ content }: { content: IntroContent }) {
         <Reveal variant="scale" className={styles.videoCol} amount={0.3}>
           <GlassRing className={styles.ring} />
           <PlusMark id="intro-plus" className={styles.plus} />
-          <div className={styles.frame}>
-            <VideoPlayer
-              video={video}
-              sizes="(min-width: 1320px) 620px, (min-width: 1024px) 46vw, 92vw"
-              className={styles.screen}
-              overlay={
-                <span className={styles.caption} aria-hidden="true">
-                  <span className={styles.captionTitle}>{video.title}</span>
-                  {video.duration ? (
-                    <span className={styles.captionMeta}>
-                      <Clock size={14} />
-                      <span dir="ltr">{video.duration}</span>
-                    </span>
-                  ) : null}
-                </span>
-              }
-            />
-          </div>
+          <VideoFrame video={content.video} sizes="(min-width: 1320px) 620px, (min-width: 1024px) 46vw, 92vw" />
         </Reveal>
       </div>
     </section>

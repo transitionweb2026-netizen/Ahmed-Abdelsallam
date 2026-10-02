@@ -1,0 +1,38 @@
+/* A soft glass tray that holds the four stat cards on wide screens. */
+.panel {
+  position: relative;
+  margin-top: 3rem;
+}
+
+@media (min-width: 1024px) {
+  .panel {
+    padding: clamp(1rem, 0.5rem + 1vw, 1.5rem);
+    border-radius: 40px;
+    background:
+      radial-gradient(60% 90% at 50% 0%, rgba(255, 255, 255, 0.75), transparent 70%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(233, 237, 253, 0.3));
+    box-shadow:
+      inset 0 1px 0 #ffffff,
+      0 40px 80px -60px rgba(27, 39, 91, 0.5);
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.75rem, 0.45rem + 1.1vw, 1.25rem);
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.item {
+  display: flex;
+}
+
+.item > * {
+  flex: 1;
+}

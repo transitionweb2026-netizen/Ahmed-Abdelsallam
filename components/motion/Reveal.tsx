@@ -22,6 +22,7 @@ const TAGS = {
   li: m.li,
   ul: m.ul,
   ol: m.ol,
+  p: m.p,
   article: m.article,
   figure: m.figure,
   span: m.span,

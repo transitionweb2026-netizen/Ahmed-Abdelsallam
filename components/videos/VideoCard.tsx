@@ -8,10 +8,19 @@ interface VideoCardProps {
   video: Video;
   sizes?: string;
   className?: string;
+  /** Open the video in a viewer dialog instead of playing inline. */
+  onOpen?: () => void;
+  headingLevel?: "h3" | "h4";
 }
 
 /** Vertical (9:16) video inside a liquid-glass frame. Shared with /videos. */
-export function VideoCard({ video, sizes = "(min-width: 1280px) 330px, (min-width: 768px) 30vw, 76vw", className }: VideoCardProps) {
+export function VideoCard({
+  video,
+  sizes = "(min-width: 1280px) 330px, (min-width: 768px) 30vw, 76vw",
+  className,
+  onOpen,
+  headingLevel: Heading = "h3",
+}: VideoCardProps) {
   return (
     <article className={cn(styles.card, className)}>
       <div className={styles.frame}>
@@ -20,6 +29,7 @@ export function VideoCard({ video, sizes = "(min-width: 1280px) 330px, (min-widt
           sizes={sizes}
           playSize="md"
           className={styles.screen}
+          onActivate={onOpen}
           overlay={
             video.duration ? (
               <span className={styles.duration} aria-hidden="true">
@@ -31,7 +41,7 @@ export function VideoCard({ video, sizes = "(min-width: 1280px) 330px, (min-widt
         />
       </div>
       <div className={styles.meta}>
-        <h3 className={styles.title}>{video.title}</h3>
+        <Heading className={styles.title}>{video.title}</Heading>
       </div>
     </article>
   );

@@ -1,0 +1,267 @@
+/* Article tile — the condition-card glass family: an inset framed photo in
+   a glass tile with a rotating conic hairline. The featured variant turns
+   horizontal from 1024px (image at the inline end, text at the start). */
+
+.card {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 10px;
+  border-radius: 28px;
+  background:
+    radial-gradient(80% 60% at 100% 100%, rgba(211, 218, 250, 0.5), transparent 60%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.9), rgba(246, 248, 255, 0.72) 50%, rgba(226, 232, 252, 0.62));
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    inset 0 -1px 0 rgba(27, 39, 91, 0.05),
+    0 2px 6px rgba(27, 39, 91, 0.04),
+    0 26px 50px -32px rgba(27, 39, 91, 0.5);
+  transition:
+    transform 0.55s var(--ease-out),
+    box-shadow 0.55s var(--ease-out);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  padding: 1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--glass-angle),
+    #ffffff,
+    rgba(168, 182, 243, 0.7) 30%,
+    rgba(27, 39, 91, 0.16) 55%,
+    rgba(168, 182, 243, 0.6) 80%,
+    #ffffff
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  transition: --glass-angle 1.4s var(--ease-out);
+}
+
+/* ---- Image ------------------------------------------------------------------ */
+
+.media {
+  position: relative;
+  isolation: isolate;
+  flex-shrink: 0;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--gradient-lavender);
+  box-shadow:
+    0 1px 2px rgba(27, 39, 91, 0.12),
+    0 12px 24px -16px rgba(27, 39, 91, 0.55);
+}
+
+.image {
+  object-fit: cover;
+  transition: transform 0.9s var(--ease-out);
+}
+
+.mediaTint {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  background:
+    linear-gradient(180deg, rgba(27, 39, 91, 0.3) 0%, rgba(27, 39, 91, 0) 38%),
+    linear-gradient(0deg, rgba(27, 39, 91, 0.22) 0%, rgba(27, 39, 91, 0) 40%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+  pointer-events: none;
+}
+
+.category {
+  position: absolute;
+  top: 12px;
+  inset-inline-start: 12px;
+  z-index: 2;
+}
+
+/* ---- Text ------------------------------------------------------------------- */
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+  min-width: 0;
+  padding: 1.1rem 0.8rem 0.7rem;
+}
+
+.title {
+  color: var(--primary);
+}
+
+.open {
+  font: inherit;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+/* Stretched button: the whole card opens the article. */
+.open::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  border-radius: inherit;
+}
+
+.open:focus-visible {
+  outline: none;
+}
+
+.card:has(.open:focus-visible) {
+  outline: 2px solid var(--ring);
+  outline-offset: 4px;
+}
+
+.excerpt {
+  font-size: 0.9375rem;
+  line-height: 1.85;
+  color: var(--text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.read {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: auto;
+  padding-top: 0.35rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--accent-ink);
+}
+
+.readIcon {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: var(--primary);
+  background: var(--gradient-lavender);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 6px 12px -8px rgba(27, 39, 91, 0.6);
+  transition:
+    transform 0.5s var(--ease-out),
+    color 0.3s ease,
+    background 0.3s ease;
+}
+
+.readIcon svg {
+  transform: scaleX(calc(var(--dir) * -1));
+}
+
+/* ---- Interaction ------------------------------------------------------------ */
+
+.card:hover,
+.card:focus-within {
+  transform: translateY(-5px);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    inset 0 -1px 0 rgba(27, 39, 91, 0.05),
+    0 2px 6px rgba(27, 39, 91, 0.04),
+    0 34px 60px -32px rgba(27, 39, 91, 0.5),
+    0 22px 56px -30px rgba(168, 182, 243, 1);
+}
+
+.card:hover::before,
+.card:focus-within::before {
+  --glass-angle: 330deg;
+}
+
+.card:hover .image,
+.card:focus-within .image {
+  transform: scale(1.05);
+}
+
+.card:hover .readIcon,
+.card:focus-within .readIcon {
+  color: #ffffff;
+  background: var(--gradient-brand);
+  transform: translateX(calc(var(--dir) * 4px));
+}
+
+/* ---- Featured variant --------------------------------------------------------- */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.85rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #ffffff;
+  background:
+    radial-gradient(120% 90% at 30% 0%, rgba(168, 182, 243, 0.5), transparent 60%),
+    var(--gradient-brand);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 8px 18px -8px rgba(27, 39, 91, 0.65);
+}
+
+.featuredTitle {
+  font-size: clamp(1.4rem, 1.1rem + 1.2vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.featured .excerpt {
+  font-size: clamp(0.975rem, 0.94rem + 0.2vw, 1.0625rem);
+  -webkit-line-clamp: 4;
+}
+
+.featured .body {
+  gap: 0.8rem;
+  padding: 1.4rem 1rem 1rem;
+}
+
+@media (min-width: 1024px) {
+  .featured {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: stretch;
+    padding: 12px;
+    border-radius: 36px;
+  }
+
+  /* In RTL column 1 is the right: text on the right, photo on the left. */
+  .featured .media {
+    grid-column: 2;
+    grid-row: 1;
+    aspect-ratio: auto;
+    min-height: 380px;
+    border-radius: 26px;
+  }
+
+  .featured .body {
+    grid-column: 1;
+    grid-row: 1;
+    justify-content: center;
+    padding: 2rem clamp(1.25rem, 0.5rem + 2vw, 2.75rem);
+  }
+
+  .featured .read {
+    margin-top: 0.5rem;
+  }
+}

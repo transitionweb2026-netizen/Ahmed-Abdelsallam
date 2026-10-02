@@ -1,0 +1,84 @@
+/**
+ * Contact form model, shared by the browser (instant feedback) and the
+ * server action (authoritative validation). Error messages are Arabic UI
+ * copy; move them to a dictionary when an English version is added.
+ */
+
+export interface ContactFormValues {
+  name: string;
+  phone: string;
+  email: string;
+  subject: string;
+  message: string;
+  /** Honeypot — must stay empty (hidden from people, filled by bots). */
+  company?: string;
+}
+
+export type ContactField = "name" | "phone" | "email" | "subject" | "message";
+export type ContactErrors = Partial<Record<ContactField, string>>;
+
+export type ContactResult =
+  | { status: "idle" }
+  | { status: "success" }
+  | { status: "invalid"; errors: ContactErrors }
+  /** No delivery endpoint configured yet (see CONTACT_FORM_ENDPOINT). */
+  | { status: "not-configured" }
+  | { status: "error" };
+
+export const CONTACT_LIMITS = { name: 80, email: 120, subject: 80, message: 1500, messageMin: 10 } as const;
+
+export const CONTACT_FIELDS: ContactField[] = ["name", "phone", "email", "subject", "message"];
+
+/** Arabic-Indic (٠-٩) and Persian (۰-۹) digits → ASCII. */
+function toLatinDigits(value: string): string {
+  return value.replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660)).replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0));
+}
+
+/** Coerces untrusted input into trimmed strings with normalised digits. */
+export function normalizeContact(input: Partial<Record<keyof ContactFormValues, unknown>>): ContactFormValues {
+  const text = (value: unknown) => (typeof value === "string" ? value : "").trim();
+  return {
+    name: text(input.name),
+    phone: toLatinDigits(text(input.phone)),
+    email: text(input.email),
+    subject: text(input.subject),
+    message: text(input.message),
+    company: text(input.company),
+  };
+}
+
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+// 8–15 digits, optional leading "+", separators allowed while typing.
+const PHONE = /^\+?\d{8,15}$/;
+
+export function validateContact(values: ContactFormValues): ContactErrors {
+  const errors: ContactErrors = {};
+
+  if (values.name.length < 2) errors.name = "يرجى كتابة الاسم (حرفان على الأقل).";
+  else if (values.name.length > CONTACT_LIMITS.name) errors.name = "الاسم أطول من المسموح.";
+
+  const phone = values.phone.replace(/[\s().-]/g, "");
+  if (!phone) errors.phone = "يرجى كتابة رقم الهاتف للتواصل معك.";
+  else if (!PHONE.test(phone)) errors.phone = "يرجى كتابة رقم هاتف صحيح (من 8 إلى 15 رقمًا).";
+
+  if (values.email) {
+    if (values.email.length > CONTACT_LIMITS.email || !EMAIL.test(values.email)) {
+      errors.email = "يرجى كتابة بريد إلكتروني صحيح، أو ترك الحقل فارغًا.";
+    }
+  }
+
+  if (!values.subject) errors.subject = "يرجى اختيار موضوع الرسالة.";
+  else if (values.subject.length > CONTACT_LIMITS.subject) errors.subject = "الموضوع أطول من المسموح.";
+
+  if (values.message.length < CONTACT_LIMITS.messageMin) errors.message = "يرجى كتابة رسالتك (10 أحرف على الأقل).";
+  else if (values.message.length > CONTACT_LIMITS.message) errors.message = "الرسالة أطول من المسموح (1500 حرف).";
+
+  return errors;
+}
+
+/** Plain-text version of a submission, e.g. for a WhatsApp fallback. */
+export function contactSummary(values: ContactFormValues, labels: Record<ContactField, string>): string {
+  return CONTACT_FIELDS.filter((field) => values[field])
+    .map((field) => `${labels[field]}: ${values[field]}`)
+    .join("\n");
+}

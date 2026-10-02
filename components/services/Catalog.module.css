@@ -1,0 +1,45 @@
+/* Services: 1 → 2 → 3 per row; an incomplete last row stays centred. */
+.serviceGrid {
+  --gap: clamp(1.25rem, 0.9rem + 1vw, 1.75rem);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--gap);
+  margin-top: 3.5rem;
+}
+
+.serviceItem {
+  flex: 1 1 100%;
+  min-width: 0;
+}
+
+@media (min-width: 640px) {
+  .serviceItem {
+    flex: 0 1 calc((100% - var(--gap)) / 2);
+  }
+}
+
+@media (min-width: 1024px) {
+  .serviceItem {
+    flex: 0 1 calc((100% - 2 * var(--gap)) / 3);
+  }
+}
+
+/* Conditions: the homepage two-column rhythm. */
+.conditionGrid {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 3.5rem;
+}
+
+@media (min-width: 768px) {
+  .conditionGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .conditionGrid {
+    gap: 1.5rem;
+  }
+}

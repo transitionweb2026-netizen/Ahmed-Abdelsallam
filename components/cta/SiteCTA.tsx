@@ -5,12 +5,45 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { RichTitle } from "@/components/ui/RichTitle";
 import { cn, whatsappUrl } from "@/lib/utils";
-import type { FinalCtaContent } from "@/types/content";
-import styles from "./FinalCTA.module.css";
+import type { CtaAction, SiteCtaContent } from "@/types/content";
+import styles from "./SiteCTA.module.css";
 
-export function FinalCTA({ content }: { content: FinalCtaContent }) {
+function CtaButton({ action, variant }: { action: CtaAction; variant: "light" | "lavender" }) {
+  if (action.kind === "whatsapp") {
+    return (
+      <GlassButton
+        href={whatsappUrl(action.message)}
+        external
+        variant={variant}
+        size="lg"
+        icon="whatsapp"
+        className={styles.action}
+        ariaLabel={`${action.label} (يفتح في نافذة جديدة)`}
+      >
+        {action.label}
+      </GlassButton>
+    );
+  }
   return (
-    <section className="page-section" aria-labelledby="final-cta-title">
+    <GlassButton href={action.href} variant={variant} size="lg" className={styles.action}>
+      {action.label}
+    </GlassButton>
+  );
+}
+
+interface SiteCTAProps {
+  content: SiteCtaContent;
+  headingId?: string;
+}
+
+/**
+ * The global call-to-action band that closes every page: the doctor
+ * cut-out on a navy liquid-glass surface with pointer-driven tilt, aurora
+ * sweep and two glass actions (WhatsApp + contact by default).
+ */
+export function SiteCTA({ content, headingId = "site-cta-title" }: SiteCTAProps) {
+  return (
+    <section className="page-section" aria-labelledby={headingId}>
       <div className="site-container">
         <Reveal variant="scale" amount={0.25}>
           <TiltCard className={cn("group", styles.card)}>
@@ -23,25 +56,13 @@ export function FinalCTA({ content }: { content: FinalCtaContent }) {
               <div className={styles.grid}>
                 <div className={styles.content}>
                   <Eyebrow tone="light">{content.eyebrow}</Eyebrow>
-                  <h2 id="final-cta-title" className={cn("type-h2", styles.title)}>
+                  <h2 id={headingId} className={cn("type-h2", styles.title)}>
                     <RichTitle title={content.title} tone="light" />
                   </h2>
                   <p className={cn("type-lead", styles.description)}>{content.description}</p>
                   <div className={styles.actions}>
-                    <GlassButton
-                      href={whatsappUrl(content.whatsappMessage)}
-                      external
-                      variant="light"
-                      size="lg"
-                      icon="whatsapp"
-                      className={styles.action}
-                      ariaLabel={`${content.whatsappLabel} (يفتح في نافذة جديدة)`}
-                    >
-                      {content.whatsappLabel}
-                    </GlassButton>
-                    <GlassButton href={content.contactCta.href} variant="lavender" size="lg" className={styles.action}>
-                      {content.contactCta.label}
-                    </GlassButton>
+                    <CtaButton action={content.primaryAction} variant="light" />
+                    <CtaButton action={content.secondaryAction} variant="lavender" />
                   </div>
                 </div>
 

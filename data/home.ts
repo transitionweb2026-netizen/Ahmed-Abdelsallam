@@ -1,5 +1,6 @@
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
+import { siteCta } from "@/data/cta";
 import { introVideo } from "@/data/videos";
 import type { HomeContent } from "@/types/content";
 
@@ -214,19 +215,6 @@ export const homeContent: HomeContent = {
     cta: { label: "عرض جميع الآراء والأسئلة", href: routes.reviews },
   },
 
-  finalCta: {
-    eyebrow: "ابدأ الآن",
-    title: [{ text: "خطوتك الأولى نحو" }, { text: "حركة أكثر راحة", accent: true }],
-    description:
-      "تواصل معنا لحجز موعد الاستشارة، وسنساعدك في اختيار الوقت المناسب والإجابة عن استفساراتك قبل الزيارة.",
-    whatsappLabel: "تواصل عبر واتساب",
-    whatsappMessage: "مرحبًا، أرغب في حجز موعد استشارة مع د. أحمد عبد السلام.",
-    contactCta: { label: "تواصل معنا", href: routes.contact },
-    image: {
-      src: "/images/doctor/doctor-cutout.png",
-      alt: "د. أحمد عبد السلام (صورة مؤقتة)",
-      width: 1000,
-      height: 1250,
-    },
-  },
+  // The global CTA band (shared with every page).
+  finalCta: siteCta,
 };

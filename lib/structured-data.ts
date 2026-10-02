@@ -1,3 +1,4 @@
+import { mainNav, routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
 import { absoluteUrl } from "@/lib/utils";
 import type { Faq } from "@/types/content";
@@ -33,6 +34,28 @@ export function faqJsonLd(items: Faq[]) {
       "@type": "Question",
       name: item.question,
       acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  };
+}
+
+/**
+ * Breadcrumb trail for an inner page: Home › `name`. Matches the visible
+ * trail the hero renders in its eyebrow.
+ */
+export function breadcrumbJsonLd(name: string, path: string) {
+  const home = mainNav.find((item) => item.href === routes.home)?.label ?? "الرئيسية";
+  const items = [
+    { name: home, path: routes.home },
+    { name, path },
+  ];
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: absoluteUrl(item.path),
     })),
   };
 }

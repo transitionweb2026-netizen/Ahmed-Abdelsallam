@@ -1,5 +1,5 @@
 import { DoctorStackCard } from "@/components/doctor/DoctorStackCard";
-import { StatCard } from "@/components/home/StatCard";
+import { StatCard } from "@/components/stats/StatCard";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { DotGrid, Orb } from "@/components/ui/Decor";
 import { SectionHeading } from "@/components/ui/SectionHeading";

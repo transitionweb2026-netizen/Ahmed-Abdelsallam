@@ -15,17 +15,21 @@ interface ConditionCardProps {
   condition: Condition;
   /** `sizes` for the card image. */
   sizes?: string;
+  /** When set, the card opens a detail dialog instead of navigating. */
+  onSelect?: () => void;
 }
 
 /**
  * Same glass family as the service cards, its own identity: a wide tile
  * pairing an inset photo with the text (side by side on wide screens,
  * stacked below), a concentric "examination" halo badge, a brand accent
- * edge and symptom chips. The whole card is clickable via a stretched link.
+ * edge and symptom chips. The whole card is clickable via a stretched link
+ * (or a stretched dialog button).
  */
 export function ConditionCard({
   condition,
   sizes = "(min-width: 1280px) 250px, (min-width: 768px) 46vw, 92vw",
+  onSelect,
 }: ConditionCardProps) {
   return (
     <article className={cn(styles.card, "group")}>
@@ -54,9 +58,15 @@ export function ConditionCard({
 
       <div className={styles.body}>
         <h3 className={cn("type-h3", styles.title)}>
-          <AppLink href={conditionHref(condition)} className={styles.link}>
-            {condition.title}
-          </AppLink>
+          {onSelect ? (
+            <button type="button" className={styles.link} onClick={onSelect} aria-haspopup="dialog">
+              {condition.title}
+            </button>
+          ) : (
+            <AppLink href={conditionHref(condition)} className={styles.link}>
+              {condition.title}
+            </AppLink>
+          )}
         </h3>
         <p className={styles.excerpt}>{condition.excerpt}</p>
         <ul className={styles.symptoms} aria-label={`أعراض شائعة: ${condition.title}`}>

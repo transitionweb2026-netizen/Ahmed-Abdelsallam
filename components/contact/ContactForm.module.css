@@ -1,0 +1,288 @@
+.form {
+  display: grid;
+  gap: 1.1rem 1rem;
+}
+
+@media (min-width: 640px) {
+  .form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.fieldWide,
+.status,
+.submitRow {
+  grid-column: 1 / -1;
+}
+
+/* ---- Field -------------------------------------------------------------------- */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.required {
+  color: var(--danger);
+}
+
+.optional {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.control {
+  position: relative;
+}
+
+.fieldIcon {
+  position: absolute;
+  inset-inline-start: 0.95rem;
+  top: 50%;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  color: var(--secondary-dark);
+  transform: translateY(-50%);
+  pointer-events: none;
+  transition: color 0.3s ease;
+}
+
+.controlMultiline .fieldIcon {
+  top: 1.05rem;
+  transform: none;
+}
+
+/* Liquid-glass inputs: inset glass well with a lavender focus glow. */
+.input {
+  display: block;
+  width: 100%;
+  min-height: 54px;
+  padding: 0.8rem 1rem;
+  padding-inline-start: 2.85rem;
+  border-radius: 16px;
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(243, 245, 253, 0.92));
+  box-shadow:
+    inset 0 1px 2px rgba(27, 39, 91, 0.08),
+    inset 0 0 0 1px rgba(168, 182, 243, 0.65),
+    0 1px 0 #ffffff;
+  transition:
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+}
+
+.input::placeholder {
+  color: #7d86ad;
+  opacity: 1;
+}
+
+.input:hover {
+  box-shadow:
+    inset 0 1px 2px rgba(27, 39, 91, 0.08),
+    inset 0 0 0 1px rgba(131, 148, 226, 0.9),
+    0 1px 0 #ffffff;
+}
+
+.input:focus {
+  outline: none;
+  background: #ffffff;
+  box-shadow:
+    inset 0 1px 2px rgba(27, 39, 91, 0.06),
+    inset 0 0 0 1.5px var(--ring),
+    0 0 0 4px rgba(168, 182, 243, 0.4);
+}
+
+.control:focus-within .fieldIcon {
+  color: var(--accent-ink);
+}
+
+/* Numbers and e-mail read left-to-right but stay aligned with the other
+   fields in the RTL form. Logical padding would follow the input's own
+   (LTR) direction, so the icon side is set physically here. */
+.ltr {
+  text-align: end;
+}
+
+.ltr::placeholder {
+  text-align: end;
+}
+
+[dir="rtl"] .ltr {
+  padding-left: 1rem;
+  padding-right: 2.85rem;
+}
+
+[dir="ltr"] .ltr,
+[dir="ltr"] .ltr::placeholder {
+  text-align: start;
+}
+
+.select {
+  appearance: none;
+  cursor: pointer;
+  padding-inline-end: 2.6rem;
+}
+
+.selectIcon {
+  position: absolute;
+  inset-inline-end: 0.95rem;
+  top: 50%;
+  color: var(--primary);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.textarea {
+  min-height: 150px;
+  resize: vertical;
+  padding-top: 0.85rem;
+}
+
+.below {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 0;
+}
+
+.counter {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+/* ---- Errors --------------------------------------------------------------------- */
+
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--danger);
+}
+
+.error svg {
+  flex-shrink: 0;
+  margin-top: 0.15em;
+}
+
+.field[data-invalid="true"] .input {
+  background: #ffffff;
+  box-shadow:
+    inset 0 1px 2px rgba(27, 39, 91, 0.06),
+    inset 0 0 0 1.5px var(--danger),
+    0 0 0 4px var(--danger-soft);
+}
+
+.field[data-invalid="true"] .fieldIcon {
+  color: var(--danger);
+}
+
+/* ---- Status notices -------------------------------------------------------------- */
+
+.status:empty {
+  display: none;
+}
+
+.status {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  border-radius: 18px;
+  font-size: 0.9375rem;
+  line-height: 1.75;
+}
+
+.notice > svg {
+  flex-shrink: 0;
+  margin-top: 0.15em;
+}
+
+.noticeTitle {
+  font-weight: 700;
+}
+
+.noticeBody {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+}
+
+.noticeBody > :last-child {
+  margin-top: 0.4rem;
+}
+
+.noticeError {
+  color: var(--danger);
+  background: linear-gradient(180deg, #fff7f6, #fdeeec);
+  box-shadow: inset 0 0 0 1px rgba(179, 38, 30, 0.28);
+}
+
+.noticeSuccess {
+  color: var(--success);
+  background: linear-gradient(180deg, #f5fbf8, #e9f6ef);
+  box-shadow: inset 0 0 0 1px rgba(31, 122, 77, 0.28);
+}
+
+.noticeInfo {
+  color: var(--primary);
+  background:
+    radial-gradient(90% 90% at 100% 0%, rgba(168, 182, 243, 0.4), transparent 60%),
+    linear-gradient(180deg, #ffffff, var(--secondary-soft));
+  box-shadow: inset 0 0 0 1px rgba(168, 182, 243, 0.7);
+}
+
+.noticeInfo > svg {
+  color: var(--accent-ink);
+}
+
+/* ---- Honeypot & submit ----------------------------------------------------------- */
+
+.trap {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.submitRow {
+  display: flex;
+  margin-top: 0.25rem;
+}
+
+@media (max-width: 479px) {
+  .submit {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

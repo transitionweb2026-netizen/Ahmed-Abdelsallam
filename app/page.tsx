@@ -1,39 +1,25 @@
 import type { Metadata } from "next";
+import { SiteCTA } from "@/components/cta/SiteCTA";
+import { Hero } from "@/components/hero/Hero";
 import { AboutDoctor } from "@/components/home/AboutDoctor";
 import { ConditionsSection } from "@/components/home/ConditionsSection";
-import { FinalCTA } from "@/components/home/FinalCTA";
-import { Hero } from "@/components/home/Hero";
-import { ImportantServices } from "@/components/home/ImportantServices";
 import { ImportantVideos } from "@/components/home/ImportantVideos";
 import { IntroSection } from "@/components/home/IntroSection";
-import { PatientJourney } from "@/components/home/PatientJourney";
 import { ReviewsFaqSection } from "@/components/home/ReviewsFaqSection";
 import { StatsSection } from "@/components/home/StatsSection";
+import { ServiceShowcase } from "@/components/services/ServiceShowcase";
+import { JourneyTimeline } from "@/components/timeline/JourneyTimeline";
+import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
 import { getConditions, getFaqs, getHomeContent, getReviews, getServices, getVideos } from "@/lib/content";
-import { faqJsonLd, jsonLdString } from "@/lib/structured-data";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: { absolute: siteConfig.title },
+export const metadata: Metadata = pageMetadata({
+  title: siteConfig.title,
+  absoluteTitle: true,
   description: siteConfig.description,
-  alternates: { canonical: "/" },
-  openGraph: {
-    url: "/",
-    type: "website",
-    locale: siteConfig.locale,
-    siteName: siteConfig.name,
-    title: siteConfig.title,
-    description: siteConfig.description,
-    images: [
-      {
-        url: siteConfig.ogImage.src,
-        width: siteConfig.ogImage.width,
-        height: siteConfig.ogImage.height,
-        alt: siteConfig.name,
-      },
-    ],
-  },
-};
+  path: routes.home,
+});
 
 export default async function HomePage() {
   const [content, services, conditions, videos, reviews, faqs] = await Promise.all([
@@ -47,17 +33,16 @@ export default async function HomePage() {
 
   return (
     <>
-      <Hero content={content.hero} />
+      <Hero content={content.hero} scrollTarget="#intro" />
       <IntroSection content={content.intro} />
       <StatsSection content={content.stats} />
-      <ImportantServices content={content.services} services={services} />
+      <ServiceShowcase content={content.services} services={services} headingId="services-title" />
       <AboutDoctor content={content.about} />
       <ConditionsSection content={content.conditions} conditions={conditions} />
-      <PatientJourney content={content.journey} />
+      <JourneyTimeline content={content.journey} headingId="journey-title" />
       <ImportantVideos content={content.videos} videos={videos} />
       <ReviewsFaqSection content={content.reviewsFaq} reviews={reviews} faqs={faqs} />
-      <FinalCTA content={content.finalCta} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(faqJsonLd(faqs)) }} />
+      <SiteCTA content={content.finalCta} />
     </>
   );
 }

@@ -22,6 +22,26 @@
   }
 }
 
+/* Compact size — roughly one-third shorter, for pages whose own content
+   should start sooner (services, contact). Same layers and composition. */
+.compact {
+  min-height: 0;
+  padding-top: calc(var(--header-h) + 8.5rem);
+  padding-bottom: 2.75rem;
+}
+
+@media (min-width: 768px) {
+  .compact {
+    min-height: clamp(520px, 66svh, 680px);
+    padding-top: calc(var(--header-h) + 3rem);
+    padding-bottom: 4rem;
+  }
+
+  .compact .floatA {
+    top: calc(var(--header-h) + 2.5rem);
+  }
+}
+
 /* ---- Image & overlay stack ------------------------------------------------ */
 
 .media {
@@ -187,6 +207,39 @@
 
 .title {
   color: var(--primary);
+}
+
+/* Breadcrumb trail rendered inside the eyebrow pill (inner pages). */
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.crumbs li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.crumbLink {
+  color: var(--text-muted);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: color 0.3s ease;
+}
+
+.crumbLink:hover {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.crumbSep {
+  flex-shrink: 0;
+  color: var(--secondary-dark);
+  transform: scaleX(calc(var(--dir) * -1));
 }
 
 .description {

@@ -18,6 +18,15 @@ interface VideoPlayerProps {
   /** Layer shown over the poster until playback starts (captions, chips). */
   overlay?: ReactNode;
   playSize?: "md" | "lg";
+  /**
+   * Replaces inline playback: pressing play calls this instead (e.g. to
+   * open the video in a viewer dialog).
+   */
+  onActivate?: () => void;
+  /** Start playing on mount — for players opened by an explicit click. */
+  autoStart?: boolean;
+  /** Move focus onto the player when playback starts (default true). */
+  focusOnPlay?: boolean;
 }
 
 /**
@@ -26,14 +35,25 @@ interface VideoPlayerProps {
  * privacy-enhanced YouTube embed. No video bytes are downloaded before
  * interaction, and native controls keep playback keyboard-accessible.
  */
-export function VideoPlayer({ video, sizes, className, overlay, playSize = "lg" }: VideoPlayerProps) {
-  const [state, setState] = useState<"idle" | "playing" | "error">("idle");
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const frameRef = useRef<HTMLIFrameElement>(null);
-  const id = useId();
+export function VideoPlayer({
+  video,
+  sizes,
+  className,
+  overlay,
+  playSize = "lg",
+  onActivate,
+  autoStart = false,
+  focusOnPlay = true,
+}: VideoPlayerProps) {
   const sources = video.sources ?? [];
   const hasFile = sources.length > 0;
   const hasYoutube = Boolean(video.youtubeId);
+  const [state, setState] = useState<"idle" | "playing" | "error">(
+    autoStart && (hasFile || hasYoutube) ? "playing" : "idle",
+  );
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const frameRef = useRef<HTMLIFrameElement>(null);
+  const id = useId();
 
   useEffect(() => {
     const onOtherPlay = (event: Event) => {
@@ -45,12 +65,16 @@ export function VideoPlayer({ video, sizes, className, overlay, playSize = "lg" 
 
   // Move focus into the player so keyboard users land on its controls.
   useEffect(() => {
-    if (state === "playing") (videoRef.current ?? frameRef.current)?.focus();
-  }, [state]);
+    if (state === "playing" && focusOnPlay) (videoRef.current ?? frameRef.current)?.focus();
+  }, [state, focusOnPlay]);
 
   const announcePlay = () => window.dispatchEvent(new CustomEvent(MEDIA_PLAY_EVENT, { detail: id }));
 
   const start = () => {
+    if (onActivate) {
+      onActivate();
+      return;
+    }
     if (!hasFile && !hasYoutube) {
       setState("error");
       return;
@@ -115,7 +139,13 @@ export function VideoPlayer({ video, sizes, className, overlay, playSize = "lg" 
           تعذّر تشغيل الفيديو حاليًا، يرجى المحاولة لاحقًا.
         </p>
       ) : null}
-      <button type="button" className={styles.hit} onClick={start} aria-label={`تشغيل الفيديو: ${video.title}`}>
+      <button
+        type="button"
+        className={styles.hit}
+        onClick={start}
+        aria-label={`تشغيل الفيديو: ${video.title}`}
+        aria-haspopup={onActivate ? "dialog" : undefined}
+      >
         <span className={cn(styles.play, playSize === "md" && styles.playMd)} aria-hidden="true">
           <span className={styles.playCore}>
             <Play size={playSize === "md" ? 20 : 24} fill="currentColor" strokeWidth={0} />

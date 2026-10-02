@@ -5,15 +5,17 @@ import styles from "./Eyebrow.module.css";
 interface EyebrowProps {
   children: ReactNode;
   tone?: "dark" | "light";
+  /** "div" when the content is block-level (e.g. a breadcrumb list). */
+  as?: "span" | "div";
   className?: string;
 }
 
 /** Small glass label that sits above section headings. */
-export function Eyebrow({ children, tone = "dark", className }: EyebrowProps) {
+export function Eyebrow({ children, tone = "dark", as: Tag = "span", className }: EyebrowProps) {
   return (
-    <span className={cn(styles.eyebrow, tone === "light" && styles.light, className)}>
+    <Tag className={cn(styles.eyebrow, tone === "light" && styles.light, className)}>
       <span className={styles.dot} aria-hidden="true" />
       {children}
-    </span>
+    </Tag>
   );
 }

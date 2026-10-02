@@ -7,7 +7,14 @@ import styles from "./ReviewCard.module.css";
 
 const AVATAR_TONES = [styles.toneNavy, styles.toneLavender, styles.toneIndigo, styles.toneSoft];
 
-export function ReviewCard({ review, index = 0 }: { review: Review; index?: number }) {
+interface ReviewCardProps {
+  review: Review;
+  index?: number;
+  /** Clamp long reviews to four lines (compact grids). Off shows the full text. */
+  clamp?: boolean;
+}
+
+export function ReviewCard({ review, index = 0, clamp = true }: ReviewCardProps) {
   const initial = Array.from(review.name.trim())[0] ?? "";
   return (
     <figure className={styles.card}>
@@ -15,7 +22,7 @@ export function ReviewCard({ review, index = 0 }: { review: Review; index?: numb
         <StarRating rating={review.rating} />
         <Quote className={styles.quote} size={34} strokeWidth={1.4} aria-hidden="true" />
       </div>
-      <blockquote className={styles.text}>
+      <blockquote className={cn(styles.text, clamp && styles.clamped)}>
         <p>{review.text}</p>
       </blockquote>
       <figcaption className={styles.author}>

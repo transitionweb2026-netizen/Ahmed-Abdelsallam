@@ -1,0 +1,6 @@
+import { jsonLdString } from "@/lib/structured-data";
+
+/** Inline JSON-LD <script>; `data` comes from the builders in lib/structured-data. */
+export function JsonLd({ data }: { data: unknown }) {
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(data) }} />;
+}

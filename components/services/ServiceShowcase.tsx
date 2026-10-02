@@ -3,21 +3,25 @@ import { ServiceCard } from "@/components/services/ServiceCard";
 import { CurveLines, Orb } from "@/components/ui/Decor";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import type { CollectionSectionContent, Service } from "@/types/content";
+import type { CollectionSectionContent, ServiceCardItem } from "@/types/content";
 
-interface ImportantServicesProps {
+interface ServiceShowcaseProps {
   content: CollectionSectionContent;
-  services: Service[];
+  /** Four glass-box cards: featured services (home) or key specialties (about). */
+  services: ServiceCardItem[];
+  headingId: string;
+  id?: string;
 }
 
-export function ImportantServices({ content, services }: ImportantServicesProps) {
+/** Heading, a row of 3D glass service cards and a "view all" action. */
+export function ServiceShowcase({ content, services, headingId, id }: ServiceShowcaseProps) {
   return (
-    <section className="page-section" aria-labelledby="services-title">
+    <section id={id} className="page-section" aria-labelledby={headingId}>
       <Orb className="top-0 left-1/2 h-[40rem] w-[min(60rem,140vw)] -translate-x-1/2 opacity-80" color="blue" />
       <CurveLines className="bottom-8 start-0 h-44 w-full opacity-60" />
 
       <div className="site-container relative">
-        <SectionHeading heading={content.heading} id="services-title" />
+        <SectionHeading heading={content.heading} id={headingId} />
 
         <RevealGroup
           as="ul"

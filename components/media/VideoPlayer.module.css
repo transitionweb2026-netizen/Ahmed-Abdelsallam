@@ -4,6 +4,27 @@
   overflow: hidden;
   border-radius: inherit;
   background: linear-gradient(160deg, var(--secondary-light), var(--secondary));
+  container: video-player / inline-size;
+}
+
+/* Narrow players (two-up phone grids): a smaller glass play button. */
+@container video-player (max-width: 190px) {
+  .play,
+  .playMd {
+    width: 56px;
+    height: 56px;
+    box-shadow:
+      inset 0 1px 0 #ffffff,
+      inset 0 -5px 10px rgba(27, 39, 91, 0.16),
+      0 12px 24px -10px rgba(11, 18, 51, 0.6),
+      0 0 0 6px rgba(255, 255, 255, 0.14);
+  }
+
+  .playCore,
+  .playMd .playCore {
+    width: 38px;
+    height: 38px;
+  }
 }
 
 .poster {

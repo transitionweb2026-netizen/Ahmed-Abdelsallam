@@ -113,3 +113,26 @@
   overflow: hidden;
   min-height: calc(2 * 1.55em);
 }
+
+/* Two-up phone grids (/videos): tighter chrome for narrow cards. The
+   threshold sits below the homepage reel's narrowest card (~219px). */
+.card {
+  container: video-card / inline-size;
+}
+
+@container video-card (max-width: 200px) {
+  .meta {
+    padding: 0.7rem 0.35rem 0.35rem;
+  }
+
+  .title {
+    font-size: 0.9rem;
+  }
+
+  .duration {
+    top: 8px;
+    inset-inline-start: 8px;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.75rem;
+  }
+}

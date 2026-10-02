@@ -1,0 +1,286 @@
+.grid {
+  position: relative;
+  display: grid;
+  gap: 3.5rem;
+  align-items: center;
+}
+
+/* RTL: column 1 (quote) is the right half, column 2 (portrait) the left. */
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: clamp(3rem, 1rem + 4vw, 5.5rem);
+  }
+}
+
+.quoteCol {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.75rem;
+  min-width: 0;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+/* ---- Quote card --------------------------------------------------------------- */
+
+.quoteWrap {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  padding-top: 2.4rem;
+}
+
+.glow {
+  position: absolute;
+  inset: 8% 4% -8%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(168, 182, 243, 0.75), rgba(168, 182, 243, 0.18) 60%, transparent);
+  pointer-events: none;
+}
+
+.quoteCard {
+  position: relative;
+  isolation: isolate;
+  padding: clamp(2.6rem, 2rem + 2vw, 3.5rem) clamp(1.35rem, 0.8rem + 2.2vw, 2.75rem) 1.9rem;
+  border-radius: 34px;
+  background:
+    radial-gradient(90% 70% at 100% 0%, rgba(211, 218, 250, 0.7), transparent 60%),
+    radial-gradient(70% 60% at 0% 100%, rgba(233, 237, 253, 0.9), transparent 60%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.94), rgba(246, 248, 255, 0.78));
+  box-shadow:
+    inset 0 1.5px 0 #ffffff,
+    inset 0 -2px 0 rgba(27, 39, 91, 0.05),
+    0 2px 6px rgba(27, 39, 91, 0.05),
+    0 40px 80px -44px rgba(27, 39, 91, 0.55),
+    0 30px 70px -40px rgba(168, 182, 243, 0.95);
+}
+
+.quoteCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  padding: 1.25px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--glass-angle),
+    #ffffff,
+    rgba(168, 182, 243, 0.8) 25%,
+    rgba(27, 39, 91, 0.2) 50%,
+    rgba(168, 182, 243, 0.8) 75%,
+    #ffffff
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  transition: --glass-angle 1.4s var(--ease-out);
+}
+
+.quoteCard:hover::before {
+  --glass-angle: 330deg;
+}
+
+/* Oversized quotation marks — pure decoration. The path is an opening
+   mark for LTR; --dir mirrors it for RTL. */
+.markOpen,
+.markClose {
+  position: absolute;
+  z-index: 2;
+  height: auto;
+  pointer-events: none;
+}
+
+.markOpen {
+  top: -2.4rem;
+  inset-inline-start: clamp(1rem, 0.5rem + 2vw, 2rem);
+  width: clamp(80px, 62px + 3.5vw, 124px);
+  filter: drop-shadow(0 16px 22px rgba(27, 39, 91, 0.32));
+  transform: scaleX(var(--dir));
+}
+
+.markClose {
+  bottom: -1.4rem;
+  inset-inline-end: clamp(1rem, 0.5rem + 2vw, 2rem);
+  width: clamp(48px, 38px + 2vw, 70px);
+  opacity: 0.9;
+  filter: drop-shadow(0 10px 16px rgba(27, 39, 91, 0.25));
+  transform: scaleX(var(--dir)) rotate(180deg);
+}
+
+.quote {
+  font-size: clamp(1.18rem, 1rem + 0.8vw, 1.55rem);
+  font-weight: 600;
+  line-height: 1.95;
+  color: var(--primary);
+}
+
+.attribution {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-top: 1.4rem;
+}
+
+.line {
+  flex-shrink: 0;
+  width: 44px;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(var(--grad-dir), var(--primary), var(--secondary));
+}
+
+.who {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.45;
+}
+
+.name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.role {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+/* ---- Values ------------------------------------------------------------------- */
+
+.values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.5rem;
+}
+
+.value {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem;
+  padding-inline-end: 1rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--primary);
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.92), rgba(233, 237, 253, 0.62));
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 1px 2px rgba(27, 39, 91, 0.05),
+    0 10px 22px -16px rgba(27, 39, 91, 0.5);
+}
+
+.valueIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+}
+
+/* ---- Portrait ----------------------------------------------------------------- */
+
+.imageCol {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  justify-content: center;
+  padding-block: 1rem 2.5rem;
+}
+
+.halo {
+  position: absolute;
+  inset: 4% -4%;
+  z-index: -2;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(168, 182, 243, 0.6), rgba(168, 182, 243, 0.14) 62%, transparent);
+  pointer-events: none;
+}
+
+.ring {
+  z-index: 2;
+  width: clamp(110px, 9vw + 60px, 180px);
+  height: clamp(110px, 9vw + 60px, 180px);
+  inset-inline-end: 0;
+  bottom: 6%;
+}
+
+.photoFrame {
+  position: relative;
+  isolation: isolate;
+  width: min(100%, 500px);
+  padding: 10px;
+  border-radius: 40px;
+  background:
+    radial-gradient(120% 80% at 15% 0%, rgba(255, 255, 255, 0.95), transparent 55%),
+    linear-gradient(155deg, rgba(255, 255, 255, 0.8), rgba(211, 218, 250, 0.55));
+  box-shadow:
+    inset 0 1.5px 0 #ffffff,
+    inset 0 -2px 0 rgba(27, 39, 91, 0.06),
+    0 2px 6px rgba(27, 39, 91, 0.06),
+    0 50px 90px -46px rgba(27, 39, 91, 0.6),
+    0 34px 80px -44px rgba(168, 182, 243, 1);
+  transform: rotate(calc(var(--dir) * -1.6deg));
+  transition: transform 0.9s var(--ease-out);
+}
+
+.photoFrame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  padding: 1px;
+  border-radius: inherit;
+  background: var(--gradient-border);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.imageCol:hover .photoFrame {
+  transform: rotate(0deg) translateY(-6px);
+}
+
+.photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 31px;
+  background: var(--secondary-light);
+}
+
+.photoImage {
+  object-fit: cover;
+  transition: transform 1s var(--ease-out);
+}
+
+.imageCol:hover .photoImage {
+  transform: scale(1.035);
+}
+
+.photoGloss {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(140deg, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0) 30%),
+    linear-gradient(to top, rgba(17, 26, 64, 0.3) 0%, rgba(17, 26, 64, 0) 36%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+}

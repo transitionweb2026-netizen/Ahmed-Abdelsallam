@@ -27,6 +27,8 @@ export const siteConfig = {
   direction: "rtl" as const,
   /** Western digits read naturally on most Arabic medical sites; use "ar-EG" for Arabic-Indic digits. */
   numberLocale: "en-US",
+  /** Arabic month names with Western digits, matching `numberLocale`. */
+  dateLocale: "ar-EG-u-nu-latn",
   ogImage: { src: "/images/og/og-default.jpg", width: 1200, height: 630 },
   contact: {
     phoneDigits,

@@ -4,29 +4,35 @@ import { AppLink } from "@/components/ui/AppLink";
 import { routes } from "@/config/routes";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/utils";
-import type { Service } from "@/types/content";
+import type { ServiceCardItem } from "@/types/content";
 import styles from "./ServiceCard.module.css";
 
 /** Link target for a service (explicit `href`, else its section on /services). */
-export const serviceHref = (service: Service) => service.href ?? `${routes.services}#${service.slug}`;
+export const serviceHref = (service: ServiceCardItem) => service.href ?? `${routes.services}#${service.slug}`;
 
 interface ServiceCardProps {
-  service: Service;
+  service: ServiceCardItem;
   index: number;
   /** `sizes` for the card image. */
   sizes?: string;
+  /** When set, the card opens a detail dialog instead of navigating. */
+  onSelect?: () => void;
+  /** Label of the action indicator. */
+  actionLabel?: string;
 }
 
 /**
  * Service card mounted inside a 3D glass box: a raised glass tray (bevelled
  * edges), a back plate offset up and to the side for visible depth, and the
  * content card recessed inside — led by a large service image. The whole
- * card is clickable via a stretched link.
+ * card is clickable via a stretched link (or a stretched dialog button).
  */
 export function ServiceCard({
   service,
   index,
   sizes = "(min-width: 1280px) 290px, (min-width: 640px) 45vw, 90vw",
+  onSelect,
+  actionLabel = onSelect ? "عرض التفاصيل" : "اعرف المزيد",
 }: ServiceCardProps) {
   return (
     <article className={cn(styles.cell, "group")}>
@@ -56,13 +62,19 @@ export function ServiceCard({
 
           <div className={styles.body}>
             <h3 className={cn("type-h3", styles.title)}>
-              <AppLink href={serviceHref(service)} className={styles.link}>
-                {service.title}
-              </AppLink>
+              {onSelect ? (
+                <button type="button" className={styles.link} onClick={onSelect} aria-haspopup="dialog">
+                  {service.title}
+                </button>
+              ) : (
+                <AppLink href={serviceHref(service)} className={styles.link}>
+                  {service.title}
+                </AppLink>
+              )}
             </h3>
             <p className={styles.description}>{service.description}</p>
             <span className={styles.more} aria-hidden="true">
-              اعرف المزيد
+              {actionLabel}
               <span className={styles.moreIcon}>
                 <ArrowLeft size={16} strokeWidth={2.2} />
               </span>

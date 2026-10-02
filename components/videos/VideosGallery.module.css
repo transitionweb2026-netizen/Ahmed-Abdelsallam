@@ -1,0 +1,193 @@
+/* 1 column below 360px · 2 on phones · 3 from 768px */
+.grid {
+  display: grid;
+  gap: 1rem 0.75rem;
+  max-width: 1100px;
+  margin: 3.5rem auto 0;
+}
+
+@media (min-width: 360px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Two-up grid with an odd count: centre the last card. */
+@media (min-width: 360px) and (max-width: 767px) {
+  .grid > li:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - 0.375rem);
+  }
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.25rem, 0.4rem + 1.8vw, 2rem);
+  }
+}
+
+/* ---- Viewer dialog -------------------------------------------------------- */
+
+.viewer {
+  --pad: clamp(1.15rem, 0.6rem + 2.4vw, 2.25rem);
+  display: grid;
+}
+
+@media (min-width: 768px) {
+  .viewer {
+    grid-template-columns: auto minmax(0, 1fr);
+    min-height: min(84dvh, 820px);
+  }
+}
+
+/* Navy stage so the video reads like a screen. */
+.stage {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  padding: 3.9rem 1.25rem 1.5rem;
+  background:
+    repeating-radial-gradient(circle at 85% 10%, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px 30px),
+    radial-gradient(90% 70% at 100% 0%, rgba(168, 182, 243, 0.35), transparent 60%),
+    linear-gradient(155deg, var(--primary-light) 0%, var(--primary) 55%, var(--primary-dark) 100%);
+}
+
+@media (min-width: 768px) {
+  .stage {
+    padding: 1.75rem;
+  }
+}
+
+.screenWrap {
+  height: min(56dvh, 150vw);
+  aspect-ratio: 9 / 16;
+  max-width: 100%;
+  padding: 6px;
+  border-radius: 26px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.35), rgba(168, 182, 243, 0.18));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 30px 60px -30px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+@media (min-width: 768px) {
+  .screenWrap {
+    height: min(78dvh, 760px);
+  }
+}
+
+.screen {
+  width: 100%;
+  height: 100%;
+  border-radius: 21px;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 1.5rem var(--pad) 1.75rem;
+}
+
+@media (min-width: 768px) {
+  .info {
+    justify-content: center;
+    padding: 5rem 2.5rem 2.5rem;
+  }
+}
+
+.counter {
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+.counter strong {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.title {
+  font-size: clamp(1.35rem, 1.15rem + 0.9vw, 1.9rem);
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--primary);
+}
+
+.duration {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--accent-ink);
+  background: linear-gradient(180deg, #ffffff, var(--secondary-soft));
+  box-shadow: inset 0 0 0 1px rgba(168, 182, 243, 0.55);
+}
+
+.description {
+  font-size: 1rem;
+  line-height: 1.9;
+  color: var(--text-soft);
+}
+
+.nav {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.navButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 44px;
+  padding-inline: 1rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--primary);
+  background: linear-gradient(180deg, #ffffff, var(--secondary-soft));
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 0 0 1px rgba(168, 182, 243, 0.5),
+    0 8px 18px -12px rgba(27, 39, 91, 0.6);
+  transition:
+    transform 0.4s var(--ease-out),
+    box-shadow 0.4s var(--ease-out);
+}
+
+.navButton:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 0 0 1px rgba(168, 182, 243, 0.8),
+    0 12px 24px -12px rgba(27, 39, 91, 0.6);
+}
+
+.navButton:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+
+/* Chevrons are drawn for RTL; mirror them for LTR. */
+.navIconPrev,
+.navIconNext {
+  flex-shrink: 0;
+  transform: scaleX(calc(var(--dir) * -1));
+}
+
+.cta {
+  margin-top: auto;
+  padding-top: 0.75rem;
+}

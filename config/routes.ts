@@ -1,9 +1,8 @@
 /**
  * Single source of truth for every internal URL.
  *
- * Pages other than "/" are not built yet; links point at their final
- * addresses so nothing needs re-wiring once they exist. `implemented`
- * drives the sitemap so unbuilt routes are never advertised.
+ * `implemented` drives the sitemap and link prefetching, so a route that is
+ * planned but not built yet is never advertised or prefetched.
  */
 export const routes = {
   home: "/",
@@ -28,13 +27,13 @@ export interface NavItem {
 /** Main navigation — shown in the header, the mobile drawer and the footer. */
 export const mainNav: NavItem[] = [
   { label: "الرئيسية", href: routes.home, implemented: true },
-  { label: "عن د. أحمد عبد السلام", href: routes.about, implemented: false },
-  { label: "الخدمات", href: routes.services, implemented: false },
-  { label: "الفيديوهات", href: routes.videos, implemented: false },
+  { label: "عن د. أحمد عبد السلام", href: routes.about, implemented: true },
+  { label: "الخدمات", href: routes.services, implemented: true },
+  { label: "الفيديوهات", href: routes.videos, implemented: true },
   // "Reviews & FAQs" — one page for patient reviews and frequently asked questions.
-  { label: "الآراء والأسئلة الشائعة", href: routes.reviews, implemented: false },
-  { label: "المقالات", href: routes.articles, implemented: false },
-  { label: "تواصل معنا", href: routes.contact, implemented: false },
+  { label: "الآراء والأسئلة الشائعة", href: routes.reviews, implemented: true },
+  { label: "المقالات", href: routes.articles, implemented: true },
+  { label: "تواصل معنا", href: routes.contact, implemented: true },
 ];
 
 const implementedPaths = new Set(mainNav.filter((item) => item.implemented).map((item) => item.href));

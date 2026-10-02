@@ -22,6 +22,8 @@ import { AppLink } from "@/components/ui/AppLink";
 import { BrandIcon } from "@/components/ui/BrandIcons";
 import { BrandMark } from "@/components/ui/BrandMark";
 import { GlassButton } from "@/components/ui/GlassButton";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { useScrollLock } from "@/hooks/useScrollLock";
 import { phoneDisplay, phoneHref, whatsappUrl } from "@/lib/utils";
 import styles from "./SiteHeader.module.css";
 
@@ -34,8 +36,6 @@ const NAV_ICONS: Record<string, LucideIcon> = {
   [routes.articles]: Newspaper,
   [routes.contact]: PhoneCall,
 };
-
-const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -69,11 +69,14 @@ export function SiteHeader() {
     };
   }, []);
 
-  // Drawer behaviour: focus in, trap Tab, Escape to close, lock page scroll,
-  // close when the viewport grows to desktop, return focus on close.
+  // Drawer behaviour (shared hooks): lock page scroll and trap Tab while
+  // open. Here: focus in, Escape to close, close when the viewport grows
+  // to desktop, return focus to the menu button on close.
+  useScrollLock(open);
+  useFocusTrap(drawerRef, open);
+
   useEffect(() => {
     if (!open) return;
-    const drawer = drawerRef.current;
     const toggle = toggleRef.current;
     closeRef.current?.focus();
 
@@ -81,33 +84,16 @@ export function SiteHeader() {
       if (event.key === "Escape") {
         event.preventDefault();
         setOpen(false);
-        return;
-      }
-      if (event.key !== "Tab" || !drawer) return;
-      const items = Array.from(drawer.querySelectorAll<HTMLElement>(FOCUSABLE));
-      if (!items.length) return;
-      const first = items[0];
-      const last = items[items.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
       }
     };
 
     const desktop = window.matchMedia("(min-width: 1024px)");
     const onViewport = () => desktop.matches && setOpen(false);
 
-    const root = document.documentElement;
-    const previousOverflow = root.style.overflow;
-    root.style.overflow = "hidden";
     document.addEventListener("keydown", onKey);
     desktop.addEventListener("change", onViewport);
 
     return () => {
-      root.style.overflow = previousOverflow;
       document.removeEventListener("keydown", onKey);
       desktop.removeEventListener("change", onViewport);
       toggle?.focus();

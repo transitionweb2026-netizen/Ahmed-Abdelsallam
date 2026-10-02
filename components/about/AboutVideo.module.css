@@ -1,0 +1,34 @@
+.stage {
+  position: relative;
+  isolation: isolate;
+  max-width: 1120px;
+  margin: 3.5rem auto 0;
+}
+
+/* Soft lavender light pooling under the frame. */
+.stage::after {
+  content: "";
+  position: absolute;
+  inset: 12% 6% -10%;
+  z-index: -2;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(168, 182, 243, 0.55), transparent);
+  pointer-events: none;
+}
+
+.ring {
+  z-index: -1;
+  width: clamp(120px, 10vw + 60px, 200px);
+  height: clamp(120px, 10vw + 60px, 200px);
+  inset-inline-start: clamp(-70px, -3.5vw, -24px);
+  bottom: clamp(-70px, -3.5vw, -28px);
+}
+
+.plus {
+  z-index: 2;
+  width: 50px;
+  height: 50px;
+  inset-inline-end: -14px;
+  top: -20px;
+  filter: drop-shadow(0 10px 16px rgba(27, 39, 91, 0.25));
+}

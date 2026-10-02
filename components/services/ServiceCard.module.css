@@ -190,6 +190,13 @@
   text-decoration: none;
 }
 
+/* Dialog mode: the title is a <button> styled exactly like the link. */
+button.link {
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
 /* Stretched link: the whole card is the click target. */
 .link::after {
   content: "";
