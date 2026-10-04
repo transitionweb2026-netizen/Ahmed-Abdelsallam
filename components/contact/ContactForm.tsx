@@ -2,7 +2,8 @@
 
 import { ChevronDown, CircleAlert, CircleCheck, Mail, MessageSquareText, Phone, Tag, TriangleAlert, UserRound } from "lucide-react";
 import { useId, useState, useTransition, type ChangeEvent, type FormEvent, type ReactNode } from "react";
-import { submitContactForm } from "@/app/contact/actions";
+import { submitContactForm } from "@/app/[lang]/contact/actions";
+import { useDictionary, useLocale } from "@/components/i18n/LocaleProvider";
 import { GlassButton } from "@/components/ui/GlassButton";
 import {
   CONTACT_FIELDS,
@@ -76,6 +77,8 @@ interface ContactFormProps {
  * a Server Action that validates again and delivers the message.
  */
 export function ContactForm({ copy }: ContactFormProps) {
+  const locale = useLocale();
+  const t = useDictionary();
   const uid = useId();
   const id = (field: ContactField) => `${uid}-${field}`;
   const [values, setValues] = useState<ContactFormValues>(EMPTY);
@@ -112,7 +115,7 @@ export function ContactForm({ copy }: ContactFormProps) {
       return;
     }
     startTransition(async () => {
-      const response = await submitContactForm(clean);
+      const response = await submitContactForm(clean, locale);
       if (response.status === "invalid") {
         setErrors(response.errors);
         focusFirstError(response.errors);
@@ -130,12 +133,16 @@ export function ContactForm({ copy }: ContactFormProps) {
   const describedBy = (field: ContactField, extra?: string) =>
     [errors[field] ? `${id(field)}-error` : null, extra].filter(Boolean).join(" ") || undefined;
   const invalid = (field: ContactField) => (errors[field] ? true : undefined);
+  const errorText = (field: ContactField) => {
+    const code = errors[field];
+    return code ? t.form.errors[code] : undefined;
+  };
   const hasErrors = attempted && Object.keys(errors).length > 0;
   const whatsappFallback = lastSent ? whatsappUrl(contactSummary(lastSent, copy.labels)) : whatsappUrl();
 
   return (
     <form className={styles.form} onSubmit={onSubmit} noValidate aria-busy={pending || undefined}>
-      <Field id={id("name")} label={copy.labels.name} error={errors.name} icon={<UserRound size={18} />}>
+      <Field id={id("name")} label={copy.labels.name} error={errorText("name")} icon={<UserRound size={18} />}>
         <input
           id={id("name")}
           name="name"
@@ -152,7 +159,7 @@ export function ContactForm({ copy }: ContactFormProps) {
         />
       </Field>
 
-      <Field id={id("phone")} label={copy.labels.phone} error={errors.phone} icon={<Phone size={18} />}>
+      <Field id={id("phone")} label={copy.labels.phone} error={errorText("phone")} icon={<Phone size={18} />}>
         <input
           id={id("phone")}
           name="phone"
@@ -174,7 +181,7 @@ export function ContactForm({ copy }: ContactFormProps) {
       <Field
         id={id("email")}
         label={copy.labels.email}
-        error={errors.email}
+        error={errorText("email")}
         optionalLabel={copy.optional}
         icon={<Mail size={18} />}
       >
@@ -195,7 +202,7 @@ export function ContactForm({ copy }: ContactFormProps) {
         />
       </Field>
 
-      <Field id={id("subject")} label={copy.labels.subject} error={errors.subject} icon={<Tag size={18} />}>
+      <Field id={id("subject")} label={copy.labels.subject} error={errorText("subject")} icon={<Tag size={18} />}>
         <select
           id={id("subject")}
           name="subject"
@@ -221,7 +228,7 @@ export function ContactForm({ copy }: ContactFormProps) {
       <Field
         id={id("message")}
         label={copy.labels.message}
-        error={errors.message}
+        error={errorText("message")}
         icon={<MessageSquareText size={18} />}
         multiline
         hint={
@@ -291,7 +298,7 @@ export function ContactForm({ copy }: ContactFormProps) {
                 external
                 size="sm"
                 icon="whatsapp"
-                ariaLabel={`${copy.notConfigured.whatsappLabel} (يفتح في نافذة جديدة)`}
+                ariaLabel={`${copy.notConfigured.whatsappLabel} ${t.common.newTab}`}
               >
                 {copy.notConfigured.whatsappLabel}
               </GlassButton>

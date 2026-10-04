@@ -131,7 +131,7 @@
 
 .excerpt {
   font-size: 0.9375rem;
-  line-height: 1.85;
+  line-height: calc(1.85 * var(--lh-scale));
   color: var(--text-muted);
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -223,7 +223,7 @@
 .featuredTitle {
   font-size: clamp(1.4rem, 1.1rem + 1.2vw, 2.1rem);
   font-weight: 700;
-  line-height: 1.45;
+  line-height: calc(1.45 * var(--lh-scale));
 }
 
 .featured .excerpt {

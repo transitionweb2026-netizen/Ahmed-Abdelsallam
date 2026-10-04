@@ -1,27 +1,27 @@
+"use client";
+
 import { CalendarDays, Clock3 } from "lucide-react";
-import { cn, formatDate } from "@/lib/utils";
+import { useDictionary, useLocale } from "@/components/i18n/LocaleProvider";
+import { formatDate, plural } from "@/i18n/format";
+import { cn } from "@/lib/utils";
 import type { ArticleWithMeta } from "@/types/content";
 import styles from "./ArticleMeta.module.css";
 
-/** Arabic number agreement: 1 → "دقيقة واحدة", 2 → "دقيقتان", 3–10 → "n دقائق", 11+ → "n دقيقة". */
-function readingTime(minutes: number): string {
-  if (minutes <= 1) return "دقيقة واحدة";
-  if (minutes === 2) return "دقيقتان";
-  return `${minutes} ${minutes <= 10 ? "دقائق" : "دقيقة"}`;
-}
-
 /** Date · reading time, shared by cards, the featured article and the reader. */
 export function ArticleMeta({ article, className }: { article: ArticleWithMeta; className?: string }) {
+  const locale = useLocale();
+  const t = useDictionary();
   return (
     <p className={cn(styles.meta, className)}>
       <span className={styles.item}>
         <CalendarDays size={15} aria-hidden="true" />
-        <time dateTime={article.publishedAt}>{formatDate(article.publishedAt)}</time>
+        <time dateTime={article.publishedAt}>{formatDate(locale, article.publishedAt)}</time>
       </span>
       <span className={styles.dot} aria-hidden="true" />
       <span className={styles.item}>
         <Clock3 size={15} aria-hidden="true" />
-        <span>{readingTime(article.readingMinutes)} للقراءة</span>
+        {/* Plural rules per language, e.g. Arabic 1 → "دقيقة واحدة", 2 → "دقيقتان". */}
+        <span>{plural(locale, article.readingMinutes, t.articles.readingTime)}</span>
       </span>
     </p>
   );

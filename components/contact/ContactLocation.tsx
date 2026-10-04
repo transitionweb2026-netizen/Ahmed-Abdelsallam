@@ -1,6 +1,8 @@
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { Reveal } from "@/components/motion/Reveal";
 import { GlassButton } from "@/components/ui/GlassButton";
+import { interpolate } from "@/i18n/format";
+import { getI18n } from "@/i18n/server";
 import { cn, phoneDisplay, phoneHref } from "@/lib/utils";
 import type { ContactInfo, ContactPageContent } from "@/types/content";
 import styles from "./ContactLocation.module.css";
@@ -23,10 +25,11 @@ interface ContactLocationProps {
 
 /**
  * Map card plus address, hours and phone. The pin comes from
- * data/contact.ts; while it is a placeholder the map says so and no
+ * data/shared/contact.ts; while it is a placeholder the map says so and no
  * directions are offered.
  */
-export function ContactLocation({ info, labels }: ContactLocationProps) {
+export async function ContactLocation({ info, labels }: ContactLocationProps) {
+  const { t } = await getI18n();
   const { map } = info;
   return (
     <div className={styles.grid}>
@@ -35,7 +38,7 @@ export function ContactLocation({ info, labels }: ContactLocationProps) {
           <iframe
             className={styles.map}
             src={osmEmbedUrl(map)}
-            title={`خريطة ${map.label}`}
+            title={interpolate(t.contact.mapTitle, { label: map.label })}
             loading="lazy"
             referrerPolicy="strict-origin-when-cross-origin"
           />
@@ -113,7 +116,7 @@ export function ContactLocation({ info, labels }: ContactLocationProps) {
             href={directionsUrl(map)}
             external
             variant="secondary"
-            ariaLabel={`${labels.directions} (يفتح في نافذة جديدة)`}
+            ariaLabel={`${labels.directions} ${t.common.newTab}`}
           >
             {labels.directions}
           </GlassButton>

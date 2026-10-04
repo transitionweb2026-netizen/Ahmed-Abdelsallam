@@ -90,16 +90,31 @@
   --header-h: 76px;
 
   /* Direction helpers — physical transforms multiply by --dir so they
-     follow the reading direction (RTL today, LTR-ready). */
+     follow the reading direction (RTL for Arabic, LTR for English). */
   --dir: 1;
   --grad-dir: 90deg;
   --gradient-ink: linear-gradient(var(--grad-dir), #25358a 0%, #4f60b8 55%, #6a7ad0 100%);
+
+  /* Language typography. Arabic (default): IBM Plex Sans Arabic, generous
+     line-height, no letter-spacing (it breaks letter joining). Every
+     line-height in the site is multiplied by --lh-scale. */
+  --font-primary: var(--font-arabic), "Segoe UI", Tahoma, system-ui, sans-serif;
+  --lh-scale: 1;
 }
 
 [dir="rtl"] {
   --dir: -1;
   --grad-dir: 270deg;
   --gradient-ink: linear-gradient(var(--grad-dir), #25358a 0%, #4f60b8 55%, #6a7ad0 100%);
+}
+
+/* English: Latin face, line-heights about 10% tighter (Latin text has no
+   tall Arabic ascenders/descenders) and slightly tighter large headings. */
+:root[lang="en"] {
+  --font-primary: var(--font-latin), "Segoe UI", system-ui, -apple-system, sans-serif;
+  --lh-scale: 0.9;
+  --display-tracking: -0.022em;
+  --heading-tracking: -0.014em;
 }
 
 @property --glass-angle {
@@ -139,7 +154,7 @@
   --color-inverse-muted: var(--text-inverse-muted);
   --color-line: var(--border);
 
-  --font-sans: var(--font-arabic), "Segoe UI", Tahoma, system-ui, sans-serif;
+  --font-sans: var(--font-primary);
 
   --radius-card: var(--radius);
   --radius-card-lg: var(--radius-lg);
@@ -150,48 +165,52 @@
 
 /* ==========================================================================
    3. Typography scale (Arabic needs generous line-height; never add
-   letter-spacing to Arabic — it breaks letter joining).
+   letter-spacing to Arabic — it breaks letter joining). Line-heights scale
+   with --lh-scale; the --*-tracking values exist only in English, so
+   Arabic headings keep their inherited (normal) letter-spacing.
    ========================================================================== */
 
 @utility type-display {
   font-size: clamp(2.05rem, 1.15rem + 4.2vw, 4.5rem);
-  line-height: 1.24;
+  line-height: calc(1.24 * var(--lh-scale));
   font-weight: 700;
+  letter-spacing: var(--display-tracking);
 }
 
 @utility type-h2 {
   font-size: clamp(1.85rem, 1.25rem + 2.1vw, 3rem);
-  line-height: 1.32;
+  line-height: calc(1.32 * var(--lh-scale));
   font-weight: 700;
+  letter-spacing: var(--heading-tracking);
 }
 
 @utility type-h3 {
   font-size: clamp(1.125rem, 1.05rem + 0.3vw, 1.3rem);
-  line-height: 1.55;
+  line-height: calc(1.55 * var(--lh-scale));
   font-weight: 600;
 }
 
 @utility type-lead {
   font-size: clamp(1.05rem, 0.98rem + 0.3vw, 1.2rem);
-  line-height: 1.95;
+  line-height: calc(1.95 * var(--lh-scale));
   font-weight: 400;
 }
 
 @utility type-body {
   font-size: 1rem;
-  line-height: 1.9;
+  line-height: calc(1.9 * var(--lh-scale));
   font-weight: 400;
 }
 
 @utility type-caption {
   font-size: 0.9rem;
-  line-height: 1.75;
+  line-height: calc(1.75 * var(--lh-scale));
   font-weight: 400;
 }
 
 @utility type-micro {
   font-size: 0.8125rem;
-  line-height: 1.5;
+  line-height: calc(1.5 * var(--lh-scale));
   font-weight: 600;
 }
 
@@ -524,13 +543,16 @@
     filter: none !important;
   }
 
+  /* Transitions are switched off outright (0s, not a tiny duration): a
+     non-zero one would keep `visibility` hidden for a frame after a drawer
+     or panel opens, and moving focus into it would fail. */
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
     animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    transition-duration: 0s !important;
     transition-delay: 0s !important;
   }
 }

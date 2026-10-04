@@ -157,14 +157,14 @@
 .title {
   font-size: 1.0625rem;
   font-weight: 700;
-  line-height: 1.5;
+  line-height: calc(1.5 * var(--lh-scale));
   color: var(--primary);
 }
 
 .text {
   grid-column: 2;
   font-size: 0.9rem;
-  line-height: 1.8;
+  line-height: calc(1.8 * var(--lh-scale));
   color: var(--text-muted);
 }
 

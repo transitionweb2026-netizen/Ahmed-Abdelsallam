@@ -75,7 +75,7 @@
   border-radius: 16px;
   font: inherit;
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: calc(1.6 * var(--lh-scale));
   color: var(--text);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(243, 245, 253, 0.92));
   box-shadow:
@@ -178,7 +178,7 @@
   gap: 0.35rem;
   font-size: 0.8125rem;
   font-weight: 600;
-  line-height: 1.6;
+  line-height: calc(1.6 * var(--lh-scale));
   color: var(--danger);
 }
 
@@ -217,7 +217,7 @@
   padding: 0.9rem 1rem;
   border-radius: 18px;
   font-size: 0.9375rem;
-  line-height: 1.75;
+  line-height: calc(1.75 * var(--lh-scale));
 }
 
 .notice > svg {

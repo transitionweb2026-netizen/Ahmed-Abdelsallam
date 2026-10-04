@@ -167,7 +167,7 @@
   margin-bottom: 0.65rem;
   font-size: 1.0625rem;
   font-weight: 700;
-  line-height: 1.5;
+  line-height: calc(1.5 * var(--lh-scale));
   color: var(--primary);
 }
 
@@ -179,7 +179,7 @@
 
 .paragraph {
   font-size: 0.975rem;
-  line-height: 1.95;
+  line-height: calc(1.95 * var(--lh-scale));
   color: var(--text-soft);
 }
 
@@ -200,7 +200,7 @@
   position: relative;
   padding-inline-start: 1.9rem;
   font-size: 0.95rem;
-  line-height: 1.8;
+  line-height: calc(1.8 * var(--lh-scale));
   color: var(--text-soft);
 }
 
@@ -229,7 +229,7 @@
   gap: 0.5rem;
   margin: 1.25rem var(--pad) 0;
   font-size: 0.8125rem;
-  line-height: 1.75;
+  line-height: calc(1.75 * var(--lh-scale));
   color: var(--text-muted);
 }
 

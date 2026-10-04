@@ -3,6 +3,7 @@ import { ServiceCard } from "@/components/services/ServiceCard";
 import { CurveLines, Orb } from "@/components/ui/Decor";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { getI18n } from "@/i18n/server";
 import type { CollectionSectionContent, ServiceCardItem } from "@/types/content";
 
 interface ServiceShowcaseProps {
@@ -14,7 +15,8 @@ interface ServiceShowcaseProps {
 }
 
 /** Heading, a row of 3D glass service cards and a "view all" action. */
-export function ServiceShowcase({ content, services, headingId, id }: ServiceShowcaseProps) {
+export async function ServiceShowcase({ content, services, headingId, id }: ServiceShowcaseProps) {
+  const { t } = await getI18n();
   return (
     <section id={id} className="page-section" aria-labelledby={headingId}>
       <Orb className="top-0 left-1/2 h-[40rem] w-[min(60rem,140vw)] -translate-x-1/2 opacity-80" color="blue" />
@@ -30,7 +32,7 @@ export function ServiceShowcase({ content, services, headingId, id }: ServiceSho
         >
           {services.map((service, index) => (
             <RevealItem as="li" key={service.slug} variant="up">
-              <ServiceCard service={service} index={index} />
+              <ServiceCard service={service} index={index} actionLabel={t.cards.learnMore} />
             </RevealItem>
           ))}
         </RevealGroup>

@@ -10,7 +10,7 @@
   margin-top: clamp(3rem, 2.4rem + 2vw, 4.5rem);
   font-size: clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
   font-weight: 700;
-  line-height: 1.5;
+  line-height: calc(1.5 * var(--lh-scale));
   color: var(--primary);
 }
 

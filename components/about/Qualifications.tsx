@@ -4,14 +4,10 @@ import { RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { DotGrid, Orb } from "@/components/ui/Decor";
 import { Icon } from "@/components/ui/Icon";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { getI18n } from "@/i18n/server";
 import { cn } from "@/lib/utils";
 import type { AboutPageContent, Qualification } from "@/types/content";
 import styles from "./Qualifications.module.css";
-
-const KIND_LABEL: Record<Qualification["kind"], string> = {
-  qualification: "مؤهل علمي",
-  certification: "شهادة مهنية",
-};
 
 interface QualificationsProps {
   content: AboutPageContent["qualifications"];
@@ -19,7 +15,12 @@ interface QualificationsProps {
 }
 
 /** Certificate tiles: artwork, kind, year, title, institution, description. */
-export function Qualifications({ content, items }: QualificationsProps) {
+export async function Qualifications({ content, items }: QualificationsProps) {
+  const { t } = await getI18n();
+  const kindLabel: Record<Qualification["kind"], string> = {
+    qualification: t.about.qualificationKind,
+    certification: t.about.certificationKind,
+  };
   return (
     <section id="qualifications" className="page-section" aria-labelledby="qualifications-title">
       <Orb className="top-1/3 start-[-14rem] h-[34rem] w-[34rem]" color="blue" />
@@ -48,7 +49,7 @@ export function Qualifications({ content, items }: QualificationsProps) {
                       sizes="(min-width: 1280px) 400px, (min-width: 640px) 46vw, 92vw"
                       className={styles.image}
                     />
-                    <span className={styles.kind}>{KIND_LABEL[item.kind]}</span>
+                    <span className={styles.kind}>{kindLabel[item.kind]}</span>
                     {/* dir on an inner span: a positioned element's logical
                         insets follow its own direction. */}
                     <span className={styles.year}>

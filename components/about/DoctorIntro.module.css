@@ -75,7 +75,7 @@
   border-radius: 18px;
   font-size: 0.975rem;
   font-weight: 600;
-  line-height: 1.6;
+  line-height: calc(1.6 * var(--lh-scale));
   color: var(--primary);
   background: var(--gradient-glass);
   box-shadow:

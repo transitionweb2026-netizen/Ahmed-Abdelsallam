@@ -17,8 +17,8 @@ interface ServiceCardProps {
   sizes?: string;
   /** When set, the card opens a detail dialog instead of navigating. */
   onSelect?: () => void;
-  /** Label of the action indicator. */
-  actionLabel?: string;
+  /** Label of the action indicator ("Learn more" / "View details"). */
+  actionLabel: string;
 }
 
 /**
@@ -32,7 +32,7 @@ export function ServiceCard({
   index,
   sizes = "(min-width: 1280px) 290px, (min-width: 640px) 45vw, 90vw",
   onSelect,
-  actionLabel = onSelect ? "عرض التفاصيل" : "اعرف المزيد",
+  actionLabel,
 }: ServiceCardProps) {
   return (
     <article className={cn(styles.cell, "group")}>

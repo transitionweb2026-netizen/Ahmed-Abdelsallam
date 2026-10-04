@@ -4,12 +4,14 @@ import { cn } from "@/lib/utils";
 interface StarRatingProps {
   rating: number;
   max?: number;
+  /** Accessible text, e.g. "Rated 5 out of 5". */
+  label: string;
   className?: string;
 }
 
-export function StarRating({ rating, max = 5, className }: StarRatingProps) {
+export function StarRating({ rating, max = 5, label, className }: StarRatingProps) {
   return (
-    <div role="img" aria-label={`التقييم ${rating} من ${max}`} className={cn("flex items-center gap-1", className)}>
+    <div role="img" aria-label={label} className={cn("flex items-center gap-1", className)}>
       {Array.from({ length: max }, (_, index) => {
         const filled = index < rating;
         return (

@@ -4,6 +4,7 @@ import { GlassRing, Orb } from "@/components/ui/Decor";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Icon } from "@/components/ui/Icon";
 import { RichTitle } from "@/components/ui/RichTitle";
+import { getI18n } from "@/i18n/server";
 import { cn } from "@/lib/utils";
 import type { AboutPageContent } from "@/types/content";
 import styles from "./Philosophy.module.css";
@@ -28,11 +29,12 @@ function QuoteMark({ className, id }: { className?: string; id: string }) {
 }
 
 /**
- * The doctor's philosophy: a large portrait on the left (second column in
- * RTL) and, on the right, the quote on a glass card framed by oversized
+ * The doctor's philosophy: a large portrait in the second column (left in
+ * RTL, right in LTR) and the quote on a glass card framed by oversized
  * quotation marks, soft glow and value chips.
  */
-export function Philosophy({ content }: { content: AboutPageContent["philosophy"] }) {
+export async function Philosophy({ content }: { content: AboutPageContent["philosophy"] }) {
+  const { t } = await getI18n();
   return (
     <section id="philosophy" className="page-section" aria-labelledby="philosophy-title">
       <Orb className="top-1/4 start-[-12rem] h-[36rem] w-[36rem]" color="lavender" />
@@ -66,7 +68,7 @@ export function Philosophy({ content }: { content: AboutPageContent["philosophy"
             </figure>
           </Reveal>
 
-          <RevealGroup as="ul" className={styles.values} stagger={0.08} aria-label="قيم الرعاية">
+          <RevealGroup as="ul" className={styles.values} stagger={0.08} aria-label={t.about.valuesLabel}>
             {content.values.map((value) => (
               <RevealItem as="li" key={value.label} className={styles.value}>
                 <span className={cn("icon-chip-soft", styles.valueIcon)}>

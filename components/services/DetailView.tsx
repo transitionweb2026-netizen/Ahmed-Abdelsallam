@@ -1,5 +1,8 @@
+"use client";
+
 import { Info } from "lucide-react";
 import Image from "next/image";
+import { useDictionary } from "@/components/i18n/LocaleProvider";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/utils";
@@ -9,7 +12,7 @@ import styles from "./DetailView.module.css";
 export interface DetailViewProps {
   /** id of the heading; the dialog is labelled by it. */
   titleId: string;
-  /** Small label above the title, e.g. "خدمة" or "حالة". */
+  /** Small label above the title, e.g. "Service" or "Condition". */
   kind: string;
   title: string;
   image: MediaImage;
@@ -28,6 +31,7 @@ export interface DetailViewProps {
  * checklists) and a sticky action bar.
  */
 export function DetailView({ titleId, kind, title, image, icon, summary, details, tags, actions, disclaimer }: DetailViewProps) {
+  const t = useDictionary();
   return (
     <article className={styles.view}>
       <header>
@@ -112,7 +116,7 @@ export function DetailView({ titleId, kind, title, image, icon, summary, details
           variant="secondary"
           icon="whatsapp"
           className={styles.action}
-          ariaLabel={`${actions.whatsappLabel} (يفتح في نافذة جديدة)`}
+          ariaLabel={`${actions.whatsappLabel} ${t.common.newTab}`}
         >
           {actions.whatsappLabel}
         </GlassButton>

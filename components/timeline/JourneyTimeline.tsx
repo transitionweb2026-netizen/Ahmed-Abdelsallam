@@ -3,6 +3,7 @@ import { InView } from "@/components/motion/InView";
 import { CurveLines, Orb } from "@/components/ui/Decor";
 import { Icon } from "@/components/ui/Icon";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { getI18n } from "@/i18n/server";
 import { cn } from "@/lib/utils";
 import type { JourneyContent } from "@/types/content";
 import styles from "./JourneyTimeline.module.css";
@@ -12,7 +13,7 @@ interface JourneyTimelineProps {
   headingId: string;
   /** Section anchor, e.g. "diagnosis". */
   id?: string;
-  /** Screen-reader prefix for each step title ("الخطوة 1: …"). */
+  /** Screen-reader prefix for each step title ("Step 1: …"); defaults to `t.timeline.step`. */
   stepLabel?: string;
 }
 
@@ -23,7 +24,9 @@ interface JourneyTimelineProps {
  * sequence and each connector draws toward the next node — all CSS
  * transitions keyed off one observer.
  */
-export function JourneyTimeline({ content, headingId, id, stepLabel = "الخطوة" }: JourneyTimelineProps) {
+export async function JourneyTimeline({ content, headingId, id, stepLabel }: JourneyTimelineProps) {
+  const { t } = await getI18n();
+  const prefix = stepLabel ?? t.timeline.step;
   return (
     <section id={id} className="page-section" aria-labelledby={headingId}>
       <Orb className="top-[58%] left-1/2 h-[34rem] w-[min(76rem,170vw)] -translate-x-1/2 -translate-y-1/2" color="lavender" />
@@ -46,7 +49,7 @@ export function JourneyTimeline({ content, headingId, id, stepLabel = "الخط�
                   </span>
                   <h3 className={styles.title}>
                     <span className="sr-only">
-                      {stepLabel} {index + 1}:{" "}
+                      {prefix} {index + 1}:{" "}
                     </span>
                     {step.title}
                   </h3>

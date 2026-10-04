@@ -7,7 +7,7 @@
   padding: 0.4rem 0.95rem 0.4rem 1.05rem;
   border-radius: var(--radius-pill);
   font-size: 0.8125rem;
-  line-height: 1.5;
+  line-height: calc(1.5 * var(--lh-scale));
   font-weight: 600;
   color: var(--accent-ink);
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.92), rgba(233, 237, 253, 0.7));

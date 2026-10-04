@@ -89,7 +89,7 @@
 
 .label {
   font-size: clamp(0.84rem, 0.8rem + 0.15vw, 0.95rem);
-  line-height: 1.65;
+  line-height: calc(1.65 * var(--lh-scale));
   font-weight: 500;
   color: var(--text-muted);
 }

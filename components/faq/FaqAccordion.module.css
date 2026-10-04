@@ -95,7 +95,7 @@
   flex: 1;
   font-size: 1rem;
   font-weight: 600;
-  line-height: 1.6;
+  line-height: calc(1.6 * var(--lh-scale));
 }
 
 .icon {
@@ -161,7 +161,7 @@
   padding: 0 1rem 1.15rem;
   padding-inline-start: calc(1rem + 34px + 0.85rem);
   font-size: 0.9375rem;
-  line-height: 1.9;
+  line-height: calc(1.9 * var(--lh-scale));
   color: var(--text-muted);
   opacity: 0;
   transform: translateY(-6px);

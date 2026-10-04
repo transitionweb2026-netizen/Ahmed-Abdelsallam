@@ -212,7 +212,7 @@ button.link {
 
 .description {
   font-size: 0.9375rem;
-  line-height: 1.85;
+  line-height: calc(1.85 * var(--lh-scale));
   color: var(--text-muted);
 }
 

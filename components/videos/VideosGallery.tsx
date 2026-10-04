@@ -2,6 +2,7 @@
 
 import { ChevronLeft, ChevronRight, Clock } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useDictionary } from "@/components/i18n/LocaleProvider";
 import { VideoPlayer } from "@/components/media/VideoPlayer";
 import { Modal } from "@/components/modal/Modal";
 import { RevealGroup, RevealItem } from "@/components/motion/Reveal";
@@ -9,6 +10,7 @@ import { GlassButton } from "@/components/ui/GlassButton";
 import { VideoCard } from "@/components/videos/VideoCard";
 import { routes } from "@/config/routes";
 import { useHashDialog } from "@/hooks/useHashDialog";
+import { interpolate } from "@/i18n/format";
 import type { Video } from "@/types/content";
 import styles from "./VideosGallery.module.css";
 
@@ -21,6 +23,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
  * `/videos#video-<slug>` deep-links into the viewer.
  */
 export function VideosGallery({ videos }: { videos: Video[] }) {
+  const t = useDictionary();
   const ids = useMemo(() => videos.map(anchor), [videos]);
   const { activeId, open, select, close } = useHashDialog(ids);
   const activeIndex = videos.findIndex((video) => anchor(video) === activeId);
@@ -38,7 +41,7 @@ export function VideosGallery({ videos }: { videos: Video[] }) {
 
   return (
     <>
-      <RevealGroup as="ul" className={styles.grid} stagger={0.08} aria-label="جميع الفيديوهات">
+      <RevealGroup as="ul" className={styles.grid} stagger={0.08} aria-label={t.video.allList}>
         {videos.map((video) => (
           <RevealItem as="li" key={video.slug} id={anchor(video)} variant="up">
             <VideoCard
@@ -76,7 +79,9 @@ export function VideosGallery({ videos }: { videos: Video[] }) {
 
             <div className={styles.info}>
               <p className={styles.counter} aria-live="polite">
-                <span className="sr-only">الفيديو {shownIndex + 1} من {videos.length}</span>
+                <span className="sr-only">
+                  {interpolate(t.video.position, { current: shownIndex + 1, total: videos.length })}
+                </span>
                 <span aria-hidden="true">
                   <strong>{pad(shownIndex + 1)}</strong> / {pad(videos.length)}
                 </span>
@@ -87,7 +92,7 @@ export function VideosGallery({ videos }: { videos: Video[] }) {
               {shown.duration ? (
                 <p className={styles.duration}>
                   <Clock size={15} aria-hidden="true" />
-                  <span className="sr-only">المدة: </span>
+                  <span className="sr-only">{t.video.duration}</span>
                   <span dir="ltr">{shown.duration}</span>
                 </p>
               ) : null}
@@ -100,17 +105,17 @@ export function VideosGallery({ videos }: { videos: Video[] }) {
               <div className={styles.nav}>
                 <button type="button" className={styles.navButton} onClick={() => go(-1)}>
                   <ChevronRight className={styles.navIconPrev} size={18} aria-hidden="true" />
-                  السابق
+                  {t.video.previous}
                 </button>
                 <button type="button" className={styles.navButton} onClick={() => go(1)}>
-                  التالي
+                  {t.video.next}
                   <ChevronLeft className={styles.navIconNext} size={18} aria-hidden="true" />
                 </button>
               </div>
 
               <div className={styles.cta}>
                 <GlassButton href={routes.contact} size="sm">
-                  احجز استشارتك
+                  {t.video.book}
                 </GlassButton>
               </div>
             </div>

@@ -5,6 +5,12 @@
  * data in `data/` can later be swapped for Supabase / CMS rows without
  * touching presentation code. Keep these types serialisable (no React
  * nodes, no functions) so they can cross the Server → Client boundary.
+ *
+ * Collections are stored in two parts, joined by slug/id in lib/content.ts:
+ * a language-neutral `…Base` record (data/shared: slug, icon, order, flags,
+ * media files) and a `…Text` record per language (data/ar, data/en). That is
+ * the shape of a CMS table plus a translations table, and TypeScript rejects
+ * a translation file that misses an entry.
  */
 
 /** Icon keys resolved to Lucide components in `components/ui/Icon.tsx`. */
@@ -290,10 +296,152 @@ export interface ContactInfo {
 
 export type SocialPlatform = "facebook" | "instagram" | "youtube" | "tiktok" | "x" | "linkedin";
 
-export interface SocialLink {
-  platform: SocialPlatform;
-  href: string;
-  label: string;
+/* ------------------------------------------------------------------ */
+/* Collection storage: language-neutral base + per-language text       */
+/* ------------------------------------------------------------------ */
+
+export interface ServiceBase {
+  slug: string;
+  icon: IconName;
+  featured?: boolean;
+  order: number;
+}
+
+export interface ServiceText {
+  title: string;
+  description: string;
+  imageAlt: string;
+  details: ItemDetails;
+}
+
+export interface ConditionBase {
+  slug: string;
+  icon: IconName;
+  featured?: boolean;
+  order: number;
+}
+
+export interface ConditionText {
+  title: string;
+  excerpt: string;
+  imageAlt: string;
+  symptoms: string[];
+  details: ItemDetails;
+}
+
+export interface SpecialtyBase {
+  slug: string;
+  icon: IconName;
+  order: number;
+  /** Slug of the service whose detail dialog the card opens. */
+  service: string;
+}
+
+export interface SpecialtyText {
+  title: string;
+  description: string;
+  imageAlt: string;
+}
+
+export interface QualificationBase {
+  id: string;
+  kind: Qualification["kind"];
+  /** Free text so ranges ("2015 – 2018") and placeholders ("20XX") both fit. */
+  year: string;
+  /** Artwork number: /images/certificates/certificate-0N.jpg. */
+  certificate: number;
+  order: number;
+}
+
+export interface QualificationText {
+  title: string;
+  institution: string;
+  description: string;
+  imageAlt: string;
+}
+
+export interface CareerStepBase {
+  id: string;
+  icon: IconName;
+}
+
+export interface CareerStepText {
+  title: string;
+  description: string;
+  /** Year or phase label, e.g. "20XX" or "Present". */
+  meta?: string;
+}
+
+export interface VideoBase {
+  slug: string;
+  poster: Omit<MediaImage, "alt">;
+  /** Display duration, e.g. "1:20". */
+  duration?: string;
+  orientation: Video["orientation"];
+  /** Alternative to self-hosted sources. */
+  youtubeId?: string;
+  featured?: boolean;
+  order: number;
+}
+
+export interface VideoText {
+  title: string;
+  description?: string;
+  posterAlt: string;
+  /** Per language, so a version with burned-in subtitles can differ. */
+  sources?: VideoFile[];
+  captions?: VideoCaptionTrack[];
+}
+
+export interface ReviewBase {
+  id: string;
+  rating: Review["rating"];
+  featured?: boolean;
+}
+
+export interface ReviewText {
+  name: string;
+  text: string;
+  context?: string;
+}
+
+export interface FaqBase {
+  id: string;
+  featured?: boolean;
+}
+
+export interface FaqText {
+  question: string;
+  answer: string;
+}
+
+export interface ArticleBase {
+  slug: string;
+  /** ISO date (YYYY-MM-DD). */
+  publishedAt: string;
+  featured?: boolean;
+  order: number;
+}
+
+export interface ArticleText {
+  title: string;
+  excerpt: string;
+  category: string;
+  imageAlt: string;
+  body: ArticleBlock[];
+}
+
+export interface ContactBase {
+  address: { isPlaceholder: boolean };
+  hoursArePlaceholder: boolean;
+  email?: string;
+  map: Omit<ContactInfo["map"], "label">;
+}
+
+export interface ContactText {
+  addressLines: string[];
+  hours: ContactInfo["hours"];
+  mapLabel: string;
 }
 
 /* ------------------------------------------------------------------ */
@@ -377,6 +525,14 @@ export interface HomeContent {
   finalCta: SiteCtaContent;
 }
 
+/**
+ * Homepage copy as stored per language (data/{ar,en}/home.ts). The content
+ * layer joins in the shared intro video and the CTA band.
+ */
+export type HomeCopy = Omit<HomeContent, "intro" | "finalCta"> & {
+  intro: Omit<IntroContent, "video">;
+};
+
 /* ------------------------------------------------------------------ */
 /* Inner pages                                                         */
 /* ------------------------------------------------------------------ */
@@ -420,6 +576,12 @@ export interface AboutPageContent {
   };
   career: JourneyContent;
 }
+
+/** About copy as stored per language; the video and career steps are joined in. */
+export type AboutPageCopy = Omit<AboutPageContent, "video" | "career"> & {
+  video: { heading: SectionHeading };
+  career: { heading: SectionHeading };
+};
 
 export interface ServicesPageContent {
   seo: PageSeo;

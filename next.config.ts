@@ -13,6 +13,11 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // Self-hosted fonts: file names carry a content hash (see app/fonts.css).
+        source: "/fonts/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+      {
         // Self-hosted video files: cache for a week at the edge/browser.
         source: "/videos/:path*",
         headers: [{ key: "Cache-Control", value: "public, max-age=604800, stale-while-revalidate=86400" }],

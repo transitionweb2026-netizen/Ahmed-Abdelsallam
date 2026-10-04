@@ -1,7 +1,7 @@
 /**
  * Contact form model, shared by the browser (instant feedback) and the
- * server action (authoritative validation). Error messages are Arabic UI
- * copy; move them to a dictionary when an English version is added.
+ * server action (authoritative validation). Validation returns language-
+ * neutral error codes; the messages live in the dictionaries (form.errors).
  */
 
 export interface ContactFormValues {
@@ -15,7 +15,17 @@ export interface ContactFormValues {
 }
 
 export type ContactField = "name" | "phone" | "email" | "subject" | "message";
-export type ContactErrors = Partial<Record<ContactField, string>>;
+export type ContactErrorCode =
+  | "nameShort"
+  | "nameLong"
+  | "phoneRequired"
+  | "phoneInvalid"
+  | "emailInvalid"
+  | "subjectRequired"
+  | "subjectLong"
+  | "messageShort"
+  | "messageLong";
+export type ContactErrors = Partial<Record<ContactField, ContactErrorCode>>;
 
 export type ContactResult =
   | { status: "idle" }
@@ -54,24 +64,24 @@ const PHONE = /^\+?\d{8,15}$/;
 export function validateContact(values: ContactFormValues): ContactErrors {
   const errors: ContactErrors = {};
 
-  if (values.name.length < 2) errors.name = "يرجى كتابة الاسم (حرفان على الأقل).";
-  else if (values.name.length > CONTACT_LIMITS.name) errors.name = "الاسم أطول من المسموح.";
+  if (values.name.length < 2) errors.name = "nameShort";
+  else if (values.name.length > CONTACT_LIMITS.name) errors.name = "nameLong";
 
   const phone = values.phone.replace(/[\s().-]/g, "");
-  if (!phone) errors.phone = "يرجى كتابة رقم الهاتف للتواصل معك.";
-  else if (!PHONE.test(phone)) errors.phone = "يرجى كتابة رقم هاتف صحيح (من 8 إلى 15 رقمًا).";
+  if (!phone) errors.phone = "phoneRequired";
+  else if (!PHONE.test(phone)) errors.phone = "phoneInvalid";
 
   if (values.email) {
     if (values.email.length > CONTACT_LIMITS.email || !EMAIL.test(values.email)) {
-      errors.email = "يرجى كتابة بريد إلكتروني صحيح، أو ترك الحقل فارغًا.";
+      errors.email = "emailInvalid";
     }
   }
 
-  if (!values.subject) errors.subject = "يرجى اختيار موضوع الرسالة.";
-  else if (values.subject.length > CONTACT_LIMITS.subject) errors.subject = "الموضوع أطول من المسموح.";
+  if (!values.subject) errors.subject = "subjectRequired";
+  else if (values.subject.length > CONTACT_LIMITS.subject) errors.subject = "subjectLong";
 
-  if (values.message.length < CONTACT_LIMITS.messageMin) errors.message = "يرجى كتابة رسالتك (10 أحرف على الأقل).";
-  else if (values.message.length > CONTACT_LIMITS.message) errors.message = "الرسالة أطول من المسموح (1500 حرف).";
+  if (values.message.length < CONTACT_LIMITS.messageMin) errors.message = "messageShort";
+  else if (values.message.length > CONTACT_LIMITS.message) errors.message = "messageLong";
 
   return errors;
 }

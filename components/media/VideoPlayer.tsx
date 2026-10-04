@@ -3,6 +3,8 @@
 import { Play } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { useDictionary } from "@/components/i18n/LocaleProvider";
+import { interpolate } from "@/i18n/format";
 import { cn } from "@/lib/utils";
 import type { Video } from "@/types/content";
 import styles from "./VideoPlayer.module.css";
@@ -45,6 +47,7 @@ export function VideoPlayer({
   autoStart = false,
   focusOnPlay = true,
 }: VideoPlayerProps) {
+  const t = useDictionary();
   const sources = video.sources ?? [];
   const hasFile = sources.length > 0;
   const hasYoutube = Boolean(video.youtubeId);
@@ -108,7 +111,7 @@ export function VideoPlayer({
           {video.captions?.map((track) => (
             <track key={track.src} kind="captions" src={track.src} srcLang={track.srcLang} label={track.label} />
           ))}
-          متصفحك لا يدعم تشغيل الفيديو.
+          {t.video.unsupported}
         </video>
       </div>
     );
@@ -136,14 +139,14 @@ export function VideoPlayer({
       {overlay}
       {state === "error" ? (
         <p role="status" className={styles.error}>
-          تعذّر تشغيل الفيديو حاليًا، يرجى المحاولة لاحقًا.
+          {t.video.error}
         </p>
       ) : null}
       <button
         type="button"
         className={styles.hit}
         onClick={start}
-        aria-label={`تشغيل الفيديو: ${video.title}`}
+        aria-label={interpolate(t.video.play, { title: video.title })}
         aria-haspopup={onActivate ? "dialog" : undefined}
       >
         <span className={cn(styles.play, playSize === "md" && styles.playMd)} aria-hidden="true">

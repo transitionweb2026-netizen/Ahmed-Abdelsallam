@@ -4,6 +4,7 @@ import {
   ChevronLeft,
   CirclePlay,
   House,
+  Languages,
   Menu,
   MessagesSquare,
   Newspaper,
@@ -16,28 +17,34 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { mainNav, routes } from "@/config/routes";
-import { siteConfig } from "@/config/site";
+import { mainNav, routes, type NavKey } from "@/config/routes";
+import { siteConfig, siteIdentity } from "@/config/site";
+import { useDictionary, useLocale } from "@/components/i18n/LocaleProvider";
+import { LanguageToggle } from "@/components/layout/LanguageToggle";
 import { AppLink } from "@/components/ui/AppLink";
 import { BrandIcon } from "@/components/ui/BrandIcons";
 import { BrandMark } from "@/components/ui/BrandMark";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { useScrollLock } from "@/hooks/useScrollLock";
+import { splitLocale } from "@/i18n/config";
 import { phoneDisplay, phoneHref, whatsappUrl } from "@/lib/utils";
 import styles from "./SiteHeader.module.css";
 
-const NAV_ICONS: Record<string, LucideIcon> = {
-  [routes.home]: House,
-  [routes.about]: UserRound,
-  [routes.services]: Stethoscope,
-  [routes.videos]: CirclePlay,
-  [routes.reviews]: MessagesSquare,
-  [routes.articles]: Newspaper,
-  [routes.contact]: PhoneCall,
+const NAV_ICONS: Record<NavKey, LucideIcon> = {
+  home: House,
+  about: UserRound,
+  services: Stethoscope,
+  videos: CirclePlay,
+  reviews: MessagesSquare,
+  articles: Newspaper,
+  contact: PhoneCall,
 };
 
 export function SiteHeader() {
+  const locale = useLocale();
+  const t = useDictionary();
+  const identity = siteIdentity[locale];
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -100,7 +107,9 @@ export function SiteHeader() {
     };
   }, [open]);
 
-  const isActive = (href: string) => (href === routes.home ? pathname === "/" : pathname.startsWith(href));
+  // Active state ignores the language prefix ("/en/about" → "/about").
+  const path = splitLocale(pathname).path;
+  const isActive = (href: string) => (href === routes.home ? path === "/" : path.startsWith(href));
   const close = () => setOpen(false);
 
   return (
@@ -110,21 +119,21 @@ export function SiteHeader() {
           <AppLink href={routes.home} className={styles.brand}>
             <BrandMark size={42} idPrefix="header-mark" />
             <span className={styles.brandText}>
-              <span className={styles.brandName}>{siteConfig.name}</span>
-              <span className={styles.brandRole}>{siteConfig.role}</span>
+              <span className={styles.brandName}>{identity.name}</span>
+              <span className={styles.brandRole}>{identity.role}</span>
             </span>
           </AppLink>
 
-          <nav aria-label="القائمة الرئيسية" className={styles.desktopNav}>
+          <nav aria-label={t.header.mainNavLabel} className={styles.desktopNav}>
             <ul className={styles.navList}>
               {mainNav.map((item) => (
-                <li key={item.href}>
+                <li key={item.key}>
                   <AppLink
                     href={item.href}
                     className={styles.navLink}
                     aria-current={isActive(item.href) ? "page" : undefined}
                   >
-                    {item.label}
+                    {t.nav[item.key]}
                   </AppLink>
                 </li>
               ))}
@@ -132,11 +141,14 @@ export function SiteHeader() {
           </nav>
 
           <div className={styles.actions}>
-            <a href={phoneHref()} className={styles.callButton} aria-label={`اتصل بنا ${phoneDisplay()}`}>
+            <div className={styles.barLanguage}>
+              <LanguageToggle />
+            </div>
+            <a href={phoneHref()} className={styles.callButton} aria-label={`${t.header.callUs} ${phoneDisplay()}`}>
               <Phone size={18} strokeWidth={2} aria-hidden="true" />
             </a>
             <GlassButton href={routes.contact} size="sm" className={styles.cta}>
-              احجز موعدًا
+              {t.header.book}
             </GlassButton>
             <button
               ref={toggleRef}
@@ -148,7 +160,7 @@ export function SiteHeader() {
               onClick={() => setOpen(true)}
             >
               <Menu size={21} aria-hidden="true" />
-              <span className={styles.menuLabel}>القائمة</span>
+              <span className={styles.menuLabel}>{t.header.menu}</span>
             </button>
           </div>
         </div>
@@ -170,24 +182,33 @@ export function SiteHeader() {
           <AppLink href={routes.home} className={styles.brand} onClick={close}>
             <BrandMark size={40} idPrefix="drawer-mark" />
             <span className={styles.drawerBrandText}>
-              <span className={styles.brandName}>{siteConfig.name}</span>
-              <span className={styles.brandRole}>{siteConfig.role}</span>
+              <span className={styles.brandName}>{identity.name}</span>
+              <span className={styles.brandRole}>{identity.role}</span>
             </span>
           </AppLink>
-          <button ref={closeRef} type="button" className={styles.closeButton} aria-label="إغلاق القائمة" onClick={close}>
+          <button ref={closeRef} type="button" className={styles.closeButton} aria-label={t.header.closeMenu} onClick={close}>
             <X size={22} aria-hidden="true" />
           </button>
         </div>
 
         <h2 id="site-drawer-title" className="sr-only">
-          القائمة الرئيسية
+          {t.header.drawerTitle}
         </h2>
-        <nav aria-label="صفحات الموقع">
+
+        <div className={styles.drawerLanguage}>
+          <span id="drawer-language-label" className={styles.drawerLanguageLabel}>
+            <Languages size={18} strokeWidth={1.9} aria-hidden="true" />
+            {t.language.label}
+          </span>
+          <LanguageToggle size="md" labelledBy="drawer-language-label" />
+        </div>
+
+        <nav aria-label={t.header.drawerNavLabel}>
           <ul className={styles.drawerList}>
             {mainNav.map((item) => {
-              const ItemIcon = NAV_ICONS[item.href] ?? House;
+              const ItemIcon = NAV_ICONS[item.key];
               return (
-                <li key={item.href}>
+                <li key={item.key}>
                   <AppLink
                     href={item.href}
                     className={styles.drawerLink}
@@ -197,7 +218,7 @@ export function SiteHeader() {
                     <span className={styles.drawerIcon} aria-hidden="true">
                       <ItemIcon size={19} strokeWidth={1.9} />
                     </span>
-                    <span className={styles.drawerLabel}>{item.label}</span>
+                    <span className={styles.drawerLabel}>{t.nav[item.key]}</span>
                     <ChevronLeft className={styles.drawerChevron} size={18} aria-hidden="true" />
                   </AppLink>
                 </li>
@@ -208,7 +229,7 @@ export function SiteHeader() {
 
         <div className={styles.drawerFooter}>
           <GlassButton href={routes.contact} className="w-full">
-            احجز موعدًا
+            {t.header.book}
           </GlassButton>
           <div className={styles.drawerContacts}>
             <a href={phoneHref()} className={styles.drawerContact}>
@@ -217,10 +238,10 @@ export function SiteHeader() {
             </a>
             <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className={styles.drawerContact}>
               <BrandIcon name="whatsapp" size={18} />
-              <span>واتساب</span>
+              <span>{t.header.whatsapp}</span>
             </a>
           </div>
-          <ul className={styles.drawerSocials} aria-label="حسابات التواصل الاجتماعي">
+          <ul className={styles.drawerSocials} aria-label={t.common.socialAccounts}>
             {siteConfig.socials.map((social) => (
               <li key={social.platform}>
                 <a
@@ -228,7 +249,7 @@ export function SiteHeader() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.drawerSocial}
-                  aria-label={`${social.label} (يفتح في نافذة جديدة)`}
+                  aria-label={`${t.socials[social.platform]} ${t.common.newTab}`}
                 >
                   <BrandIcon name={social.platform} size={18} />
                 </a>

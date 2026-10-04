@@ -17,6 +17,8 @@ interface ConditionCardProps {
   sizes?: string;
   /** When set, the card opens a detail dialog instead of navigating. */
   onSelect?: () => void;
+  /** Accessible name prefix of the symptom chips ("Common symptoms"). */
+  symptomsLabel: string;
 }
 
 /**
@@ -30,6 +32,7 @@ export function ConditionCard({
   condition,
   sizes = "(min-width: 1280px) 250px, (min-width: 768px) 46vw, 92vw",
   onSelect,
+  symptomsLabel,
 }: ConditionCardProps) {
   return (
     <article className={cn(styles.card, "group")}>
@@ -69,7 +72,7 @@ export function ConditionCard({
           )}
         </h3>
         <p className={styles.excerpt}>{condition.excerpt}</p>
-        <ul className={styles.symptoms} aria-label={`أعراض شائعة: ${condition.title}`}>
+        <ul className={styles.symptoms} aria-label={`${symptomsLabel}: ${condition.title}`}>
           {condition.symptoms.map((symptom) => (
             <li key={symptom} className={styles.chip}>
               {symptom}

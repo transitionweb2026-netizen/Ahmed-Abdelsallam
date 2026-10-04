@@ -72,7 +72,7 @@
 .brandText {
   display: flex;
   flex-direction: column;
-  line-height: 1.35;
+  line-height: calc(1.35 * var(--lh-scale));
 }
 
 .brandName {
@@ -90,7 +90,7 @@
 .disclaimer {
   max-width: 34ch;
   font-size: 0.9375rem;
-  line-height: 1.9;
+  line-height: calc(1.9 * var(--lh-scale));
   color: var(--text-muted);
 }
 

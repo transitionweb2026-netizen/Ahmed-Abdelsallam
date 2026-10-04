@@ -336,7 +336,7 @@
 .floatText {
   display: flex;
   flex-direction: column;
-  line-height: 1.4;
+  line-height: calc(1.4 * var(--lh-scale));
 }
 
 .floatTitle {

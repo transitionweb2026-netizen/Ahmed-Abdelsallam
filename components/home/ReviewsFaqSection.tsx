@@ -5,6 +5,7 @@ import { DotGrid, Orb } from "@/components/ui/Decor";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TextLink } from "@/components/ui/TextLink";
+import { getI18n } from "@/i18n/server";
 import { cn } from "@/lib/utils";
 import type { Faq, Review, ReviewsFaqContent } from "@/types/content";
 import styles from "./ReviewsFaqSection.module.css";
@@ -19,16 +20,17 @@ interface ReviewsFaqSectionProps {
  * Two mirrored columns with identical anatomy — heading, content block,
  * "view all" link pinned to the bottom — so they stay visually balanced.
  */
-export function ReviewsFaqSection({ content, reviews, faqs }: ReviewsFaqSectionProps) {
+export async function ReviewsFaqSection({ content, reviews, faqs }: ReviewsFaqSectionProps) {
+  const { t } = await getI18n();
   return (
-    <section className="page-section" aria-label="آراء المرضى والأسئلة الشائعة">
+    <section className="page-section" aria-label={t.reviews.section}>
       <Orb className="top-10 end-[-12rem] h-[34rem] w-[34rem]" color="lavender" />
       <Orb className="bottom-0 start-[-12rem] h-[30rem] w-[30rem]" color="blue" />
       <DotGrid className="top-1/2 left-1/2 hidden h-72 w-72 -translate-x-1/2 -translate-y-1/2 opacity-50 lg:block" />
 
       <div className="site-container relative">
         <div className={styles.columns}>
-          {/* Reviews — right column in RTL */}
+          {/* Reviews — start column (right in RTL, left in LTR) */}
           <section className={styles.column} aria-labelledby="reviews-title">
             <SectionHeading heading={content.reviews.heading} id="reviews-title" align="start" />
             <RevealGroup as="ul" className={styles.reviewsGrid} stagger={0.08}>
@@ -47,7 +49,7 @@ export function ReviewsFaqSection({ content, reviews, faqs }: ReviewsFaqSectionP
             <span className={styles.dividerNode} />
           </span>
 
-          {/* FAQ — left column in RTL */}
+          {/* FAQ — end column (left in RTL, right in LTR) */}
           <section className={styles.column} aria-labelledby="faq-title" id="faq">
             <SectionHeading heading={content.faq.heading} id="faq-title" align="start" />
             <Reveal variant="up" amount={0.15}>

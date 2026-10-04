@@ -1,0 +1,125 @@
+/* AR | EN switch: a liquid-glass track (same recipe as the header buttons)
+   with a navy glass thumb that slides to the chosen language. The group is
+   dir="ltr", so physical left/right are stable in both languages. */
+
+.toggle {
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  flex-shrink: 0;
+  padding: 3px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(180deg, #ffffff, var(--secondary-soft));
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    inset 0 -2px 4px rgba(27, 39, 91, 0.06),
+    0 6px 14px -8px rgba(27, 39, 91, 0.45);
+}
+
+/* Gradient hairline border. */
+.toggle::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(120deg, #ffffff, rgba(168, 182, 243, 0.7) 50%, rgba(27, 39, 91, 0.16));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.sm {
+  height: 40px;
+}
+
+.md {
+  height: 44px;
+}
+
+.thumb {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc(50% - 3px);
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 90% at 30% 0%, rgba(168, 182, 243, 0.55), transparent 60%),
+    var(--gradient-brand);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.18),
+    0 6px 14px -6px rgba(27, 39, 91, 0.7);
+  transition: transform 0.26s var(--ease-out);
+}
+
+/* Glass sheen across the thumb. */
+.thumb::after {
+  content: "";
+  position: absolute;
+  inset: 1px 18% auto;
+  height: 42%;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0));
+}
+
+.toggle[data-active="en"] .thumb {
+  transform: translateX(100%);
+}
+
+.option {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  min-width: 2.5rem;
+  padding-inline: 0.55rem;
+  border-radius: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  color: var(--text-soft);
+  text-decoration: none;
+  transition:
+    color 0.26s ease,
+    background 0.3s ease,
+    transform 0.2s var(--ease-out);
+}
+
+.md .option {
+  min-width: 3rem;
+  font-size: 0.84rem;
+}
+
+.option[data-on="true"] {
+  color: #ffffff;
+}
+
+a.option {
+  cursor: pointer;
+}
+
+a.option:hover:not([data-on="true"]) {
+  color: var(--primary);
+  background: rgba(211, 218, 250, 0.55);
+}
+
+a.option:active {
+  transform: scale(0.94);
+}
+
+a.option:focus-visible {
+  outline-offset: 1px;
+}
+
+.short {
+  /* Optical centring for the caps-only labels. */
+  padding-top: 0.06em;
+}

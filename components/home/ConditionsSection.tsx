@@ -3,6 +3,7 @@ import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { DotGrid, Orb, PlusMark } from "@/components/ui/Decor";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { getI18n } from "@/i18n/server";
 import type { CollectionSectionContent, Condition } from "@/types/content";
 
 interface ConditionsSectionProps {
@@ -10,7 +11,8 @@ interface ConditionsSectionProps {
   conditions: Condition[];
 }
 
-export function ConditionsSection({ content, conditions }: ConditionsSectionProps) {
+export async function ConditionsSection({ content, conditions }: ConditionsSectionProps) {
+  const { t } = await getI18n();
   return (
     <section id="conditions" className="page-section" aria-labelledby="conditions-title">
       <Orb className="top-1/4 end-[-12rem] h-[32rem] w-[32rem]" color="lavender" />
@@ -24,7 +26,7 @@ export function ConditionsSection({ content, conditions }: ConditionsSectionProp
         <RevealGroup as="ul" className="mt-14 grid gap-5 md:grid-cols-2 lg:gap-6" stagger={0.1}>
           {conditions.map((condition) => (
             <RevealItem as="li" key={condition.slug} variant="up">
-              <ConditionCard condition={condition} />
+              <ConditionCard condition={condition} symptomsLabel={t.cards.symptoms} />
             </RevealItem>
           ))}
         </RevealGroup>

@@ -121,7 +121,7 @@
 .quote {
   font-size: clamp(1.18rem, 1rem + 0.8vw, 1.55rem);
   font-weight: 600;
-  line-height: 1.95;
+  line-height: calc(1.95 * var(--lh-scale));
   color: var(--primary);
 }
 
@@ -143,7 +143,7 @@
 .who {
   display: flex;
   flex-direction: column;
-  line-height: 1.45;
+  line-height: calc(1.45 * var(--lh-scale));
 }
 
 .name {

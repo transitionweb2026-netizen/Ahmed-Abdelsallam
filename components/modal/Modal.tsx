@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { AnimatePresence, m } from "motion/react";
 import { useEffect, useRef, type MouseEvent, type PointerEvent, type ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { useDictionary } from "@/components/i18n/LocaleProvider";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { useIsClient, useMediaQuery } from "@/hooks/useMediaQuery";
 import { useScrollLock } from "@/hooks/useScrollLock";
@@ -19,6 +20,7 @@ export interface ModalProps {
   labelledBy: string;
   describedBy?: string;
   size?: "md" | "lg" | "xl";
+  /** Accessible name of the close button (default: the dictionary's "close"). */
   closeLabel?: string;
   /** Focus target after closing when the opener is gone (e.g. deep links). */
   returnFocus?: () => HTMLElement | null | undefined;
@@ -43,12 +45,13 @@ export function Modal({
   labelledBy,
   describedBy,
   size = "lg",
-  closeLabel = "إغلاق",
+  closeLabel,
   returnFocus,
   contentKey,
   className,
   children,
 }: ModalProps) {
+  const t = useDictionary();
   const isClient = useIsClient();
   const sheet = useMediaQuery("(max-width: 639px)");
   const rootRef = useRef<HTMLDivElement>(null);
@@ -147,7 +150,7 @@ export function Modal({
               transition={{ duration: sheet ? 0.5 : 0.45, ease: EASE }}
             >
               <span className={styles.handle} aria-hidden="true" />
-              <button type="button" className={styles.close} onClick={onClose} aria-label={closeLabel}>
+              <button type="button" className={styles.close} onClick={onClose} aria-label={closeLabel ?? t.common.close}>
                 <X size={20} strokeWidth={2.2} aria-hidden="true" />
               </button>
               <div ref={bodyRef} className={styles.body}>

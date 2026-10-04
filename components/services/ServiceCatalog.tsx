@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useDictionary } from "@/components/i18n/LocaleProvider";
 import { Modal } from "@/components/modal/Modal";
 import { RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { DetailView } from "@/components/services/DetailView";
@@ -21,6 +22,7 @@ interface ServiceCatalogProps {
  * place. `/services#<slug>` deep-links straight into a dialog.
  */
 export function ServiceCatalog({ services, dialog }: ServiceCatalogProps) {
+  const t = useDictionary();
   const ids = useMemo(() => services.map((service) => service.slug), [services]);
   const { activeId, open, close } = useHashDialog(ids);
   const active = services.find((service) => service.slug === activeId);
@@ -39,6 +41,7 @@ export function ServiceCatalog({ services, dialog }: ServiceCatalogProps) {
               index={index}
               sizes="(min-width: 1320px) 400px, (min-width: 1024px) 31vw, (min-width: 640px) 46vw, 92vw"
               onSelect={() => open(service.slug)}
+              actionLabel={t.cards.viewDetails}
             />
           </RevealItem>
         ))}
@@ -54,7 +57,7 @@ export function ServiceCatalog({ services, dialog }: ServiceCatalogProps) {
         {shown ? (
           <DetailView
             titleId="service-dialog-title"
-            kind="خدمة"
+            kind={t.cards.serviceKind}
             title={shown.title}
             image={shown.image}
             icon={shown.icon}

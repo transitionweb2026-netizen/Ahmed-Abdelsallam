@@ -8,13 +8,13 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { Icon } from "@/components/ui/Icon";
 import { RichTitle } from "@/components/ui/RichTitle";
-import { mainNav, routes } from "@/config/routes";
+import { routes } from "@/config/routes";
+import { getI18n } from "@/i18n/server";
 import { cn } from "@/lib/utils";
 import type { Cta, HeroContent } from "@/types/content";
 import styles from "./Hero.module.css";
 
 const delay = (seconds: number) => ({ "--delay": `${seconds}s` }) as CSSProperties;
-const homeLabel = mainNav.find((item) => item.href === routes.home)?.label ?? "الرئيسية";
 
 interface HeroProps {
   content: HeroContent;
@@ -53,7 +53,7 @@ function HeroAction({ cta, variant }: { cta: Cta; variant: "primary" | "secondar
  * brand colour grade and lavender readability scrim, floating glass cards,
  * display headline and liquid-glass actions. Only content and height vary.
  */
-export function Hero({
+export async function Hero({
   content,
   size = "full",
   scrollTarget,
@@ -61,6 +61,7 @@ export function Hero({
   breadcrumb = false,
   headingId = "hero-title",
 }: HeroProps) {
+  const { t } = await getI18n();
   const floatingCards = content.floatingCards ?? [];
   return (
     <section className={cn(styles.hero, size === "compact" && styles.compact)} aria-labelledby={headingId}>
@@ -79,7 +80,7 @@ export function Hero({
       <CurveLines className={styles.curves} />
 
       {floatingCards.length ? (
-        <ul className={styles.floating} aria-label="ما يميز الرعاية">
+        <ul className={styles.floating} aria-label={t.common.careHighlights}>
           {floatingCards.map((card, index) => (
             <li
               key={card.title}
@@ -101,12 +102,12 @@ export function Hero({
       <div className={cn("site-container", styles.inner)}>
         <div className={styles.content}>
           {breadcrumb ? (
-            <nav aria-label="مسار التنقل" className="anim-rise" style={delay(0.05)}>
+            <nav aria-label={t.common.breadcrumb} className="anim-rise" style={delay(0.05)}>
               <Eyebrow as="div">
                 <ol className={styles.crumbs}>
                   <li>
                     <AppLink href={routes.home} className={styles.crumbLink}>
-                      {homeLabel}
+                      {t.nav.home}
                     </AppLink>
                   </li>
                   <li>

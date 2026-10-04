@@ -4,11 +4,12 @@ import { TiltCard } from "@/components/motion/TiltCard";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { RichTitle } from "@/components/ui/RichTitle";
+import { getI18n } from "@/i18n/server";
 import { cn, whatsappUrl } from "@/lib/utils";
 import type { CtaAction, SiteCtaContent } from "@/types/content";
 import styles from "./SiteCTA.module.css";
 
-function CtaButton({ action, variant }: { action: CtaAction; variant: "light" | "lavender" }) {
+function CtaButton({ action, variant, newTab }: { action: CtaAction; variant: "light" | "lavender"; newTab: string }) {
   if (action.kind === "whatsapp") {
     return (
       <GlassButton
@@ -18,7 +19,7 @@ function CtaButton({ action, variant }: { action: CtaAction; variant: "light" | 
         size="lg"
         icon="whatsapp"
         className={styles.action}
-        ariaLabel={`${action.label} (يفتح في نافذة جديدة)`}
+        ariaLabel={`${action.label} ${newTab}`}
       >
         {action.label}
       </GlassButton>
@@ -41,7 +42,8 @@ interface SiteCTAProps {
  * cut-out on a navy liquid-glass surface with pointer-driven tilt, aurora
  * sweep and two glass actions (WhatsApp + contact by default).
  */
-export function SiteCTA({ content, headingId = "site-cta-title" }: SiteCTAProps) {
+export async function SiteCTA({ content, headingId = "site-cta-title" }: SiteCTAProps) {
+  const { t } = await getI18n();
   return (
     <section className="page-section" aria-labelledby={headingId}>
       <div className="site-container">
@@ -61,8 +63,8 @@ export function SiteCTA({ content, headingId = "site-cta-title" }: SiteCTAProps)
                   </h2>
                   <p className={cn("type-lead", styles.description)}>{content.description}</p>
                   <div className={styles.actions}>
-                    <CtaButton action={content.primaryAction} variant="light" />
-                    <CtaButton action={content.secondaryAction} variant="lavender" />
+                    <CtaButton action={content.primaryAction} variant="light" newTab={t.common.newTab} />
+                    <CtaButton action={content.secondaryAction} variant="lavender" newTab={t.common.newTab} />
                   </div>
                 </div>
 

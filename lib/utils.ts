@@ -7,22 +7,9 @@ export function cn(...classes: ClassValue[]): string {
   return classes.filter(Boolean).join(" ");
 }
 
+/** Western digits in both languages (see `siteConfig.numberLocale`). */
 export function formatNumber(value: number): string {
   return new Intl.NumberFormat(siteConfig.numberLocale).format(value);
-}
-
-const dateFormatter = new Intl.DateTimeFormat(siteConfig.dateLocale, {
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-  // Dates are stored as calendar days; UTC keeps server and browser output
-  // identical whatever their time zones (no hydration mismatch).
-  timeZone: "UTC",
-});
-
-/** "2026-09-18" → "18 سبتمبر 2026". */
-export function formatDate(isoDate: string): string {
-  return dateFormatter.format(new Date(`${isoDate}T00:00:00Z`));
 }
 
 export function whatsappUrl(message?: string): string {

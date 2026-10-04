@@ -11,7 +11,7 @@ interface ArticleCardProps {
   onOpen: () => void;
   /** "featured": the large horizontal card at the top of /articles. */
   variant?: "default" | "featured";
-  /** Badge on the featured card, e.g. "مقال مميز". */
+  /** Badge on the featured card, e.g. "Featured article". */
   badge?: string;
   headingLevel?: "h2" | "h3" | "h4";
   sizes?: string;

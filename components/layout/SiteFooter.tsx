@@ -1,14 +1,17 @@
 import { ArrowUp, Phone } from "lucide-react";
 import { AppLink } from "@/components/ui/AppLink";
 import { mainNav, routes } from "@/config/routes";
-import { siteConfig } from "@/config/site";
+import { siteConfig, siteIdentity } from "@/config/site";
 import { BrandIcon } from "@/components/ui/BrandIcons";
 import { BrandMark } from "@/components/ui/BrandMark";
 import { DotGrid, Orb } from "@/components/ui/Decor";
+import { getI18n } from "@/i18n/server";
 import { phoneDisplay, phoneHref, whatsappUrl } from "@/lib/utils";
 import styles from "./SiteFooter.module.css";
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const { locale, t } = await getI18n();
+  const identity = siteIdentity[locale];
   const year = new Date().getFullYear();
 
   return (
@@ -23,14 +26,12 @@ export function SiteFooter() {
               <AppLink href={routes.home} className={styles.brand}>
                 <BrandMark size={48} idPrefix="footer-mark" />
                 <span className={styles.brandText}>
-                  <span className={styles.brandName}>{siteConfig.name}</span>
-                  <span className={styles.brandRole}>{siteConfig.role}</span>
+                  <span className={styles.brandName}>{identity.name}</span>
+                  <span className={styles.brandRole}>{identity.role}</span>
                 </span>
               </AppLink>
-              <p className={styles.about}>
-                رعاية متخصصة لمشكلات العظام والمفاصل، بخطوات واضحة من الاستشارة الأولى وحتى المتابعة.
-              </p>
-              <ul className={styles.socials} aria-label="حسابات التواصل الاجتماعي">
+              <p className={styles.about}>{t.footer.about}</p>
+              <ul className={styles.socials} aria-label={t.common.socialAccounts}>
                 {siteConfig.socials.map((social) => (
                   <li key={social.platform}>
                     <a
@@ -38,7 +39,7 @@ export function SiteFooter() {
                       target="_blank"
                       rel="noopener noreferrer"
                       className={styles.social}
-                      aria-label={social.label}
+                      aria-label={t.socials[social.platform]}
                     >
                       <BrandIcon name={social.platform} size={18} />
                     </a>
@@ -49,13 +50,13 @@ export function SiteFooter() {
 
             <nav aria-labelledby="footer-links-title">
               <h2 id="footer-links-title" className={styles.colTitle}>
-                روابط سريعة
+                {t.footer.quickLinks}
               </h2>
               <ul className={styles.links}>
                 {mainNav.map((item) => (
-                  <li key={item.href}>
+                  <li key={item.key}>
                     <AppLink href={item.href} className={styles.link}>
-                      {item.label}
+                      {t.nav[item.key]}
                     </AppLink>
                   </li>
                 ))}
@@ -63,7 +64,7 @@ export function SiteFooter() {
             </nav>
 
             <div>
-              <h2 className={styles.colTitle}>تواصل معنا</h2>
+              <h2 className={styles.colTitle}>{t.footer.contactTitle}</h2>
               <ul className={styles.contacts}>
                 <li>
                   <a href={phoneHref()} className={styles.contact}>
@@ -78,26 +79,24 @@ export function SiteFooter() {
                     <span className={styles.contactIcon} aria-hidden="true">
                       <BrandIcon name="whatsapp" size={17} />
                     </span>
-                    <span>راسلنا عبر واتساب</span>
+                    <span>{t.footer.whatsapp}</span>
                   </a>
                 </li>
               </ul>
             </div>
 
             <div>
-              <h2 className={styles.colTitle}>تنويه طبي</h2>
-              <p className={styles.disclaimer}>
-                المحتوى المنشور على هذا الموقع لأغراض التوعية العامة فقط، ولا يغني عن الفحص والاستشارة الطبية المباشرة.
-              </p>
+              <h2 className={styles.colTitle}>{t.footer.disclaimerTitle}</h2>
+              <p className={styles.disclaimer}>{t.footer.disclaimer}</p>
             </div>
           </div>
 
           <div className={styles.bottom}>
             <p>
-              © {year} {siteConfig.name}. جميع الحقوق محفوظة.
+              © {year} {identity.name}. {t.footer.rights}
             </p>
             <a href="#top" className={styles.toTop}>
-              العودة للأعلى
+              {t.footer.backToTop}
               <ArrowUp size={16} aria-hidden="true" />
             </a>
           </div>

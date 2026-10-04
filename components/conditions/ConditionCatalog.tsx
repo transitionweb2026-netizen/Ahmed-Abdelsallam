@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { ConditionCard } from "@/components/conditions/ConditionCard";
+import { useDictionary } from "@/components/i18n/LocaleProvider";
 import { Modal } from "@/components/modal/Modal";
 import { RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { DetailView } from "@/components/services/DetailView";
@@ -23,6 +24,7 @@ const anchor = (condition: Condition) => `condition-${condition.slug}`;
  * dialog as the services. `/services#condition-<slug>` deep-links into it.
  */
 export function ConditionCatalog({ conditions, dialog }: ConditionCatalogProps) {
+  const t = useDictionary();
   const ids = useMemo(() => conditions.map(anchor), [conditions]);
   const { activeId, open, close } = useHashDialog(ids);
   const active = conditions.find((condition) => anchor(condition) === activeId);
@@ -36,7 +38,11 @@ export function ConditionCatalog({ conditions, dialog }: ConditionCatalogProps) 
       <RevealGroup as="ul" className={styles.conditionGrid} stagger={0.08}>
         {conditions.map((condition) => (
           <RevealItem as="li" key={condition.slug} id={anchor(condition)} variant="up">
-            <ConditionCard condition={condition} onSelect={() => open(anchor(condition))} />
+            <ConditionCard
+              condition={condition}
+              symptomsLabel={t.cards.symptoms}
+              onSelect={() => open(anchor(condition))}
+            />
           </RevealItem>
         ))}
       </RevealGroup>
@@ -51,13 +57,13 @@ export function ConditionCatalog({ conditions, dialog }: ConditionCatalogProps) 
         {shown ? (
           <DetailView
             titleId="condition-dialog-title"
-            kind="حالة"
+            kind={t.cards.conditionKind}
             title={shown.title}
             image={shown.image}
             icon={shown.icon}
             summary={shown.excerpt}
             details={shown.details}
-            tags={{ label: `أعراض شائعة: ${shown.title}`, items: shown.symptoms }}
+            tags={{ label: `${t.cards.symptoms}: ${shown.title}`, items: shown.symptoms }}
             actions={{
               bookLabel: dialog.bookLabel,
               bookHref: routes.contact,

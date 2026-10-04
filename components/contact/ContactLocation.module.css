@@ -99,7 +99,7 @@
   border-radius: 16px;
   font-size: 0.8125rem;
   font-weight: 600;
-  line-height: 1.65;
+  line-height: calc(1.65 * var(--lh-scale));
   color: var(--primary);
   background: linear-gradient(165deg, rgba(255, 255, 255, 0.94), rgba(233, 237, 253, 0.86));
   box-shadow:
@@ -178,7 +178,7 @@
 .itemTitle {
   font-size: 1rem;
   font-weight: 700;
-  line-height: 1.5;
+  line-height: calc(1.5 * var(--lh-scale));
   color: var(--primary);
 }
 
@@ -187,7 +187,7 @@
   flex-direction: column;
   font-style: normal;
   font-size: 0.9375rem;
-  line-height: 1.8;
+  line-height: calc(1.8 * var(--lh-scale));
   color: var(--text-muted);
 }
 
@@ -195,7 +195,7 @@
   display: grid;
   gap: 0.25rem;
   font-size: 0.9375rem;
-  line-height: 1.7;
+  line-height: calc(1.7 * var(--lh-scale));
 }
 
 .hoursRow {

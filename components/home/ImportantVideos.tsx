@@ -4,6 +4,7 @@ import { GlassRing, Orb } from "@/components/ui/Decor";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { VideoCard } from "@/components/videos/VideoCard";
+import { getI18n } from "@/i18n/server";
 import type { CollectionSectionContent, Video } from "@/types/content";
 import styles from "./ImportantVideos.module.css";
 
@@ -13,7 +14,8 @@ interface ImportantVideosProps {
   videos: Video[];
 }
 
-export function ImportantVideos({ content, videos }: ImportantVideosProps) {
+export async function ImportantVideos({ content, videos }: ImportantVideosProps) {
+  const { t } = await getI18n();
   return (
     <section className="page-section" aria-labelledby="videos-title">
       <Orb className="top-1/3 start-[-14rem] h-[36rem] w-[36rem]" color="blue" />
@@ -23,7 +25,7 @@ export function ImportantVideos({ content, videos }: ImportantVideosProps) {
       <div className="site-container relative">
         <SectionHeading heading={content.heading} id="videos-title" />
 
-        <RevealGroup as="ul" className={styles.list} stagger={0.12} aria-label="فيديوهات مختارة">
+        <RevealGroup as="ul" className={styles.list} stagger={0.12} aria-label={t.video.featuredList}>
           {videos.map((video) => (
             <RevealItem as="li" key={video.slug} variant="up" className={styles.item}>
               <VideoCard video={video} />
@@ -33,7 +35,7 @@ export function ImportantVideos({ content, videos }: ImportantVideosProps) {
 
         <p className={styles.swipeHint} aria-hidden="true">
           <MoveLeft size={16} />
-          اسحب لمشاهدة المزيد
+          {t.video.swipeHint}
         </p>
 
         <Reveal variant="fade" className="mt-10 flex justify-center md:mt-14">

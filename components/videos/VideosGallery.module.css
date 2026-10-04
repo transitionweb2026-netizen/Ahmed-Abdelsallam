@@ -117,7 +117,7 @@
 .title {
   font-size: clamp(1.35rem, 1.15rem + 0.9vw, 1.9rem);
   font-weight: 700;
-  line-height: 1.45;
+  line-height: calc(1.45 * var(--lh-scale));
   color: var(--primary);
 }
 
@@ -136,7 +136,7 @@
 
 .description {
   font-size: 1rem;
-  line-height: 1.9;
+  line-height: calc(1.9 * var(--lh-scale));
   color: var(--text-soft);
 }
 

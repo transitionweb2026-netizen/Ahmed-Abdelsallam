@@ -60,7 +60,7 @@
 
 .text {
   font-size: 0.9375rem;
-  line-height: 1.9;
+  line-height: calc(1.9 * var(--lh-scale));
   color: var(--text-soft);
 }
 
@@ -128,7 +128,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  line-height: 1.45;
+  line-height: calc(1.45 * var(--lh-scale));
 }
 
 .name {
