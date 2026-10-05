@@ -3,6 +3,7 @@ import { Reveal } from "@/components/motion/Reveal";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { interpolate } from "@/i18n/format";
 import { getI18n } from "@/i18n/server";
+import { getSite } from "@/lib/content";
 import { cn, phoneDisplay, phoneHref } from "@/lib/utils";
 import type { ContactInfo, ContactPageContent } from "@/types/content";
 import styles from "./ContactLocation.module.css";
@@ -29,7 +30,8 @@ interface ContactLocationProps {
  * directions are offered.
  */
 export async function ContactLocation({ info, labels }: ContactLocationProps) {
-  const { t } = await getI18n();
+  const { locale, t } = await getI18n();
+  const { contact } = await getSite(locale);
   const { map } = info;
   return (
     <div className={styles.grid}>
@@ -90,8 +92,8 @@ export async function ContactLocation({ info, labels }: ContactLocationProps) {
             </span>
             <div className={styles.itemText}>
               <h3 className={styles.itemTitle}>{labels.phone}</h3>
-              <a href={phoneHref()} className={styles.phone}>
-                <span dir="ltr">{phoneDisplay()}</span>
+              <a href={phoneHref(contact)} className={styles.phone}>
+                <span dir="ltr">{phoneDisplay(contact)}</span>
               </a>
             </div>
           </li>

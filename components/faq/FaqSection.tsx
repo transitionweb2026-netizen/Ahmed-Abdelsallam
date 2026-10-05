@@ -5,6 +5,7 @@ import { GlassButton } from "@/components/ui/GlassButton";
 import { Icon } from "@/components/ui/Icon";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { getI18n } from "@/i18n/server";
+import { getSite } from "@/lib/content";
 import { cn, phoneDisplay, phoneHref, whatsappUrl } from "@/lib/utils";
 import type { Faq, ReviewsPageContent } from "@/types/content";
 import styles from "./FaqSection.module.css";
@@ -16,7 +17,8 @@ interface FaqSectionProps {
 
 /** Every FAQ in the shared accordion, beside a sticky navy "still need help?" card. */
 export async function FaqSection({ content, faqs }: FaqSectionProps) {
-  const { t } = await getI18n();
+  const { locale, t } = await getI18n();
+  const { contact } = await getSite(locale);
   const { help } = content;
   return (
     <section id="faq" className="page-section" aria-labelledby="faq-title">
@@ -42,7 +44,7 @@ export async function FaqSection({ content, faqs }: FaqSectionProps) {
               <p className={styles.helpText}>{help.text}</p>
               <div className={styles.helpActions}>
                 <GlassButton
-                  href={whatsappUrl(help.whatsappMessage)}
+                  href={whatsappUrl(contact, help.whatsappMessage)}
                   external
                   variant="light"
                   icon="whatsapp"
@@ -52,17 +54,17 @@ export async function FaqSection({ content, faqs }: FaqSectionProps) {
                   {help.whatsappLabel}
                 </GlassButton>
                 <GlassButton
-                  href={phoneHref()}
+                  href={phoneHref(contact)}
                   variant="lavender"
                   icon="phone"
                   className={styles.helpAction}
-                  ariaLabel={`${help.callLabel} ${phoneDisplay()}`}
+                  ariaLabel={`${help.callLabel} ${phoneDisplay(contact)}`}
                 >
                   {help.callLabel}
                 </GlassButton>
               </div>
               <p className={styles.phone}>
-                <span dir="ltr">{phoneDisplay()}</span>
+                <span dir="ltr">{phoneDisplay(contact)}</span>
               </p>
             </div>
           </Reveal>

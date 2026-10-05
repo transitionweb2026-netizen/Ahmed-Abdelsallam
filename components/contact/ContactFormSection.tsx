@@ -4,13 +4,15 @@ import { DotGrid, GlassRing, Orb } from "@/components/ui/Decor";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { getI18n } from "@/i18n/server";
+import { getSite } from "@/lib/content";
 import { phoneDisplay, phoneHref, whatsappUrl } from "@/lib/utils";
 import type { ContactPageContent } from "@/types/content";
 import styles from "./ContactFormSection.module.css";
 
 /** The glass form card, with WhatsApp and call buttons underneath it. */
 export async function ContactFormSection({ content }: { content: ContactPageContent["form"] }) {
-  const { t } = await getI18n();
+  const { locale, t } = await getI18n();
+  const { contact } = await getSite(locale);
   return (
     <section id="contact-form" className="page-section" aria-labelledby="contact-form-title">
       <Orb className="top-1/4 start-[-14rem] h-[36rem] w-[36rem]" color="lavender" />
@@ -28,7 +30,7 @@ export async function ContactFormSection({ content }: { content: ContactPageCont
 
           <Reveal variant="fade" delay={0.1} className={styles.direct}>
             <GlassButton
-              href={whatsappUrl(content.whatsappMessage)}
+              href={whatsappUrl(contact, content.whatsappMessage)}
               external
               size="lg"
               icon="whatsapp"
@@ -38,12 +40,12 @@ export async function ContactFormSection({ content }: { content: ContactPageCont
               {content.whatsappLabel}
             </GlassButton>
             <GlassButton
-              href={phoneHref()}
+              href={phoneHref(contact)}
               size="lg"
               variant="secondary"
               icon="phone"
               className={styles.directButton}
-              ariaLabel={`${content.callLabel} ${phoneDisplay()}`}
+              ariaLabel={`${content.callLabel} ${phoneDisplay(contact)}`}
             >
               {content.callLabel}
             </GlassButton>

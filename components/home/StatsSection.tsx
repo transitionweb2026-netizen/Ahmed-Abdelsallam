@@ -7,9 +7,9 @@ import { cn } from "@/lib/utils";
 import type { StatsContent } from "@/types/content";
 import styles from "./StatsSection.module.css";
 
-export function StatsSection({ content }: { content: StatsContent }) {
+export function StatsSection({ content, id }: { content: StatsContent; id?: string }) {
   return (
-    <section className="page-section" aria-labelledby="stats-title">
+    <section id={id} className="page-section" aria-labelledby="stats-title">
       <Orb className="top-1/4 end-[-14rem] h-[36rem] w-[36rem]" color="lavender" />
       <DotGrid className="top-10 start-[4%] h-64 w-64 opacity-70" />
 

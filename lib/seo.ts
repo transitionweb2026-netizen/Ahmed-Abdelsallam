@@ -1,14 +1,15 @@
+import "server-only";
 import type { Metadata } from "next";
-import { siteIdentity } from "@/config/site";
 import { defaultLocale, localeSettings, localizeHref, locales, type Locale } from "@/i18n/config";
+import { getPageSeo, getSite } from "@/lib/content";
 
 interface PageMetadataInput {
   locale: Locale;
-  title: string;
-  description: string;
+  /** CMS page key (pages table), e.g. "about". */
+  page: string;
   /** Path without the language prefix, e.g. "/about" (the home page is "/"). */
   path: string;
-  /** Use `title` as-is instead of "title | site name". */
+  /** Use the title as-is instead of "title | site name". */
   absoluteTitle?: boolean;
 }
 
@@ -21,19 +22,22 @@ export function languageAlternates(path: string): Record<string, string> {
 }
 
 /**
- * Page-level metadata: title, description, self-referencing canonical,
- * reciprocal hreflang alternates (ar, en, x-default), Open Graph and
- * Twitter card in the page's language. Next.js replaces (does not merge)
- * nested objects such as `openGraph`, so every field is set here.
+ * Page-level metadata from the CMS: title, description, self-referencing
+ * canonical, reciprocal hreflang alternates (ar, en, x-default), Open Graph
+ * and Twitter card in the page's language, and `noindex` when indexing is
+ * switched off for the page or the whole site. Next.js replaces (does not
+ * merge) nested objects such as `openGraph`, so every field is set here.
  */
-export function pageMetadata({ locale, title, description, path, absoluteTitle = false }: PageMetadataInput): Metadata {
-  const identity = siteIdentity[locale];
-  const fullTitle = absoluteTitle ? title : `${title} | ${identity.name}`;
+export async function pageMetadata({ locale, page, path, absoluteTitle = false }: PageMetadataInput): Promise<Metadata> {
+  const [site, seo] = await Promise.all([getSite(locale), getPageSeo(locale, page)]);
+  const { identity } = site;
+  const fullTitle = absoluteTitle ? seo.title : `${seo.title} | ${identity.name}`;
   const url = localizeHref(path, locale);
-  const og = identity.ogImage;
+  const og = seo.ogImage ?? identity.ogImage;
+  const indexable = site.robotsIndex && seo.index;
   return {
-    title: absoluteTitle ? { absolute: title } : title,
-    description,
+    title: absoluteTitle ? { absolute: seo.title } : seo.title,
+    description: seo.description,
     alternates: { canonical: url, languages: languageAlternates(path) },
     openGraph: {
       type: "website",
@@ -42,14 +46,15 @@ export function pageMetadata({ locale, title, description, path, absoluteTitle =
       alternateLocale: locales.filter((other) => other !== locale).map((other) => localeSettings[other].ogLocale),
       siteName: identity.name,
       title: fullTitle,
-      description,
+      description: seo.description,
       images: [{ url: og.src, width: og.width, height: og.height, alt: identity.name }],
     },
     twitter: {
       card: "summary_large_image",
       title: fullTitle,
-      description,
+      description: seo.description,
       images: [og.src],
     },
+    robots: indexable ? { index: true, follow: true } : { index: false, follow: true },
   };
 }

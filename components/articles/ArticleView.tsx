@@ -1,8 +1,8 @@
 import { Info, Lightbulb, TriangleAlert } from "lucide-react";
 import Image from "next/image";
 import { ArticleMeta, CategoryChip } from "@/components/articles/ArticleMeta";
+import { useSite } from "@/components/i18n/LocaleProvider";
 import { GlassButton } from "@/components/ui/GlassButton";
-import { routes } from "@/config/routes";
 import type { ArticleBlock, ArticleWithMeta } from "@/types/content";
 import styles from "./ArticleView.module.css";
 
@@ -52,6 +52,7 @@ interface ArticleViewProps {
  * date and reading time, then every body block in full — never truncated.
  */
 export function ArticleView({ article, titleId, disclaimer, ctaLabel }: ArticleViewProps) {
+  const { bookingHref } = useSite();
   return (
     <article className={styles.view}>
       <header>
@@ -87,7 +88,7 @@ export function ArticleView({ article, titleId, disclaimer, ctaLabel }: ArticleV
           <Info size={16} aria-hidden="true" />
           {disclaimer}
         </p>
-        <GlassButton href={routes.contact}>{ctaLabel}</GlassButton>
+        <GlassButton href={bookingHref}>{ctaLabel}</GlassButton>
       </footer>
     </article>
   );

@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+/* The CMS has its own calm, light interface — separate from the public site's
+   styles, but in the same brand colours (navy + lavender). */
+
+@theme {
+  --color-brand: #33458f;
+  --color-brand-dark: #1b275b;
+  --color-brand-soft: #e9edfd;
+  --color-ink: #141c45;
+  --color-muted: #58618f;
+  --color-line: #e1e5f3;
+  --font-sans: "IBM Plex Sans", "IBM Plex Sans Arabic", "IBM Plex Sans Fallback", "Segoe UI", system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    background: #f4f6fc;
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  body { min-height: 100dvh; }
+  :focus-visible { outline: 2px solid var(--color-brand); outline-offset: 2px; }
+  [dir="rtl"], :lang(ar) { font-family: "IBM Plex Sans Arabic", "IBM Plex Sans", "IBM Plex Sans Arabic Fallback", system-ui, sans-serif; }
+  button:not(:disabled), [role="button"]:not(:disabled), summary { cursor: pointer; }
+}
+
+@layer components {
+  .adm-card {
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 0 0 1px rgb(27 39 91 / 0.07), 0 1px 2px rgb(27 39 91 / 0.04), 0 8px 24px -16px rgb(27 39 91 / 0.18);
+  }
+  .adm-label { display: block; font-size: 0.8125rem; font-weight: 600; color: #26305f; }
+  .adm-help { font-size: 0.75rem; line-height: 1.45; color: #646c95; }
+  .adm-input {
+    width: 100%;
+    border-radius: 0.625rem;
+    border: 1px solid #d5dbef;
+    background: #fff;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+    color: var(--color-ink);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .adm-input:hover { border-color: #b8c1e3; }
+  .adm-input:focus { outline: none; border-color: var(--color-brand); box-shadow: 0 0 0 3px rgb(51 69 143 / 0.16); }
+  .adm-input[aria-invalid="true"] { border-color: #dc2626; box-shadow: 0 0 0 3px rgb(220 38 38 / 0.12); }
+  .adm-input:disabled { background: #f4f6fc; color: #646c95; }
+  textarea.adm-input { resize: vertical; line-height: 1.6; }
+  select.adm-input { padding-inline-end: 2rem; }
+
+  .adm-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    min-height: 2.35rem;
+    padding: 0 0.95rem;
+    border-radius: 0.625rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: background 0.15s, box-shadow 0.15s, color 0.15s, opacity 0.15s;
+  }
+  .adm-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+  .adm-btn-primary { background: var(--color-brand-dark); color: #fff; }
+  .adm-btn-primary:hover:not(:disabled) { background: #111a40; }
+  .adm-btn-secondary { background: #fff; color: #1b275b; box-shadow: inset 0 0 0 1px #d5dbef; }
+  .adm-btn-secondary:hover:not(:disabled) { background: #f1f3fb; }
+  .adm-btn-ghost { color: #3a4472; }
+  .adm-btn-ghost:hover:not(:disabled) { background: #eceffa; }
+  .adm-btn-danger { background: #fff; color: #b91c1c; box-shadow: inset 0 0 0 1px #f3c4c4; }
+  .adm-btn-danger:hover:not(:disabled) { background: #fef2f2; }
+  .adm-btn-danger-solid { background: #b91c1c; color: #fff; }
+  .adm-btn-danger-solid:hover:not(:disabled) { background: #991b1b; }
+  .adm-btn-sm { min-height: 1.9rem; padding: 0 0.65rem; font-size: 0.78rem; }
+  .adm-btn-icon { min-height: 2rem; width: 2rem; padding: 0; }
+
+  .adm-badge { display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 999px; padding: 0.12rem 0.55rem; font-size: 0.7rem; font-weight: 600; white-space: nowrap; }
+  .adm-badge-green { background: #e5f5ec; color: #1f6b43; }
+  .adm-badge-amber { background: #fdf3dc; color: #8a5a00; }
+  .adm-badge-gray { background: #eceffa; color: #4a5384; }
+  .adm-badge-red { background: #fde8e8; color: #a61b1b; }
+  .adm-badge-blue { background: #e4e9fd; color: #2c3c86; }
+
+  .adm-lang {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 0.375rem;
+    background: #eceffa;
+    padding: 0.05rem 0.4rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #4a5384;
+  }
+  .adm-lang-missing { background: #fdf3dc; color: #8a5a00; }
+
+  .adm-switch { position: relative; display: inline-flex; height: 1.5rem; width: 2.75rem; flex: none; border-radius: 999px; background: #cdd3ea; transition: background 0.15s; }
+  .adm-switch[aria-checked="true"] { background: var(--color-brand); }
+  .adm-switch > span { position: absolute; top: 0.125rem; inset-inline-start: 0.125rem; height: 1.25rem; width: 1.25rem; border-radius: 999px; background: #fff; box-shadow: 0 1px 2px rgb(0 0 0 / 0.2); transition: inset-inline-start 0.15s; }
+  .adm-switch[aria-checked="true"] > span { inset-inline-start: 1.375rem; }
+
+  .adm-fieldset { border-radius: 0.875rem; border: 1px solid var(--color-line); background: #fbfcff; padding: 1rem; }
+  .adm-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  .adm-table th { text-align: start; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #646c95; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--color-line); }
+  .adm-table td { padding: 0.65rem 0.75rem; border-bottom: 1px solid #eef0f8; vertical-align: middle; }
+  .adm-table tr:last-child td { border-bottom: 0; }
+}
+
+@keyframes adm-slide-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes adm-fade { from { opacity: 0; } to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

@@ -11,6 +11,7 @@ import type { Faq, Review, ReviewsFaqContent } from "@/types/content";
 import styles from "./ReviewsFaqSection.module.css";
 
 interface ReviewsFaqSectionProps {
+  id?: string;
   content: ReviewsFaqContent;
   reviews: Review[];
   faqs: Faq[];
@@ -20,10 +21,10 @@ interface ReviewsFaqSectionProps {
  * Two mirrored columns with identical anatomy — heading, content block,
  * "view all" link pinned to the bottom — so they stay visually balanced.
  */
-export async function ReviewsFaqSection({ content, reviews, faqs }: ReviewsFaqSectionProps) {
+export async function ReviewsFaqSection({ content, reviews, faqs, id }: ReviewsFaqSectionProps) {
   const { t } = await getI18n();
   return (
-    <section className="page-section" aria-label={t.reviews.section}>
+    <section id={id} className="page-section" aria-label={t.reviews.section}>
       <Orb className="top-10 end-[-12rem] h-[34rem] w-[34rem]" color="lavender" />
       <Orb className="bottom-0 start-[-12rem] h-[30rem] w-[30rem]" color="blue" />
       <DotGrid className="top-1/2 left-1/2 hidden h-72 w-72 -translate-x-1/2 -translate-y-1/2 opacity-50 lg:block" />

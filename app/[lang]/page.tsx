@@ -10,21 +10,21 @@ import { StatsSection } from "@/components/home/StatsSection";
 import { ServiceShowcase } from "@/components/services/ServiceShowcase";
 import { JourneyTimeline } from "@/components/timeline/JourneyTimeline";
 import { routes } from "@/config/routes";
-import { siteIdentity } from "@/config/site";
 import { getLocale } from "@/i18n/server";
-import { getConditions, getFaqs, getHomeContent, getReviews, getServices, getVideos } from "@/lib/content";
+import { renderSections, scrollTargetAfterHero } from "@/lib/cms/render";
+import { getConditions, getFaqs, getHomeContent, getReviews, getSectionOrder, getServices, getVideos } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
-  const { title, description } = siteIdentity[locale];
-  return pageMetadata({ locale, title, absoluteTitle: true, description, path: routes.home });
+  return pageMetadata({ locale, page: "home", path: routes.home, absoluteTitle: true });
 }
 
 export default async function HomePage() {
   const locale = await getLocale();
-  const [content, services, conditions, videos, reviews, faqs] = await Promise.all([
+  const [content, order, services, conditions, videos, reviews, faqs] = await Promise.all([
     getHomeContent(locale),
+    getSectionOrder(locale, "home"),
     getServices(locale, { featured: true, limit: 4 }),
     getConditions(locale, { featured: true, limit: 4 }),
     getVideos(locale, { featured: true, limit: 3 }),
@@ -32,18 +32,16 @@ export default async function HomePage() {
     getFaqs(locale, { featured: true, limit: 6 }),
   ]);
 
-  return (
-    <>
-      <Hero content={content.hero} scrollTarget="#intro" />
-      <IntroSection content={content.intro} />
-      <StatsSection content={content.stats} />
-      <ServiceShowcase content={content.services} services={services} headingId="services-title" />
-      <AboutDoctor content={content.about} />
-      <ConditionsSection content={content.conditions} conditions={conditions} />
-      <JourneyTimeline content={content.journey} headingId="journey-title" />
-      <ImportantVideos content={content.videos} videos={videos} />
-      <ReviewsFaqSection content={content.reviewsFaq} reviews={reviews} faqs={faqs} />
-      <SiteCTA content={content.finalCta} />
-    </>
-  );
+  return renderSections(order, {
+    hero: () => <Hero content={content.hero} scrollTarget={scrollTargetAfterHero("home", order)} />,
+    intro: () => <IntroSection content={content.intro} />,
+    stats: () => <StatsSection id="stats" content={content.stats} />,
+    services: () => <ServiceShowcase id="services" content={content.services} services={services} headingId="services-title" />,
+    about: () => <AboutDoctor content={content.about} />,
+    conditions: () => <ConditionsSection content={content.conditions} conditions={conditions} />,
+    journey: () => <JourneyTimeline id="journey" content={content.journey} headingId="journey-title" />,
+    videos: () => <ImportantVideos id="videos" content={content.videos} videos={videos} />,
+    reviewsFaq: () => <ReviewsFaqSection id="reviews-faq" content={content.reviewsFaq} reviews={reviews} faqs={faqs} />,
+    cta: () => <SiteCTA id="site-cta" content={content.finalCta} />,
+  });
 }

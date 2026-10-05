@@ -6,14 +6,15 @@ import type { SectionHeading as SectionHeadingValue, Stat } from "@/types/conten
 import styles from "./StatsBand.module.css";
 
 interface StatsBandProps {
+  id?: string;
   heading: SectionHeadingValue;
   stats: Stat[];
 }
 
 /** Heading plus a row of glass stat cards whose counters run on first view. */
-export function StatsBand({ heading, stats }: StatsBandProps) {
+export function StatsBand({ heading, stats, id }: StatsBandProps) {
   return (
-    <section className="page-section" aria-labelledby="about-stats-title">
+    <section id={id} className="page-section" aria-labelledby="about-stats-title">
       <Orb className="top-1/4 end-[-14rem] h-[34rem] w-[34rem]" color="lavender" />
       <DotGrid className="bottom-6 start-[4%] h-56 w-56 opacity-60" />
 

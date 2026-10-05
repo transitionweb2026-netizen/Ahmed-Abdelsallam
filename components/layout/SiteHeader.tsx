@@ -2,6 +2,7 @@
 
 import {
   ChevronLeft,
+  Circle,
   CirclePlay,
   House,
   Languages,
@@ -17,21 +18,20 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { mainNav, routes, type NavKey } from "@/config/routes";
-import { siteConfig, siteIdentity } from "@/config/site";
-import { useDictionary, useLocale } from "@/components/i18n/LocaleProvider";
+import { routes, type NavKey } from "@/config/routes";
+import { useDictionary, useSite } from "@/components/i18n/LocaleProvider";
 import { LanguageToggle } from "@/components/layout/LanguageToggle";
 import { AppLink } from "@/components/ui/AppLink";
 import { BrandIcon } from "@/components/ui/BrandIcons";
-import { BrandMark } from "@/components/ui/BrandMark";
 import { GlassButton } from "@/components/ui/GlassButton";
+import { SiteLogo } from "@/components/ui/SiteLogo";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { useScrollLock } from "@/hooks/useScrollLock";
 import { splitLocale } from "@/i18n/config";
 import { phoneDisplay, phoneHref, whatsappUrl } from "@/lib/utils";
 import styles from "./SiteHeader.module.css";
 
-const NAV_ICONS: Record<NavKey, LucideIcon> = {
+const NAV_ICONS: Partial<Record<string, LucideIcon>> & Record<NavKey, LucideIcon> = {
   home: House,
   about: UserRound,
   services: Stethoscope,
@@ -42,9 +42,10 @@ const NAV_ICONS: Record<NavKey, LucideIcon> = {
 };
 
 export function SiteHeader() {
-  const locale = useLocale();
   const t = useDictionary();
-  const identity = siteIdentity[locale];
+  const site = useSite();
+  const identity = site.identity;
+  const headerNav = site.navigation.filter((item) => item.showInHeader);
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -117,7 +118,7 @@ export function SiteHeader() {
       <div className="site-container">
         <div className={styles.bar}>
           <AppLink href={routes.home} className={styles.brand}>
-            <BrandMark size={42} idPrefix="header-mark" />
+            <SiteLogo logo={site.logo} size={42} idPrefix="header-mark" />
             <span className={styles.brandText}>
               <span className={styles.brandName}>{identity.name}</span>
               <span className={styles.brandRole}>{identity.role}</span>
@@ -126,14 +127,14 @@ export function SiteHeader() {
 
           <nav aria-label={t.header.mainNavLabel} className={styles.desktopNav}>
             <ul className={styles.navList}>
-              {mainNav.map((item) => (
+              {headerNav.map((item) => (
                 <li key={item.key}>
                   <AppLink
                     href={item.href}
                     className={styles.navLink}
                     aria-current={isActive(item.href) ? "page" : undefined}
                   >
-                    {t.nav[item.key]}
+                    {item.label}
                   </AppLink>
                 </li>
               ))}
@@ -144,10 +145,10 @@ export function SiteHeader() {
             <div className={styles.barLanguage}>
               <LanguageToggle />
             </div>
-            <a href={phoneHref()} className={styles.callButton} aria-label={`${t.header.callUs} ${phoneDisplay()}`}>
+            <a href={phoneHref(site.contact)} className={styles.callButton} aria-label={`${t.header.callUs} ${phoneDisplay(site.contact)}`}>
               <Phone size={18} strokeWidth={2} aria-hidden="true" />
             </a>
-            <GlassButton href={routes.contact} size="sm" className={styles.cta}>
+            <GlassButton href={site.bookingHref} size="sm" className={styles.cta}>
               {t.header.book}
             </GlassButton>
             <button
@@ -180,7 +181,7 @@ export function SiteHeader() {
       >
         <div className={styles.drawerHead}>
           <AppLink href={routes.home} className={styles.brand} onClick={close}>
-            <BrandMark size={40} idPrefix="drawer-mark" />
+            <SiteLogo logo={site.logo} size={40} idPrefix="drawer-mark" />
             <span className={styles.drawerBrandText}>
               <span className={styles.brandName}>{identity.name}</span>
               <span className={styles.brandRole}>{identity.role}</span>
@@ -205,8 +206,8 @@ export function SiteHeader() {
 
         <nav aria-label={t.header.drawerNavLabel}>
           <ul className={styles.drawerList}>
-            {mainNav.map((item) => {
-              const ItemIcon = NAV_ICONS[item.key];
+            {headerNav.map((item) => {
+              const ItemIcon = NAV_ICONS[item.key] ?? Circle;
               return (
                 <li key={item.key}>
                   <AppLink
@@ -218,7 +219,7 @@ export function SiteHeader() {
                     <span className={styles.drawerIcon} aria-hidden="true">
                       <ItemIcon size={19} strokeWidth={1.9} />
                     </span>
-                    <span className={styles.drawerLabel}>{t.nav[item.key]}</span>
+                    <span className={styles.drawerLabel}>{item.label}</span>
                     <ChevronLeft className={styles.drawerChevron} size={18} aria-hidden="true" />
                   </AppLink>
                 </li>
@@ -228,21 +229,21 @@ export function SiteHeader() {
         </nav>
 
         <div className={styles.drawerFooter}>
-          <GlassButton href={routes.contact} className="w-full">
+          <GlassButton href={site.bookingHref} className="w-full">
             {t.header.book}
           </GlassButton>
           <div className={styles.drawerContacts}>
-            <a href={phoneHref()} className={styles.drawerContact}>
+            <a href={phoneHref(site.contact)} className={styles.drawerContact}>
               <Phone size={18} aria-hidden="true" />
-              <span dir="ltr">{phoneDisplay()}</span>
+              <span dir="ltr">{phoneDisplay(site.contact)}</span>
             </a>
-            <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className={styles.drawerContact}>
+            <a href={whatsappUrl(site.contact)} target="_blank" rel="noopener noreferrer" className={styles.drawerContact}>
               <BrandIcon name="whatsapp" size={18} />
               <span>{t.header.whatsapp}</span>
             </a>
           </div>
           <ul className={styles.drawerSocials} aria-label={t.common.socialAccounts}>
-            {siteConfig.socials.map((social) => (
+            {site.socials.map((social) => (
               <li key={social.platform}>
                 <a
                   href={social.href}

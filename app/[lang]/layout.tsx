@@ -1,13 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import { preload } from "react-dom";
-import { LocaleProvider } from "@/components/i18n/LocaleProvider";
+import { LocaleProvider, type ClientSiteData } from "@/components/i18n/LocaleProvider";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { fontPreloads } from "@/config/fonts";
-import { siteConfig, siteIdentity } from "@/config/site";
+import { siteConfig } from "@/config/site";
 import { localeSettings, locales } from "@/i18n/config";
 import { getI18n } from "@/i18n/server";
+import { getSite } from "@/lib/content";
 import { jsonLdString, physicianJsonLd } from "@/lib/structured-data";
 import "../fonts.css";
 import "../globals.css";
@@ -19,7 +20,8 @@ export function generateStaticParams() {
 
 export async function generateMetadata(): Promise<Metadata> {
   const { locale } = await getI18n();
-  const identity = siteIdentity[locale];
+  const site = await getSite(locale);
+  const { identity } = site;
   const og = identity.ogImage;
   return {
     metadataBase: new URL(siteConfig.url),
@@ -29,6 +31,10 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description: identity.description,
     applicationName: identity.name,
+    // Favicon from the CMS (Global settings), or the bundled brand icon.
+    icons: site.favicon
+      ? { icon: [{ url: site.favicon.src, type: site.favicon.type }], apple: [{ url: site.favicon.src }] }
+      : { icon: [{ url: "/icon.svg", type: "image/svg+xml" }], apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }] },
     openGraph: {
       type: "website",
       locale: localeSettings[locale].ogLocale,
@@ -43,7 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description: identity.description,
       images: [og.src],
     },
-    robots: { index: true, follow: true },
+    robots: site.robotsIndex ? { index: true, follow: true } : { index: false, follow: true },
     formatDetection: { telephone: false },
   };
 }
@@ -64,6 +70,16 @@ const noScriptStyles =
  */
 export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
   const { locale, t } = await getI18n();
+  const site = await getSite(locale);
+  const otherNames = await Promise.all(locales.filter((other) => other !== locale).map(async (other) => (await getSite(other)).identity.name));
+  const clientSite: ClientSiteData = {
+    identity: site.identity,
+    contact: site.contact,
+    navigation: site.navigation,
+    socials: site.socials,
+    bookingHref: site.bookingHref,
+    logo: site.logo,
+  };
   // Only this language's font files (see config/fonts.ts).
   for (const href of fontPreloads[locale]) preload(href, { as: "font", type: "font/woff2", crossOrigin: "anonymous" });
 
@@ -82,7 +98,7 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
         <a href="#main" className="skip-link">
           {t.skipToContent}
         </a>
-        <LocaleProvider locale={locale} t={t}>
+        <LocaleProvider locale={locale} t={t} site={clientSite}>
           <MotionProvider>
             <SiteHeader />
             <main id="main" tabIndex={-1} className="outline-none">
@@ -91,7 +107,10 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
             <SiteFooter />
           </MotionProvider>
         </LocaleProvider>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(physicianJsonLd(locale)) }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: jsonLdString(physicianJsonLd(locale, site, otherNames)) }}
+        />
       </body>
     </html>
   );

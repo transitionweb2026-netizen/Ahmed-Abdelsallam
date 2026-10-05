@@ -10,7 +10,7 @@ Next.js 16 (App Router, Turbopack) · React 19 · TypeScript · Tailwind CSS v4 
 npm install
 cp .env.example .env.local   # then fill in the values
 npm run dev                  # http://localhost:3000
-npm run lint
+npm run lint && npm run typecheck && npm test
 npm run build && npm start
 ```
 
@@ -46,18 +46,35 @@ npm run build && npm start
 | `lib/seo.ts`, `lib/structured-data.ts` | Page metadata builder; JSON-LD (Physician, BreadcrumbList, FAQPage) |
 | `lib/contact-form.ts` | Contact form model and validation, shared by browser and server |
 | `types/content.ts` | Content model shared by data, CMS and components |
+| `app/admin/`, `components/admin/` | CMS dashboard (own root layout), Server Actions in `app/admin/_actions/` |
+| `lib/cms/` | CMS: field definitions and registry, snapshot source and mapper, bundled content, import plan, upload, admin session and validation |
+| `lib/supabase/` | Supabase clients (cookie session for the dashboard, anonymous for the public site) and the `/admin` proxy guard |
+| `supabase/` | Migrations (schema, RLS, storage) and seed SQL (current content, first owner) |
+| `scripts/`, `tests/`, `docs/cms/` | CMS scripts, tests, setup guide and content inventory |
 
 ## Content and CMS
 
-Pages never import from `data/` directly. Each page loads everything through the async getters in `lib/content.ts` (`getAboutPage(locale)`, `getServices(locale)`, `getArticles(locale)`, `getSiteCta(locale)`, …) and passes plain props down. Each getter joins the language-neutral fields in `data/shared/` with that language's text in `data/ar/` or `data/en/`. To move to Supabase or a headless CMS, re-implement those functions against the same `types/content.ts` shapes (typically one table per collection plus a translations table keyed by id and locale); no component changes are needed.
+All content — every page section, collection item, setting, menu item, SEO field and interface text, in both languages — is managed in a dashboard at **`/admin`**, backed by Supabase (Postgres, Auth, Storage). **Setup: [`docs/cms/SETUP.md`](docs/cms/SETUP.md)**. Everything the CMS manages: [`docs/cms/CONTENT-INVENTORY.md`](docs/cms/CONTENT-INVENTORY.md).
 
-- Every collection item has a stable `slug`/`id` and an `order`, which map directly to table columns.
-- Long text is structured, not HTML: service and condition dialogs use `details.sections` (paragraphs and/or bullet items), and articles use typed `body` blocks (`paragraph`, `heading`, `list`, `callout`). Both fit a JSON column.
-- Icons are stored as string keys (`IconName`) and resolved in `components/ui/Icon.tsx`.
-- Headings are arrays of `TitlePart` (`{ text, accent?, breakAfter? }`), so editors choose the accent words without writing markup.
-- `featured` flags pick the homepage subset from each full collection. `/videos` and the homepage read the same nine-video dataset.
-- Derived values are computed, never stored: article reading time comes from the word count, and the About page counters are the sizes of the site's own collections (services, conditions, videos, articles).
-- Page copy lives in `data/{ar,en}/pages/*` (one object per page, including its SEO title and description), ready to become one CMS entry per page and per locale.
+- **Two sources, one shape.** Pages never import from `data/`. They read through `lib/content.ts`, which maps a *CMS snapshot* to the shapes in `types/content.ts` (`lib/cms/content-map.ts`). The snapshot comes from Supabase (`cms_snapshot()`, published rows only) once `NEXT_PUBLIC_SUPABASE_URL` and the publishable key are set, and from the content bundled in `data/` and `config/` before that (`lib/cms/bundled.ts`). A test proves both render exactly the pre-CMS website. Once Supabase is configured there is no silent fallback: an empty or unreachable database fails loudly.
+- **Dashboard** (`app/admin/`, `components/admin/`): overview with real counts and warnings, pages & sections (edit, reorder, hide), content explorer (search both languages, missing-translation filter), collections with draft/published, media library (resumable uploads, alt text per language, replace everywhere, usage, safe delete), global settings, navigation & social links, per-page SEO with a search preview, interface text, contact-form inbox, administrators.
+- **What is editable** is declared once in `lib/cms/registry.ts` (fields, labels, limits) and `lib/cms/pages.ts` (sections per page). The same definitions drive the forms, browser validation, server validation (`lib/cms/admin/mutations.ts`), the content explorer and the missing-translation checks.
+- **Security:** only the publishable key is used. Administrators are rows in `public.admins`, checked in the proxy, in every dashboard page and Server Action, and by Row Level Security in the database. Content is structured text, never HTML, and links are restricted to site paths, anchors, https, tel and mailto.
+- **Publishing:** saving rebuilds the affected pages (`revalidatePath`), live on the next page load. Drafts and hidden sections never reach visitors.
+- **Content model details:**
+  - Headings are arrays of `TitlePart` (`{ text, accent?, breakAfter? }`).
+  - Service and condition dialogs use structured `details` (intro and sections).
+  - Articles use typed blocks (`paragraph`, `heading`, `list`, `callout`).
+  - Icons are string keys resolved in `components/ui/Icon.tsx`.
+  - Derived values are computed, never stored: article reading time, and the About counters (counts of published content).
+
+| Command | Does |
+| --- | --- |
+| `npm test` | Unit and database tests (Vitest + in-process Postgres running the real migrations: RLS, import, dashboard saves, golden content) |
+| `npm run typecheck` | TypeScript |
+| `npm run cms:seed-sql` | Regenerates `supabase/seed/content.sql` from `data/` (a test fails if it is stale) |
+| `npm run cms:inventory` | Regenerates `docs/cms/CONTENT-INVENTORY.md` |
+| `npm run cms:verify` | Checks a connected Supabase project as an anonymous visitor: content imported, drafts / admins / inbox unreadable, no anonymous writes or uploads |
 
 ## Languages
 
@@ -103,7 +120,7 @@ The header shows every page inline from 1024px; below that, the menu button open
 
 The form validates in the browser (messages in the page's language, first invalid field focused, Arabic-Indic digits accepted in the phone field) and again in the Server Action `app/[lang]/contact/actions.ts`, which returns error codes that each language words itself. A hidden honeypot field filters simple bots.
 
-Set `CONTACT_FORM_ENDPOINT` to any HTTPS endpoint that accepts a JSON `POST` (a form service, a Supabase Edge Function, a CRM webhook). It receives `{ name, phone, email, subject, message, source, submittedAt }`. Until it is set, the form says that sending is not enabled yet and offers to send the same message through WhatsApp, so no enquiry is lost.
+With the CMS connected, messages are saved to the dashboard **Inbox** (switchable in Global settings; only administrators can read them, and the database refuses more than 30 messages a minute). Additionally or instead, set `CONTACT_FORM_ENDPOINT` to any HTTPS endpoint that accepts a JSON `POST` (a form service, a Supabase Edge Function, a CRM webhook). It receives `{ name, phone, email, subject, message, source, submittedAt }`. With neither, the form says that sending is not enabled yet and offers to send the same message through WhatsApp, so no enquiry is lost.
 
 ## Map
 
@@ -186,6 +203,8 @@ The cover, service, condition, specialty and article photos are free stock place
 | Article: MRI guide | @accuray | [unsplash.com/photos/MhM8LiIzmZw](https://unsplash.com/photos/MhM8LiIzmZw) |
 
 ## Placeholder content to replace before launch
+
+Once the CMS is connected, all of the items below are edited in the dashboard (the files named here are only the initial content). The dashboard overview lists what still needs attention.
 
 All placeholders are marked `PLACEHOLDER` in code comments, in both languages. Nothing on the site states a real degree, institution, year, certificate, membership, award, patient count, success rate or address of the doctor. Every item below has an Arabic and an English file — update both.
 

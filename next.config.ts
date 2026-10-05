@@ -1,5 +1,14 @@
 import type { NextConfig } from "next";
 
+// Images uploaded through the CMS are served from the Supabase project's public Storage.
+const supabaseHost = (() => {
+  try {
+    return process.env.NEXT_PUBLIC_SUPABASE_URL ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname : null;
+  } catch {
+    return null;
+  }
+})();
+
 const nextConfig: NextConfig = {
   // Pin the project root: a parent folder contains another project's
   // lockfile, which would otherwise be picked up as the workspace root.
@@ -9,6 +18,7 @@ const nextConfig: NextConfig = {
   images: {
     // AVIF first (smaller), WebP fallback.
     formats: ["image/avif", "image/webp"],
+    remotePatterns: supabaseHost ? [{ protocol: "https", hostname: supabaseHost, pathname: "/storage/v1/object/public/**" }] : [],
   },
   async headers() {
     return [

@@ -5,15 +5,17 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { RichTitle } from "@/components/ui/RichTitle";
 import { getI18n } from "@/i18n/server";
+import type { ContactSettings } from "@/lib/cms/content-map";
+import { getSite } from "@/lib/content";
 import { cn, whatsappUrl } from "@/lib/utils";
 import type { CtaAction, SiteCtaContent } from "@/types/content";
 import styles from "./SiteCTA.module.css";
 
-function CtaButton({ action, variant, newTab }: { action: CtaAction; variant: "light" | "lavender"; newTab: string }) {
+function CtaButton({ action, variant, newTab, contact }: { action: CtaAction; variant: "light" | "lavender"; newTab: string; contact: ContactSettings }) {
   if (action.kind === "whatsapp") {
     return (
       <GlassButton
-        href={whatsappUrl(action.message)}
+        href={whatsappUrl(contact, action.message)}
         external
         variant={variant}
         size="lg"
@@ -35,6 +37,8 @@ function CtaButton({ action, variant, newTab }: { action: CtaAction; variant: "l
 interface SiteCTAProps {
   content: SiteCtaContent;
   headingId?: string;
+  /** Section anchor (lets the hero scroll cue land here). */
+  id?: string;
 }
 
 /**
@@ -42,10 +46,11 @@ interface SiteCTAProps {
  * cut-out on a navy liquid-glass surface with pointer-driven tilt, aurora
  * sweep and two glass actions (WhatsApp + contact by default).
  */
-export async function SiteCTA({ content, headingId = "site-cta-title" }: SiteCTAProps) {
-  const { t } = await getI18n();
+export async function SiteCTA({ content, headingId = "site-cta-title", id }: SiteCTAProps) {
+  const { locale, t } = await getI18n();
+  const { contact } = await getSite(locale);
   return (
-    <section className="page-section" aria-labelledby={headingId}>
+    <section id={id} className="page-section" aria-labelledby={headingId}>
       <div className="site-container">
         <Reveal variant="scale" amount={0.25}>
           <TiltCard className={cn("group", styles.card)}>
@@ -63,8 +68,8 @@ export async function SiteCTA({ content, headingId = "site-cta-title" }: SiteCTA
                   </h2>
                   <p className={cn("type-lead", styles.description)}>{content.description}</p>
                   <div className={styles.actions}>
-                    <CtaButton action={content.primaryAction} variant="light" newTab={t.common.newTab} />
-                    <CtaButton action={content.secondaryAction} variant="lavender" newTab={t.common.newTab} />
+                    <CtaButton action={content.primaryAction} variant="light" newTab={t.common.newTab} contact={contact} />
+                    <CtaButton action={content.secondaryAction} variant="lavender" newTab={t.common.newTab} contact={contact} />
                   </div>
                 </div>
 

@@ -2,11 +2,10 @@
 
 import { useMemo, useState } from "react";
 import { ConditionCard } from "@/components/conditions/ConditionCard";
-import { useDictionary } from "@/components/i18n/LocaleProvider";
+import { useDictionary, useSite } from "@/components/i18n/LocaleProvider";
 import { Modal } from "@/components/modal/Modal";
 import { RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { DetailView } from "@/components/services/DetailView";
-import { routes } from "@/config/routes";
 import { useHashDialog } from "@/hooks/useHashDialog";
 import { whatsappUrl } from "@/lib/utils";
 import type { Condition, ServicesPageContent } from "@/types/content";
@@ -25,6 +24,7 @@ const anchor = (condition: Condition) => `condition-${condition.slug}`;
  */
 export function ConditionCatalog({ conditions, dialog }: ConditionCatalogProps) {
   const t = useDictionary();
+  const site = useSite();
   const ids = useMemo(() => conditions.map(anchor), [conditions]);
   const { activeId, open, close } = useHashDialog(ids);
   const active = conditions.find((condition) => anchor(condition) === activeId);
@@ -66,9 +66,9 @@ export function ConditionCatalog({ conditions, dialog }: ConditionCatalogProps) 
             tags={{ label: `${t.cards.symptoms}: ${shown.title}`, items: shown.symptoms }}
             actions={{
               bookLabel: dialog.bookLabel,
-              bookHref: routes.contact,
+              bookHref: site.bookingHref,
               whatsappLabel: dialog.whatsappLabel,
-              whatsappHref: whatsappUrl(dialog.whatsappMessage.replace("{title}", shown.title)),
+              whatsappHref: whatsappUrl(site.contact, dialog.whatsappMessage.replace("{title}", shown.title)),
             }}
             disclaimer={dialog.disclaimer}
           />

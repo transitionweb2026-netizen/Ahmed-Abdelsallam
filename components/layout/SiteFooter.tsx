@@ -1,17 +1,18 @@
 import { ArrowUp, Phone } from "lucide-react";
 import { AppLink } from "@/components/ui/AppLink";
-import { mainNav, routes } from "@/config/routes";
-import { siteConfig, siteIdentity } from "@/config/site";
+import { routes } from "@/config/routes";
 import { BrandIcon } from "@/components/ui/BrandIcons";
-import { BrandMark } from "@/components/ui/BrandMark";
+import { SiteLogo } from "@/components/ui/SiteLogo";
 import { DotGrid, Orb } from "@/components/ui/Decor";
 import { getI18n } from "@/i18n/server";
+import { getSite } from "@/lib/content";
 import { phoneDisplay, phoneHref, whatsappUrl } from "@/lib/utils";
 import styles from "./SiteFooter.module.css";
 
 export async function SiteFooter() {
   const { locale, t } = await getI18n();
-  const identity = siteIdentity[locale];
+  const site = await getSite(locale);
+  const identity = site.identity;
   const year = new Date().getFullYear();
 
   return (
@@ -24,7 +25,7 @@ export async function SiteFooter() {
           <div className={styles.grid}>
             <div className={styles.brandCol}>
               <AppLink href={routes.home} className={styles.brand}>
-                <BrandMark size={48} idPrefix="footer-mark" />
+                <SiteLogo logo={site.logo} size={48} idPrefix="footer-mark" />
                 <span className={styles.brandText}>
                   <span className={styles.brandName}>{identity.name}</span>
                   <span className={styles.brandRole}>{identity.role}</span>
@@ -32,7 +33,7 @@ export async function SiteFooter() {
               </AppLink>
               <p className={styles.about}>{t.footer.about}</p>
               <ul className={styles.socials} aria-label={t.common.socialAccounts}>
-                {siteConfig.socials.map((social) => (
+                {site.socials.map((social) => (
                   <li key={social.platform}>
                     <a
                       href={social.href}
@@ -53,10 +54,10 @@ export async function SiteFooter() {
                 {t.footer.quickLinks}
               </h2>
               <ul className={styles.links}>
-                {mainNav.map((item) => (
+                {site.navigation.filter((item) => item.showInFooter).map((item) => (
                   <li key={item.key}>
                     <AppLink href={item.href} className={styles.link}>
-                      {t.nav[item.key]}
+                      {item.label}
                     </AppLink>
                   </li>
                 ))}
@@ -67,15 +68,15 @@ export async function SiteFooter() {
               <h2 className={styles.colTitle}>{t.footer.contactTitle}</h2>
               <ul className={styles.contacts}>
                 <li>
-                  <a href={phoneHref()} className={styles.contact}>
+                  <a href={phoneHref(site.contact)} className={styles.contact}>
                     <span className={styles.contactIcon} aria-hidden="true">
                       <Phone size={17} />
                     </span>
-                    <span dir="ltr">{phoneDisplay()}</span>
+                    <span dir="ltr">{phoneDisplay(site.contact)}</span>
                   </a>
                 </li>
                 <li>
-                  <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className={styles.contact}>
+                  <a href={whatsappUrl(site.contact)} target="_blank" rel="noopener noreferrer" className={styles.contact}>
                     <span className={styles.contactIcon} aria-hidden="true">
                       <BrandIcon name="whatsapp" size={17} />
                     </span>

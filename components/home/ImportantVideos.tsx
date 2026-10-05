@@ -9,15 +9,16 @@ import type { CollectionSectionContent, Video } from "@/types/content";
 import styles from "./ImportantVideos.module.css";
 
 interface ImportantVideosProps {
+  id?: string;
   content: CollectionSectionContent;
   /** The featured subset of the shared 9-video dataset. */
   videos: Video[];
 }
 
-export async function ImportantVideos({ content, videos }: ImportantVideosProps) {
+export async function ImportantVideos({ content, videos, id }: ImportantVideosProps) {
   const { t } = await getI18n();
   return (
-    <section className="page-section" aria-labelledby="videos-title">
+    <section id={id} className="page-section" aria-labelledby="videos-title">
       <Orb className="top-1/3 start-[-14rem] h-[36rem] w-[36rem]" color="blue" />
       <Orb className="bottom-10 end-[-12rem] h-[30rem] w-[30rem]" color="lavender" />
       <GlassRing className="top-[46%] end-[5%] hidden h-28 w-28 xl:block" />

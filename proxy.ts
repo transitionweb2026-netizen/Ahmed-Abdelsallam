@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { isPagePath } from "@/config/routes";
 import { defaultLocale, isLocale, LOCALE_COOKIE, splitLocale } from "@/i18n/config";
+import { guardAdmin } from "@/lib/supabase/proxy";
 
 /**
  * Every page lives under /ar or /en. Requests without a language prefix —
@@ -11,9 +12,13 @@ import { defaultLocale, isLocale, LOCALE_COOKIE, splitLocale } from "@/i18n/conf
  *
  * Prefixed URLs that are not a page (/en/old-page) are rendered by
  * app/[lang]/[...rest] as the branded 404 page; this sets their status.
+ *
+ * /admin (the CMS dashboard) is not localized: signed-out visitors are sent
+ * to the login page (lib/supabase/proxy.ts).
  */
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  if (pathname === "/admin" || pathname.startsWith("/admin/")) return guardAdmin(request);
   const { locale, path } = splitLocale(pathname);
   if (locale) return isPagePath(path) ? NextResponse.next() : NextResponse.next({ status: 404 });
 

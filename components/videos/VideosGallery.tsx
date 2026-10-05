@@ -2,13 +2,12 @@
 
 import { ChevronLeft, ChevronRight, Clock } from "lucide-react";
 import { useMemo, useState } from "react";
-import { useDictionary } from "@/components/i18n/LocaleProvider";
+import { useDictionary, useSite } from "@/components/i18n/LocaleProvider";
 import { VideoPlayer } from "@/components/media/VideoPlayer";
 import { Modal } from "@/components/modal/Modal";
 import { RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { VideoCard } from "@/components/videos/VideoCard";
-import { routes } from "@/config/routes";
 import { useHashDialog } from "@/hooks/useHashDialog";
 import { interpolate } from "@/i18n/format";
 import type { Video } from "@/types/content";
@@ -24,6 +23,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
  */
 export function VideosGallery({ videos }: { videos: Video[] }) {
   const t = useDictionary();
+  const { bookingHref } = useSite();
   const ids = useMemo(() => videos.map(anchor), [videos]);
   const { activeId, open, select, close } = useHashDialog(ids);
   const activeIndex = videos.findIndex((video) => anchor(video) === activeId);
@@ -114,7 +114,7 @@ export function VideosGallery({ videos }: { videos: Video[] }) {
               </div>
 
               <div className={styles.cta}>
-                <GlassButton href={routes.contact} size="sm">
+                <GlassButton href={bookingHref} size="sm">
                   {t.video.book}
                 </GlassButton>
               </div>

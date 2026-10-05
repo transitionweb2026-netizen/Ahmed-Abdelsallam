@@ -3,7 +3,7 @@
 import { ChevronDown, CircleAlert, CircleCheck, Mail, MessageSquareText, Phone, Tag, TriangleAlert, UserRound } from "lucide-react";
 import { useId, useState, useTransition, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 import { submitContactForm } from "@/app/[lang]/contact/actions";
-import { useDictionary, useLocale } from "@/components/i18n/LocaleProvider";
+import { useDictionary, useLocale, useSite } from "@/components/i18n/LocaleProvider";
 import { GlassButton } from "@/components/ui/GlassButton";
 import {
   CONTACT_FIELDS,
@@ -79,6 +79,7 @@ interface ContactFormProps {
 export function ContactForm({ copy }: ContactFormProps) {
   const locale = useLocale();
   const t = useDictionary();
+  const { contact } = useSite();
   const uid = useId();
   const id = (field: ContactField) => `${uid}-${field}`;
   const [values, setValues] = useState<ContactFormValues>(EMPTY);
@@ -138,7 +139,7 @@ export function ContactForm({ copy }: ContactFormProps) {
     return code ? t.form.errors[code] : undefined;
   };
   const hasErrors = attempted && Object.keys(errors).length > 0;
-  const whatsappFallback = lastSent ? whatsappUrl(contactSummary(lastSent, copy.labels)) : whatsappUrl();
+  const whatsappFallback = lastSent ? whatsappUrl(contact, contactSummary(lastSent, copy.labels)) : whatsappUrl(contact);
 
   return (
     <form className={styles.form} onSubmit={onSubmit} noValidate aria-busy={pending || undefined}>
