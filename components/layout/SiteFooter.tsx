@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ArrowUp, Phone } from "lucide-react";
 import { AppLink } from "@/components/ui/AppLink";
 import { routes } from "@/config/routes";
@@ -89,6 +90,16 @@ export async function SiteFooter() {
             <div>
               <h2 className={styles.colTitle}>{t.footer.disclaimerTitle}</h2>
               <p className={styles.disclaimer}>{t.footer.disclaimer}</p>
+            </div>
+          </div>
+
+          <div className={styles.creditRow}>
+            <div className={styles.credit}>
+              <span className={styles.creditText}>{t.footer.credit}</span>
+              <span className={styles.creditMark}>
+                <Image src="/transition-mark.png" alt="Transition" width={18} height={18} />
+              </span>
+              <span className={styles.creditBrand}>Transition</span>
             </div>
           </div>
 

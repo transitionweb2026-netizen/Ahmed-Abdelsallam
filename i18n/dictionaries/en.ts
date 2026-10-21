@@ -49,6 +49,7 @@ export const en: Dictionary = {
       "The content on this website is for general awareness only and does not replace an in-person examination or medical consultation.",
     rights: "All rights reserved.",
     backToTop: "Back to top",
+    credit: "Design & Development",
   },
   cards: {
     learnMore: "Learn more",

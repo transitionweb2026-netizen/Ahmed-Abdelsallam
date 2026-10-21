@@ -41,6 +41,7 @@ export interface Dictionary {
     disclaimer: string;
     rights: string;
     backToTop: string;
+    credit: string;
   };
   cards: {
     learnMore: string;
