@@ -385,7 +385,7 @@ SEO: SEO title, Meta description, Sharing image (Arabic), Sharing image (English
 - **Description** — text · AR+EN
 - **Icon** — icon
 - **Card image** — media (image) · required
-- **Opens the service** — link to another item
+- **Linked service** — link to another item
 
 ### Qualifications and certificates
 
@@ -540,7 +540,7 @@ Social links (3): platform, https address, visible, order.
 
 ## Interface text
 
-75 short texts (buttons, labels, accessible names, form messages), each in Arabic and English. An empty value falls back to the built-in wording.
+76 short texts (buttons, labels, accessible names, form messages), each in Arabic and English. An empty value falls back to the built-in wording.
 
 | Group | Texts |
 | --- | --- |
@@ -549,7 +549,7 @@ Social links (3): platform, https address, visible, order.
 | Cards | 5 |
 | Shared labels | 5 |
 | Contact page | 1 |
-| Footer | 8 |
+| Footer | 9 |
 | Form validation messages | 9 |
 | Header and menu | 8 |
 | Language switch | 1 |

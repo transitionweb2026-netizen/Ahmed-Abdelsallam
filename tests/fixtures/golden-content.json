@@ -133,7 +133,8 @@
         "disclaimerTitle": "تنويه طبي",
         "disclaimer": "المحتوى المنشور على هذا الموقع لأغراض التوعية العامة فقط، ولا يغني عن الفحص والاستشارة الطبية المباشرة.",
         "rights": "جميع الحقوق محفوظة.",
-        "backToTop": "العودة للأعلى"
+        "backToTop": "العودة للأعلى",
+        "credit": "تصميم وتطوير"
       },
       "cards": {
         "learnMore": "اعرف المزيد",
@@ -2873,11 +2874,11 @@
         "slug": "knee-joints",
         "icon": "bone",
         "order": 1,
-        "title": "الركبة والمفاصل",
-        "description": "تقييم وعلاج آلام الركبة وخشونة المفاصل وإصابات الأربطة والغضاريف.",
+        "title": "علاج آلام الركبة والمفاصل",
+        "description": "تقييم أسباب ألم الركبة والمفاصل وتحديد خطة علاج مناسبة لطبيعة الحالة ونمط الحياة.",
         "image": {
-          "src": "/images/specialties/knee-joints.jpg",
-          "alt": "رسم تشريحي لأربطة مفصل الركبة",
+          "src": "/images/services/knee-joint-pain.jpg",
+          "alt": "أخصائي يفحص ركبة مريض مستلقٍ على سرير الفحص",
           "width": 1200,
           "height": 900
         },
@@ -2887,11 +2888,11 @@
         "slug": "spine",
         "icon": "spine",
         "order": 2,
-        "title": "العمود الفقري",
-        "description": "تشخيص آلام الظهر والرقبة والانزلاق الغضروفي، مع البدء بالعلاج التحفظي كلما أمكن.",
+        "title": "آلام الظهر والرقبة",
+        "description": "فحص مشكلات العمود الفقري والظهر والرقبة، والتمييز بين أسبابها لاختيار العلاج الأنسب.",
         "image": {
-          "src": "/images/specialties/spine.jpg",
-          "alt": "صورة أشعة جانبية للرأس وفقرات الرقبة",
+          "src": "/images/services/spine-back-pain.jpg",
+          "alt": "مجسم للعمود الفقري يوضح الفقرات القطنية والغضاريف",
           "width": 1200,
           "height": 900
         },
@@ -2901,11 +2902,11 @@
         "slug": "sports-rehab",
         "icon": "activity",
         "order": 3,
-        "title": "الإصابات الرياضية والتأهيل",
-        "description": "متابعة الإصابة من التشخيص حتى العودة الآمنة إلى الملعب ببرنامج تأهيل تدريجي.",
+        "title": "إصابات الملاعب",
+        "description": "متابعة الإصابات الرياضية من التشخيص حتى العودة التدريجية الآمنة إلى النشاط.",
         "image": {
-          "src": "/images/specialties/sports-rehab.jpg",
-          "alt": "أخصائي تأهيل يوجّه مريضة أثناء تمرين بشريط مقاومة",
+          "src": "/images/services/sports-injuries.jpg",
+          "alt": "رياضية ترتدي دعامة للركبة بجوار كرة سلة",
           "width": 1200,
           "height": 900
         },
@@ -2915,11 +2916,11 @@
         "slug": "fractures-trauma",
         "icon": "boneFracture",
         "order": 4,
-        "title": "الكسور والإصابات",
-        "description": "التعامل مع الكسور ومتابعة الالتئام، ثم استعادة الحركة والقوة بعد الإصابة.",
+        "title": "تشخيص وعلاج الكسور",
+        "description": "التعامل مع الكسور والإصابات العظمية ومتابعة مراحل الالتئام خطوة بخطوة.",
         "image": {
-          "src": "/images/specialties/fractures-trauma.jpg",
-          "alt": "صورة أشعة لكسر في عظمة الترقوة",
+          "src": "/images/services/fractures.jpg",
+          "alt": "ساق مثبّتة بجبيرة داعمة أثناء المشي",
           "width": 1200,
           "height": 900
         },
@@ -4105,7 +4106,8 @@
         "disclaimerTitle": "Medical disclaimer",
         "disclaimer": "The content on this website is for general awareness only and does not replace an in-person examination or medical consultation.",
         "rights": "All rights reserved.",
-        "backToTop": "Back to top"
+        "backToTop": "Back to top",
+        "credit": "Design & Development"
       },
       "cards": {
         "learnMore": "Learn more",
@@ -6842,11 +6844,11 @@
         "slug": "knee-joints",
         "icon": "bone",
         "order": 1,
-        "title": "Knee and Joints",
-        "description": "Assessing and treating knee pain, osteoarthritis, and ligament and cartilage injuries.",
+        "title": "Knee and Joint Pain Treatment",
+        "description": "Assessing the causes of knee and joint pain and building a treatment plan that suits the condition and your lifestyle.",
         "image": {
-          "src": "/images/specialties/knee-joints.jpg",
-          "alt": "An anatomical drawing of the knee ligaments",
+          "src": "/images/services/knee-joint-pain.jpg",
+          "alt": "A specialist examining the knee of a patient lying on an examination couch",
           "width": 1200,
           "height": 900
         },
@@ -6856,11 +6858,11 @@
         "slug": "spine",
         "icon": "spine",
         "order": 2,
-        "title": "Spine",
-        "description": "Diagnosing back and neck pain and herniated discs, starting with conservative treatment whenever possible.",
+        "title": "Back and Neck Pain",
+        "description": "Examining problems of the spine, back and neck, and telling their causes apart to choose the most suitable treatment.",
         "image": {
-          "src": "/images/specialties/spine.jpg",
-          "alt": "A side-view X-ray of the head and neck vertebrae",
+          "src": "/images/services/spine-back-pain.jpg",
+          "alt": "A spine model showing the lumbar vertebrae and discs",
           "width": 1200,
           "height": 900
         },
@@ -6870,11 +6872,11 @@
         "slug": "sports-rehab",
         "icon": "activity",
         "order": 3,
-        "title": "Sports Injuries and Rehabilitation",
-        "description": "Following an injury from diagnosis to a safe return to play, with a gradual rehabilitation program.",
+        "title": "Sports Injuries",
+        "description": "Caring for sports injuries from diagnosis through a gradual, safe return to activity.",
         "image": {
-          "src": "/images/specialties/sports-rehab.jpg",
-          "alt": "A rehabilitation specialist guiding a patient through a resistance-band exercise",
+          "src": "/images/services/sports-injuries.jpg",
+          "alt": "An athlete wearing a knee brace next to a basketball",
           "width": 1200,
           "height": 900
         },
@@ -6884,11 +6886,11 @@
         "slug": "fractures-trauma",
         "icon": "boneFracture",
         "order": 4,
-        "title": "Fractures and Injuries",
-        "description": "Managing fractures and monitoring healing, then restoring movement and strength after the injury.",
+        "title": "Fracture Diagnosis and Treatment",
+        "description": "Managing fractures and bone injuries, and following each stage of healing step by step.",
         "image": {
-          "src": "/images/specialties/fractures-trauma.jpg",
-          "alt": "An X-ray of a collarbone fracture",
+          "src": "/images/services/fractures.jpg",
+          "alt": "A leg supported by a cast while walking",
           "width": 1200,
           "height": 900
         },

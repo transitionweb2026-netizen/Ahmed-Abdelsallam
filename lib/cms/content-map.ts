@@ -378,19 +378,40 @@ export class ContentReader {
     return select(items, options);
   }
 
+  /**
+   * "Key specialties" on the About page. Each card is linked to one service
+   * (`service_id`) and, when linked, is a mirror of that service's own card:
+   * same title, description, image and icon as on /services, read live from
+   * the service — never a separate copy that can drift out of sync. Editing
+   * the service updates its specialty card automatically. The specialty's
+   * own title/description/image are only a fallback for a card not yet
+   * linked to a service.
+   */
   specialties(): Specialty[] {
-    const services = new Map(this.snapshot.services.map((row) => [row.id, row.slug]));
+    const services = new Map(this.snapshot.services.map((row) => [row.id, row]));
+    const ar = this.locale === "ar";
     return [...this.snapshot.specialties].sort(byOrder).map((row) => {
       const service = row.service_id ? services.get(row.service_id) : undefined;
+      if (service) {
+        return {
+          slug: row.slug,
+          icon: service.icon as Specialty["icon"],
+          order: row.sort_order,
+          title: ar ? service.title_ar : service.title_en,
+          description: ar ? service.description_ar : service.description_en,
+          image: this.image(service.image_id),
+          // Opens that service's own detail dialog on /services.
+          href: `${routes.services}#${service.slug}`,
+        };
+      }
       return {
         slug: row.slug,
         icon: row.icon as Specialty["icon"],
         order: row.sort_order,
-        title: this.locale === "ar" ? row.title_ar : row.title_en,
-        description: this.locale === "ar" ? row.description_ar : row.description_en,
+        title: ar ? row.title_ar : row.title_en,
+        description: ar ? row.description_ar : row.description_en,
         image: this.image(row.image_id),
-        // Opens the matching service dialog on /services.
-        href: service ? `${routes.services}#${service}` : routes.services,
+        href: routes.services,
       };
     });
   }
