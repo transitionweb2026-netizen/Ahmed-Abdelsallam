@@ -23,7 +23,11 @@ export default async function RecordPage({ params }: Props) {
   const row = isNew ? null : await loadRecord(supabase, def, id);
   if (!isNew && !row) notFound();
 
-  const doc = row ? rowToDoc(def.fields, row) : emptyDoc(def.fields);
+  // Every boolean field starts a new item as "off" (emptyValue); videos are the
+  // one case where that default is wrong — "listed" should be on so a new
+  // video appears in the gallery as soon as it is published, and only the
+  // single introduction video needs it switched off by hand.
+  const doc = row ? rowToDoc(def.fields, row) : def.key === "videos" ? { ...emptyDoc(def.fields), listed: true } : emptyDoc(def.fields);
   const [media, references] = await Promise.all([loadMediaMap(supabase, mediaIdsOf(def.fields, doc)), loadReferenceOptions(supabase, def.fields)]);
   // New items start as drafts: nothing reaches the website until it is published.
   const status = row ? (row.status === "draft" ? "draft" : "published") : "draft";
