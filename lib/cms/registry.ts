@@ -108,7 +108,7 @@ export const sectionTypes: Record<SectionType, SectionTypeDef> = {
   homeStats: {
     label: "Statistics",
     fields: [headingField],
-    slots: [{ key: "doctorImage", label: "Doctor photo", required: true, help: "Portrait, 4:5." }],
+    slots: [{ key: "doctorImage", label: "Doctor photo", required: true, position: true, help: "Portrait, 4:5." }],
     note: { text: "The figures themselves are edited under Statistics.", href: "/admin/c/home-stats", link: "Edit figures" },
   },
   collection: { label: "Heading and link", fields: [headingField, cta("cta", "Link button")] },
