@@ -244,18 +244,20 @@
 }
 
 .offset .caption {
-  top: 8%;
-  inset-inline-start: -8%;
+  /* Hangs below the card, like the fan variant's — never over the photo,
+     so it can never cover the face at any screen width. */
+  bottom: -20px;
+  inset-inline-start: 6%;
   /* The card scales with the viewport (vw-based); without a cap the badge's
      fixed font/icon size stays constant and can grow wider than the photo
-     itself on narrow screens, covering the face instead of framing it. */
+     itself on narrow screens. */
   max-width: min(76%, 230px);
 }
 
 @media (max-width: 639px) {
   .offset .caption {
-    inset-inline-start: -4%;
-    top: 5%;
+    inset-inline-start: 4%;
+    bottom: -14px;
     max-width: 68%;
     gap: 0.5rem;
     padding: 0.45rem;
