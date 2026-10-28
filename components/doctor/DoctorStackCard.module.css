@@ -246,11 +246,34 @@
 .offset .caption {
   top: 8%;
   inset-inline-start: -8%;
+  /* The card scales with the viewport (vw-based); without a cap the badge's
+     fixed font/icon size stays constant and can grow wider than the photo
+     itself on narrow screens, covering the face instead of framing it. */
+  max-width: min(76%, 230px);
 }
 
 @media (max-width: 639px) {
   .offset .caption {
     inset-inline-start: -4%;
+    top: 5%;
+    max-width: 68%;
+    gap: 0.5rem;
+    padding: 0.45rem;
+    padding-inline-end: 0.85rem;
+  }
+
+  .offset .captionIcon {
+    width: 32px;
+    height: 32px;
+    border-radius: 11px;
+  }
+
+  .offset .captionTitle {
+    font-size: 0.85rem;
+  }
+
+  .offset .captionSub {
+    font-size: 0.75rem;
   }
 }
 
