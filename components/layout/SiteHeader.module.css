@@ -87,6 +87,8 @@
   font-weight: 700;
   color: var(--primary);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .brandRole {
@@ -94,6 +96,8 @@
   font-weight: 500;
   color: var(--text-muted);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ---- Desktop navigation ------------------------------------------------ */
