@@ -7,8 +7,13 @@
   align-items: flex-end;
   width: 100%;
   min-height: max(700px, 100svh);
-  /* Phones: a generous photo band above the text. */
-  padding-top: calc(var(--header-h) + 15rem);
+  /* Phones: a generous photo band above the text — tall enough that a
+     face anywhere in the upper half of the cover photo stays clear of the
+     text, however tall the section grows to fit its own content (the
+     photo always fills the full section, so more text pushes the photo's
+     visible area down with it; a fixed reserve alone doesn't scale with
+     that, hence the svh floor). */
+  padding-top: max(calc(var(--header-h) + 15rem), 46svh);
   padding-bottom: 3rem;
   overflow: clip;
 }
@@ -26,7 +31,7 @@
    should start sooner (services, contact). Same layers and composition. */
 .compact {
   min-height: 0;
-  padding-top: calc(var(--header-h) + 8.5rem);
+  padding-top: max(calc(var(--header-h) + 8.5rem), 34svh);
   padding-bottom: 2.75rem;
 }
 
