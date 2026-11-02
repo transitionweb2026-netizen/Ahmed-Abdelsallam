@@ -27,6 +27,18 @@
   }
 }
 
+/* Desktop photos are widest relative to the text column around laptop
+   widths (1024–1400px), where the subject sits roughly in the frame's
+   middle — close enough to the text side that the full-size display
+   headline used to reach past it. A lower font-size ceiling keeps every
+   line shorter (the matching max-width lives on .content below, so it
+   wins the cascade over the unconditional rule there). */
+@media (min-width: 768px) {
+  .title {
+    font-size: clamp(2.1rem, 1.1rem + 2.1vw, 3.4rem);
+  }
+}
+
 /* Compact size — roughly one-third shorter, for pages whose own content
    should start sooner (services, contact). Same layers and composition. */
 .compact {
@@ -133,10 +145,10 @@
   .scrim {
     background: linear-gradient(
       var(--grad-dir),
-      rgba(243, 245, 252, 0.9) 0%,
-      rgba(236, 240, 253, 0.8) 38%,
-      rgba(211, 218, 250, 0.5) 58%,
-      rgba(168, 182, 243, 0.16) 76%,
+      rgba(243, 245, 252, 0.72) 0%,
+      rgba(236, 240, 253, 0.64) 38%,
+      rgba(211, 218, 250, 0.4) 58%,
+      rgba(168, 182, 243, 0.13) 76%,
       rgba(168, 182, 243, 0) 90%
     );
   }
@@ -146,10 +158,10 @@
   .scrim {
     background: linear-gradient(
       var(--grad-dir),
-      rgba(243, 245, 252, 0.86) 0%,
-      rgba(236, 240, 253, 0.76) 30%,
-      rgba(211, 218, 250, 0.46) 47%,
-      rgba(168, 182, 243, 0.14) 62%,
+      rgba(243, 245, 252, 0.69) 0%,
+      rgba(236, 240, 253, 0.61) 30%,
+      rgba(211, 218, 250, 0.37) 47%,
+      rgba(168, 182, 243, 0.11) 62%,
       rgba(168, 182, 243, 0) 74%
     );
   }
@@ -200,13 +212,18 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 1.35rem;
-  max-width: 40rem;
+  /* Narrow enough on desktop that the text column stays clear of the
+     photo's centre, where the subject usually sits (mobile never reaches
+     this width, so it's unaffected). */
+  max-width: 29rem;
 }
 
-/* Room for the headline's intended two-line composition. */
+/* A little more room once the column's width is a smaller share of a
+   wide screen, without giving back the ground the 768px rule won from
+   the photo. */
 @media (min-width: 1280px) {
   .content {
-    max-width: 46rem;
+    max-width: 32rem;
   }
 }
 
