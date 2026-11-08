@@ -85,8 +85,7 @@ export const homeCopy: HomeCopy = {
       width: 1200,
       height: 1500,
     },
-    doctorName: name,
-    doctorRole: role,
+    caption: { icon: "stethoscope", title: name, subtitle: role },
   },
 
   services: {

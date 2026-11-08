@@ -133,6 +133,10 @@ SEO: SEO title, Meta description, Sharing image (Arabic), Sharing image (English
   - **Small label above the heading** — text · AR+EN
   - **Heading** — heading (accent parts) · AR+EN · required
   - **Description** — text · AR+EN
+- **Caption on the doctor photo** — group
+  - **Icon** — icon
+  - **Name** — text · AR+EN
+  - **Title** — text · AR+EN
 - _The figures themselves are edited under Statistics._
 
 ### Heading and link (`collection`)

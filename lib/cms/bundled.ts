@@ -388,7 +388,14 @@ export function buildBundledSnapshot(): CmsSnapshot {
     },
     { videoId: introVideoId },
   );
-  const statsSection = b.section("home", "stats", { heading: heading(arHome.stats.heading, enHome.stats.heading) });
+  const statsSection = b.section("home", "stats", {
+    heading: heading(arHome.stats.heading, enHome.stats.heading),
+    caption: {
+      icon: same(arHome.stats.caption.icon, enHome.stats.caption.icon, "home.stats.caption.icon"),
+      title: pair(arHome.stats.caption.title, enHome.stats.caption.title),
+      subtitle: pair(arHome.stats.caption.subtitle, enHome.stats.caption.subtitle),
+    },
+  });
   b.imageSlot(statsSection, "doctorImage", arHome.stats.doctorImage, enHome.stats.doctorImage, "home.stats.doctorImage");
   zip(arHome.stats.stats, enHome.stats.stats, "home.stats.stats").forEach(([a, e], index) => {
     const key = same(a.id, e.id, "home.stats.id");

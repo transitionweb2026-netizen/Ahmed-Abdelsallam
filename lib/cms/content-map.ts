@@ -19,6 +19,7 @@ import type {
   HeroDoc,
   HomeAboutDoc,
   HomeIntroDoc,
+  HomeStatsDoc,
   HomeReviewsFaqDoc,
   PageCtaDoc,
   ReviewsFaqDoc,
@@ -586,7 +587,8 @@ export class ContentReader {
 
   home(): HomeContent {
     const intro = this.doc<HomeIntroDoc>("home", "intro");
-    const stats = this.section("home", "stats");
+    const statsRow = this.section("home", "stats");
+    const stats = (statsRow?.content ?? {}) as Partial<HomeStatsDoc>;
     const services = this.doc<CollectionDoc>("home", "services");
     const aboutRow = this.section("home", "about");
     const about = (aboutRow?.content ?? {}) as Partial<HomeAboutDoc>;
@@ -594,7 +596,6 @@ export class ContentReader {
     const journey = this.doc<HeadingOnlyDoc>("home", "journey");
     const videos = this.doc<CollectionDoc>("home", "videos");
     const rf = this.doc<HomeReviewsFaqDoc>("home", "reviewsFaq");
-    const identity = this.identity();
     return {
       hero: this.hero("home"),
       intro: {
@@ -604,11 +605,14 @@ export class ContentReader {
         video: this.sectionVideo("home", "intro"),
       },
       stats: {
-        heading: this.heading((stats?.content as Partial<HeadingOnlyDoc> | undefined)?.heading),
+        heading: this.heading(stats.heading),
         stats: this.homeStats(),
-        doctorImage: this.requiredSlot(stats, "doctorImage"),
-        doctorName: identity.name,
-        doctorRole: identity.role,
+        doctorImage: this.requiredSlot(statsRow, "doctorImage"),
+        caption: {
+          icon: (stats.caption?.icon ?? "stethoscope") as never,
+          title: this.text(stats.caption?.title),
+          subtitle: this.text(stats.caption?.subtitle),
+        },
       },
       services: { heading: this.heading(services.heading), cta: this.cta(services.cta) },
       about: {

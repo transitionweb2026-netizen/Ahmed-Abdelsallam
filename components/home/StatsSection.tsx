@@ -32,7 +32,7 @@ export function StatsSection({ content, id }: { content: StatsContent; id?: stri
             image={content.doctorImage}
             variant="fan"
             sizes="(min-width: 1024px) 420px, (min-width: 768px) 38vw, 68vw"
-            caption={{ icon: "stethoscope", title: content.doctorName, subtitle: content.doctorRole }}
+            caption={content.caption}
           />
         </Reveal>
       </div>

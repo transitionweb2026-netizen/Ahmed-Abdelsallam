@@ -472,8 +472,7 @@ export interface StatsContent {
   heading: SectionHeading;
   stats: Stat[];
   doctorImage: MediaImage;
-  doctorName: string;
-  doctorRole: string;
+  caption: { icon: IconName; title: string; subtitle: string };
 }
 
 export interface AboutContent {

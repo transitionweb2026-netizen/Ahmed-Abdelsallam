@@ -357,8 +357,11 @@
           "width": 1200,
           "height": 1500
         },
-        "doctorName": "د. أحمد عبد السلام",
-        "doctorRole": "طبيب العظام"
+        "caption": {
+          "icon": "stethoscope",
+          "title": "د. أحمد عبد السلام",
+          "subtitle": "طبيب العظام"
+        }
       },
       "services": {
         "heading": {
@@ -4327,8 +4330,11 @@
           "width": 1200,
           "height": 1500
         },
-        "doctorName": "Dr. Ahmed Abdelsalam",
-        "doctorRole": "Orthopedic Doctor"
+        "caption": {
+          "icon": "stethoscope",
+          "title": "Dr. Ahmed Abdelsalam",
+          "subtitle": "Orthopedic Doctor"
+        }
       },
       "services": {
         "heading": {

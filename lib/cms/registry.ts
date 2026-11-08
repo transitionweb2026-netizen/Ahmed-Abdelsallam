@@ -107,7 +107,15 @@ export const sectionTypes: Record<SectionType, SectionTypeDef> = {
   },
   homeStats: {
     label: "Statistics",
-    fields: [headingField],
+    fields: [
+      headingField,
+      {
+        type: "group",
+        key: "caption",
+        label: "Caption on the doctor photo",
+        fields: [{ type: "icon", key: "icon", label: "Icon" }, text("title", "Name", 80), text("subtitle", "Title", 200)],
+      },
+    ],
     slots: [{ key: "doctorImage", label: "Doctor photo", required: true, position: true, help: "Portrait, 4:5." }],
     note: { text: "The figures themselves are edited under Statistics.", href: "/admin/c/home-stats", link: "Edit figures" },
   },

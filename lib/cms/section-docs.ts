@@ -29,6 +29,11 @@ export interface HeadingOnlyDoc {
   heading: HeadingDoc;
 }
 
+export interface HomeStatsDoc {
+  heading: HeadingDoc;
+  caption: { icon: string; title: L; subtitle: L };
+}
+
 export interface CollectionDoc {
   heading: HeadingDoc;
   cta: CtaDoc;
@@ -131,7 +136,7 @@ export interface ContactLocationDoc {
 export interface SectionDocs {
   hero: HeroDoc;
   homeIntro: HomeIntroDoc;
-  homeStats: HeadingOnlyDoc;
+  homeStats: HomeStatsDoc;
   collection: CollectionDoc;
   homeAbout: HomeAboutDoc;
   timeline: HeadingOnlyDoc;
