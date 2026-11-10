@@ -81,13 +81,6 @@
   pointer-events: none;
 }
 
-.category {
-  position: absolute;
-  top: 12px;
-  inset-inline-start: 12px;
-  z-index: 2;
-}
-
 /* ---- Text ------------------------------------------------------------------- */
 
 .body {

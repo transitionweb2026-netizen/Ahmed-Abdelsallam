@@ -1,6 +1,6 @@
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
-import { ArticleMeta, CategoryChip } from "@/components/articles/ArticleMeta";
+import { ArticleMeta } from "@/components/articles/ArticleMeta";
 import { cn } from "@/lib/utils";
 import type { ArticleWithMeta } from "@/types/content";
 import styles from "./ArticleCard.module.css";
@@ -45,7 +45,6 @@ export function ArticleCard({
           style={{ objectPosition: article.image.objectPosition }}
         />
         <span className={styles.mediaTint} aria-hidden="true" />
-        <CategoryChip className={styles.category}>{article.category}</CategoryChip>
       </div>
 
       <div className={styles.body}>
