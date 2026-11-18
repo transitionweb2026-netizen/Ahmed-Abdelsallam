@@ -25,7 +25,7 @@ export default async function ArticlesPage() {
     getPageCta(locale, "articles"),
   ]);
   const featured = articles.find((article) => article.featured) ?? articles[0];
-  const others = articles.filter((article) => article !== featured).slice(0, 6);
+  const others = articles.filter((article) => article !== featured);
 
   return (
     <>
