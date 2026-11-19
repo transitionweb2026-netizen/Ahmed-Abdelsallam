@@ -2,7 +2,7 @@
 
 import { AlertTriangle, ExternalLink, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { deleteRecord, saveRecord } from "@/app/admin/_actions/content";
 import type { MediaMap, ReferenceOptions } from "@/lib/cms/admin/types";
 import { missingTranslations, pruneDoc, validateDoc } from "@/lib/cms/fields";
@@ -66,6 +66,29 @@ export function RecordForm({
     if (!id) router.replace(`/admin/c/${collectionKey}/${result.data.id}`);
     router.refresh();
   };
+
+  // Autosave while drafting: a draft is never visible to visitors, so saving
+  // it quietly in the background is safe — nothing is lost if the editor
+  // navigates away without pressing the button. Never autosaves a published
+  // item (that would push a half-finished edit live) or an invalid doc (the
+  // explicit Save button is what shows those errors).
+  const canAutosave = def.hasStatus && status === "draft";
+  useEffect(() => {
+    if (!canAutosave || !form.dirty || form.saving) return;
+    const timer = setTimeout(() => {
+      if (validateDoc(def.fields, pruneDoc(def.fields, doc)).length) return;
+      void (async () => {
+        form.setSaving(true);
+        const result = await saveRecord(collectionKey, id, { doc, status });
+        form.setSaving(false);
+        if (!result.ok) return;
+        form.markSaved(form.doc);
+        if (!id) router.replace(`/admin/c/${collectionKey}/${result.data.id}`);
+      })();
+    }, 1500);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only the edited content should reset the debounce timer, not every form/router re-render
+  }, [doc, status, canAutosave, form.dirty, form.saving]);
 
   const remove = async () => {
     if (!id) return;
