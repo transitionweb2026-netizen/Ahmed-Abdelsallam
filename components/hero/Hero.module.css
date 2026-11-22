@@ -242,37 +242,16 @@
   color: var(--primary);
 }
 
-/* Breadcrumb trail rendered inside the eyebrow pill (inner pages). */
-.crumbs {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.3rem;
+/* Home only: nudged a little further down from the photo above it, on top
+   of the clearance the photo's own zoom already gives it. */
+.homeEyebrow {
+  margin-top: 0.75rem;
 }
 
-.crumbs li {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-}
-
-.crumbLink {
-  color: var(--text-muted);
-  text-decoration: none;
-  border-radius: 6px;
-  transition: color 0.3s ease;
-}
-
-.crumbLink:hover {
-  color: var(--primary);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
-.crumbSep {
-  flex-shrink: 0;
-  color: var(--secondary-dark);
-  transform: scaleX(calc(var(--dir) * -1));
+@media (min-width: 768px) {
+  .homeEyebrow {
+    margin-top: 0;
+  }
 }
 
 .description {

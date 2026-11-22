@@ -41,6 +41,18 @@
   box-shadow: 0 0 0 3px rgba(168, 182, 243, 0.45);
 }
 
+.small {
+  gap: 0.45rem;
+  padding: 0.3rem 0.75rem 0.3rem 0.85rem;
+  font-size: 0.7rem;
+}
+
+.small .dot {
+  width: 6px;
+  height: 6px;
+  box-shadow: 0 0 0 2px rgba(168, 182, 243, 0.45);
+}
+
 .light {
   color: var(--secondary-light);
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(168, 182, 243, 0.1));

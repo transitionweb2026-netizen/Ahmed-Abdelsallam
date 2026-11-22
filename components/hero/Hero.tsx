@@ -1,14 +1,11 @@
-import { ChevronLeft } from "lucide-react";
 import type { CSSProperties } from "react";
 import { SocialPhonePanel } from "@/components/contact/SocialPhonePanel";
 import { ArtDirectedImage } from "@/components/media/ArtDirectedImage";
-import { AppLink } from "@/components/ui/AppLink";
 import { CurveLines } from "@/components/ui/Decor";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { Icon } from "@/components/ui/Icon";
 import { RichTitle } from "@/components/ui/RichTitle";
-import { routes } from "@/config/routes";
 import { getI18n } from "@/i18n/server";
 import { cn } from "@/lib/utils";
 import type { Cta, HeroContent } from "@/types/content";
@@ -24,10 +21,7 @@ interface HeroProps {
   scrollTarget?: string;
   /** Show the social links + phone panel under the actions. */
   showContactPanel?: boolean;
-  /**
-   * Inner pages: render the eyebrow as a breadcrumb trail
-   * (Home › eyebrow). Mirrors the BreadcrumbList JSON-LD.
-   */
+  /** Inner pages: skip the name/role eyebrow badge (home keeps it, smaller). */
   breadcrumb?: boolean;
   headingId?: string;
 }
@@ -101,25 +95,9 @@ export async function Hero({
 
       <div className={cn("site-container", styles.inner)}>
         <div className={styles.content}>
-          {breadcrumb ? (
-            <nav aria-label={t.common.breadcrumb} className="anim-rise" style={delay(0.05)}>
-              <Eyebrow as="div">
-                <ol className={styles.crumbs}>
-                  <li>
-                    <AppLink href={routes.home} className={styles.crumbLink}>
-                      {t.nav.home}
-                    </AppLink>
-                  </li>
-                  <li>
-                    <ChevronLeft className={styles.crumbSep} size={14} strokeWidth={2.4} aria-hidden="true" />
-                    <span aria-current="page">{content.eyebrow}</span>
-                  </li>
-                </ol>
-              </Eyebrow>
-            </nav>
-          ) : (
-            <div className="anim-rise" style={delay(0.05)}>
-              <Eyebrow>{content.eyebrow}</Eyebrow>
+          {!breadcrumb && (
+            <div className={cn("anim-rise", styles.homeEyebrow)} style={delay(0.05)}>
+              <Eyebrow small>{content.eyebrow}</Eyebrow>
             </div>
           )}
           <h1 id={headingId} className={cn("type-display", styles.title, "anim-rise")} style={delay(0.14)}>
