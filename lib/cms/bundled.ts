@@ -606,6 +606,8 @@ export function buildBundledSnapshot(): CmsSnapshot {
     whatsappLabel: pair(form.whatsappLabel, formEn.whatsappLabel),
     whatsappMessage: pair(form.whatsappMessage, formEn.whatsappMessage),
     callLabel: pair(form.callLabel, formEn.callLabel),
+    onlineLabel: pair(form.onlineLabel, formEn.onlineLabel),
+    onlineMessage: pair(form.onlineMessage, formEn.onlineMessage),
   });
   const labels = arContactPage.location.labels;
   const labelsEn = enContactPage.location.labels;

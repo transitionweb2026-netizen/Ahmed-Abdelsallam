@@ -1354,7 +1354,9 @@
         },
         "whatsappLabel": "احجز عبر واتساب",
         "whatsappMessage": "مرحبًا، أرغب في حجز موعد استشارة مع د. أحمد عبد السلام.",
-        "callLabel": "اتصل بنا"
+        "callLabel": "اتصل بنا",
+        "onlineLabel": "احجز استشارة أونلاين",
+        "onlineMessage": "مرحبًا، أرغب في حجز استشارة أونلاين مع د. أحمد عبد السلام."
       },
       "location": {
         "heading": {
@@ -5327,7 +5329,9 @@
         },
         "whatsappLabel": "Book on WhatsApp",
         "whatsappMessage": "Hello, I'd like to book a consultation with Dr. Ahmed Abdelsalam.",
-        "callLabel": "Call us"
+        "callLabel": "Call us",
+        "onlineLabel": "Book an online consultation",
+        "onlineMessage": "Hello, I'd like to book an online consultation with Dr. Ahmed Abdelsalam."
       },
       "location": {
         "heading": {

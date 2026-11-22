@@ -759,6 +759,8 @@ export class ContentReader {
         whatsappLabel: this.text(form.whatsappLabel),
         whatsappMessage: this.text(form.whatsappMessage),
         callLabel: this.text(form.callLabel),
+        onlineLabel: this.text(form.onlineLabel),
+        onlineMessage: this.text(form.onlineMessage),
       },
       location: {
         heading: this.heading(location.heading),

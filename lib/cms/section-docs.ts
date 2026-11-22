@@ -125,6 +125,8 @@ export interface ContactFormDoc {
   whatsappLabel: L;
   whatsappMessage: L;
   callLabel: L;
+  onlineLabel: L;
+  onlineMessage: L;
 }
 
 export interface ContactLocationDoc {

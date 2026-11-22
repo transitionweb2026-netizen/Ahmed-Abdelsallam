@@ -49,6 +49,17 @@ export async function ContactFormSection({ content }: { content: ContactPageCont
             >
               {content.callLabel}
             </GlassButton>
+            <GlassButton
+              href={whatsappUrl(contact, content.onlineMessage)}
+              external
+              size="lg"
+              variant="secondary"
+              icon="whatsapp"
+              className={styles.directButton}
+              ariaLabel={`${content.onlineLabel} ${t.common.newTab}`}
+            >
+              {content.onlineLabel}
+            </GlassButton>
           </Reveal>
         </div>
       </div>

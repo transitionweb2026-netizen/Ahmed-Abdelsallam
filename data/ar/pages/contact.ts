@@ -76,6 +76,8 @@ export const contactPage: ContactPageContent = {
     whatsappLabel: "احجز عبر واتساب",
     whatsappMessage: "مرحبًا، أرغب في حجز موعد استشارة مع د. أحمد عبد السلام.",
     callLabel: "اتصل بنا",
+    onlineLabel: "احجز استشارة أونلاين",
+    onlineMessage: "مرحبًا، أرغب في حجز استشارة أونلاين مع د. أحمد عبد السلام.",
   },
 
   location: {

@@ -77,6 +77,8 @@ export const contactPage: ContactPageContent = {
     whatsappLabel: "Book on WhatsApp",
     whatsappMessage: "Hello, I'd like to book a consultation with Dr. Ahmed Abdelsalam.",
     callLabel: "Call us",
+    onlineLabel: "Book an online consultation",
+    onlineMessage: "Hello, I'd like to book an online consultation with Dr. Ahmed Abdelsalam.",
   },
 
   location: {

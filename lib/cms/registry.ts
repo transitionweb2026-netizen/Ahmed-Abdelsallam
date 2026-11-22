@@ -280,6 +280,8 @@ export const sectionTypes: Record<SectionType, SectionTypeDef> = {
       text("whatsappLabel", "WhatsApp button under the form", 60),
       longText("whatsappMessage", "WhatsApp message", 300),
       text("callLabel", "Call button under the form", 60),
+      text("onlineLabel", "Online consultation button under the form", 60),
+      longText("onlineMessage", "Online consultation WhatsApp message", 300),
     ],
   },
   contactLocation: {

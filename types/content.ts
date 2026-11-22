@@ -647,6 +647,8 @@ export interface ContactPageContent {
     whatsappLabel: string;
     whatsappMessage: string;
     callLabel: string;
+    onlineLabel: string;
+    onlineMessage: string;
   };
   location: {
     heading: SectionHeading;

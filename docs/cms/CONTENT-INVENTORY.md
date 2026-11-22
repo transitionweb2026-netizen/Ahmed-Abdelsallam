@@ -324,6 +324,8 @@ SEO: SEO title, Meta description, Sharing image (Arabic), Sharing image (English
 - **WhatsApp button under the form** — text · AR+EN
 - **WhatsApp message** — text · AR+EN
 - **Call button under the form** — text · AR+EN
+- **Online consultation button under the form** — text · AR+EN
+- **Online consultation WhatsApp message** — text · AR+EN
 
 ### Clinic location (`contactLocation`)
 
