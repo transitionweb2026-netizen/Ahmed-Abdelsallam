@@ -93,11 +93,20 @@
   height: 100%;
   object-fit: cover;
   object-position: var(--pos-mobile);
+  /* On a narrow phone frame, cover always shows the photo's full height
+     (it's the width that overflows and gets cropped), so object-position's
+     vertical component can't move the subject — only the photo itself
+     moving does. Scaling up, anchored at the bottom edge, pushes
+     everything above that edge further up the screen, clearing the head
+     and shoulders from whatever sits just below the photo. */
+  transform: scale(1.1);
+  transform-origin: 50% 100%;
 }
 
 @media (min-width: 768px) {
   .image {
     object-position: var(--pos-desktop);
+    transform: none;
   }
 }
 
