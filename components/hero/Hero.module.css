@@ -12,8 +12,10 @@
      text, however tall the section grows to fit its own content (the
      photo always fills the full section, so more text pushes the photo's
      visible area down with it; a fixed reserve alone doesn't scale with
-     that, hence the svh floor). */
-  padding-top: max(calc(var(--header-h) + 15rem), 46svh);
+     that, hence the svh floor). A few points above the strict minimum, so
+     the eyebrow badge — the first, topmost piece of text — keeps a clear
+     margin under the chin instead of just grazing it. */
+  padding-top: max(calc(var(--header-h) + 15rem), 49svh);
   padding-bottom: 3rem;
   overflow: clip;
 }
@@ -43,7 +45,7 @@
    should start sooner (services, contact). Same layers and composition. */
 .compact {
   min-height: 0;
-  padding-top: max(calc(var(--header-h) + 8.5rem), 34svh);
+  padding-top: max(calc(var(--header-h) + 8.5rem), 36svh);
   padding-bottom: 2.75rem;
 }
 
