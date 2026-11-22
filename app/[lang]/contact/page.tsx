@@ -3,6 +3,7 @@ import { ContactFormSection } from "@/components/contact/ContactFormSection";
 import { ContactLocation } from "@/components/contact/ContactLocation";
 import { SiteCTA } from "@/components/cta/SiteCTA";
 import { Hero } from "@/components/hero/Hero";
+import heroStyles from "@/components/hero/Hero.module.css";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Orb } from "@/components/ui/Decor";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -24,7 +25,7 @@ export default async function ContactPage() {
   return (
     <>
       {renderSections(order, {
-        hero: () => <Hero content={content.hero} size="compact" breadcrumb />,
+        hero: () => <Hero content={content.hero} size="compact" breadcrumb className={heroStyles.contactHero} />,
         form: () => <ContactFormSection content={content.form} />,
         location: () => (
           <section id="clinic-location" className="page-section" aria-labelledby="clinic-location-title">

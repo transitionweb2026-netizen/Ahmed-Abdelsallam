@@ -103,6 +103,14 @@
   transform-origin: 50% 100%;
 }
 
+/* The contact page's own photo (especially its English version) is framed
+   closer than the others — the shared zoom above pushes it past its own
+   top edge and the text ends up overlapping the chin. Give this one page
+   a smaller lift of its own instead of changing the shared default. */
+.contactHero .image {
+  transform: scale(1);
+}
+
 @media (min-width: 768px) {
   .image {
     object-position: var(--pos-desktop);

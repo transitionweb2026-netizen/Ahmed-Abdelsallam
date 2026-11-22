@@ -24,6 +24,8 @@ interface HeroProps {
   /** Inner pages: skip the name/role eyebrow badge (home keeps it, smaller). */
   breadcrumb?: boolean;
   headingId?: string;
+  /** Extra class on the section, for a page whose own photo needs its own crop tuning. */
+  className?: string;
 }
 
 function HeroAction({ cta, variant }: { cta: Cta; variant: "primary" | "secondary" }) {
@@ -54,11 +56,12 @@ export async function Hero({
   showContactPanel = size === "full",
   breadcrumb = false,
   headingId = "hero-title",
+  className,
 }: HeroProps) {
   const { t } = await getI18n();
   const floatingCards = content.floatingCards ?? [];
   return (
-    <section className={cn(styles.hero, size === "compact" && styles.compact)} aria-labelledby={headingId}>
+    <section className={cn(styles.hero, size === "compact" && styles.compact, className)} aria-labelledby={headingId}>
       <div className={styles.media}>
         <div className={styles.parallax}>
           <div className={styles.settle}>
