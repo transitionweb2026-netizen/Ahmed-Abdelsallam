@@ -9,6 +9,7 @@ import { siteConfig } from "@/config/site";
 import { localeSettings, locales } from "@/i18n/config";
 import { getI18n } from "@/i18n/server";
 import { getSite } from "@/lib/content";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { jsonLdString, physicianJsonLd } from "@/lib/structured-data";
 import "../fonts.css";
 import "../globals.css";
@@ -22,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const { locale } = await getI18n();
   const site = await getSite(locale);
   const { identity } = site;
-  const og = identity.ogImage;
+  const og = DEFAULT_OG_IMAGE[locale];
   return {
     metadataBase: new URL(siteConfig.url),
     title: {
@@ -31,10 +32,16 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description: identity.description,
     applicationName: identity.name,
-    // Favicon from the CMS (Global settings), or the bundled brand icon.
-    icons: site.favicon
-      ? { icon: [{ url: site.favicon.src, type: site.favicon.type }], apple: [{ url: site.favicon.src }] }
-      : { icon: [{ url: "/icon.svg", type: "image/svg+xml" }], apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }] },
+    // Static brand icon — deliberately not the CMS's Global Settings
+    // favicon, so the public site never depends on that field.
+    // (The admin dashboard has its own, separate /icon.svg — not this.)
+    icons: {
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        { url: "/icon-192.png", type: "image/png", sizes: "192x192" },
+      ],
+      apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+    },
     openGraph: {
       type: "website",
       locale: localeSettings[locale].ogLocale,

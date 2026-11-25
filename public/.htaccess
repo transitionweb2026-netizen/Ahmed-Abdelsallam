@@ -1,0 +1,27 @@
+# Static export (out/) deployed to Hostinger. See docs/deploy/static-export.md.
+
+# Branded 404: Apache serves this file's content for any request that
+# doesn't match a real file or directory, while keeping the ORIGINAL
+# requested URL in the browser's address bar (this is a local path, not an
+# absolute URL, so ErrorDocument substitutes the body only — it does not
+# redirect). That lets app/not-found.tsx detect the intended language from
+# the URL client-side, and it keeps the real HTTP 404 status: this only
+# fires when nothing on disk matches the request, so it never touches an
+# existing file, an existing directory, or the root redirect at "/".
+ErrorDocument 404 /404.html
+
+# Next's trailingSlash:true output is folders with their own index.html
+# (e.g. /ar/about/index.html). Apache's own directory-index + its default
+# DirectorySlash redirect (no-slash -> slash) already serve these correctly
+# with no rewrite needed; this just makes that explicit rather than relying
+# on the host's default.
+DirectoryIndex index.html
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
+</IfModule>
+
+# Per-directory cache lifetimes (matching next.config.ts's headers() on
+# Vercel, which output: 'export' has no server to run) live in fonts/.htaccess
+# and videos/.htaccess — <FilesMatch> here would match by filename only, not
+# by path, so it can't scope to a subdirectory from the webroot file.

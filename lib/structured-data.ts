@@ -1,6 +1,7 @@
 import { routes } from "@/config/routes";
 import { localizeHref, type Locale } from "@/i18n/config";
 import type { SiteData } from "@/lib/cms/source";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { absoluteUrl } from "@/lib/utils";
 import type { Faq } from "@/types/content";
 
@@ -30,7 +31,8 @@ export function physicianJsonLd(locale: Locale, site: SiteData, otherNames: stri
     alternateName: otherNames,
     description: identity.description,
     url: absoluteUrl(localizeHref(routes.home, locale)),
-    image: identity.ogImage.src.startsWith("http") ? identity.ogImage.src : absoluteUrl(identity.ogImage.src),
+    // Static default image, not the CMS's Global Settings one — see lib/seo.ts.
+    image: absoluteUrl(DEFAULT_OG_IMAGE[locale].src),
     medicalSpecialty: "https://schema.org/Musculoskeletal",
     inLanguage: locale,
     ...(contact.isPlaceholder ? {} : { telephone: `+${contact.phoneDigits}` }),

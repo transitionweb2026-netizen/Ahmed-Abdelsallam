@@ -13,6 +13,17 @@ interface PageMetadataInput {
   absoluteTitle?: boolean;
 }
 
+/**
+ * The site-wide default Open Graph image, deliberately a static file rather
+ * than the CMS's Global Settings image — not read from and not affected by
+ * that setting. A page's own CMS-set OG image (`seo.ogImage` below) still
+ * takes priority over this when one is set.
+ */
+export const DEFAULT_OG_IMAGE: Record<Locale, { src: string; width: number; height: number }> = {
+  ar: { src: "/images/og/og-default.jpg", width: 1200, height: 630 },
+  en: { src: "/images/og/og-default-en.jpg", width: 1200, height: 630 },
+};
+
 /** Equivalent URLs of a page in every language, plus x-default (Arabic). */
 export function languageAlternates(path: string): Record<string, string> {
   return {
@@ -33,7 +44,7 @@ export async function pageMetadata({ locale, page, path, absoluteTitle = false }
   const { identity } = site;
   const fullTitle = absoluteTitle ? seo.title : `${seo.title} | ${identity.name}`;
   const url = localizeHref(path, locale);
-  const og = seo.ogImage ?? identity.ogImage;
+  const og = seo.ogImage ?? DEFAULT_OG_IMAGE[locale];
   const indexable = site.robotsIndex && seo.index;
   return {
     title: absoluteTitle ? { absolute: seo.title } : seo.title,

@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/utils";
 import type { IconName, MediaImage } from "@/types/content";
 import styles from "./DoctorStackCard.module.css";
@@ -8,6 +7,7 @@ interface DoctorStackCardProps {
   image: MediaImage;
   /** "fan": cards fanned like a hand of cards. "offset": a slid, diagonal deck. */
   variant?: "fan" | "offset";
+  /** `icon` is CMS content, unused here — the badge is always the brand mark. */
   caption: { icon: IconName; title: string; subtitle?: string };
   sizes?: string;
   className?: string;
@@ -35,8 +35,8 @@ export function DoctorStackCard({
         <span className={styles.gloss} aria-hidden="true" />
       </div>
       <figcaption className={styles.caption}>
-        <span className={cn("icon-chip", styles.captionIcon)}>
-          <Icon name={caption.icon} size={18} />
+        <span className={styles.captionIcon}>
+          <Image src="/icon-192.png" alt="" fill sizes="40px" style={{ objectFit: "cover" }} />
         </span>
         <span className={styles.captionText}>
           <span className={styles.captionTitle}>{caption.title}</span>

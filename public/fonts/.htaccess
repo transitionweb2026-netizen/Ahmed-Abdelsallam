@@ -1,0 +1,10 @@
+# Self-hosted fonts: file names carry a content hash (see app/fonts.css),
+# so a long cache lifetime is safe. Matches next.config.ts's headers() for
+# this same path on Vercel.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 1 year"
+</IfModule>
+<IfModule mod_headers.c>
+  Header set Cache-Control "public, max-age=31536000, immutable"
+</IfModule>
