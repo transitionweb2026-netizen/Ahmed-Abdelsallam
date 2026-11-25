@@ -5,6 +5,10 @@ import { getSnapshot } from "@/lib/content";
 import { languageAlternates } from "@/lib/seo";
 import { absoluteUrl } from "@/lib/utils";
 
+// Required by `output: 'export'` (the Hostinger build) — harmless for the
+// ordinary Vercel build, which never needs this file to be request-dynamic.
+export const dynamic = "force-static";
+
 /**
  * Every implemented page in both languages; each entry lists its
  * equivalents (hreflang ar / en / x-default). Pages switched to "noindex"
