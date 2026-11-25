@@ -2,9 +2,9 @@
 
 import { ChevronDown, CircleAlert, CircleCheck, Mail, MessageSquareText, Phone, Tag, TriangleAlert, UserRound } from "lucide-react";
 import { useId, useState, useTransition, type ChangeEvent, type FormEvent, type ReactNode } from "react";
-import { submitContactForm } from "@/app/[lang]/contact/actions";
 import { useDictionary, useLocale, useSite } from "@/components/i18n/LocaleProvider";
 import { GlassButton } from "@/components/ui/GlassButton";
+import { submitContact } from "@/lib/contact-submit";
 import {
   CONTACT_FIELDS,
   CONTACT_LIMITS,
@@ -69,14 +69,17 @@ function Field({ id, label, error, optionalLabel, icon, children, multiline, hin
 
 interface ContactFormProps {
   copy: ContactFormCopy;
+  /** The CMS's "save messages in the dashboard" toggle (Global settings). */
+  storeSubmissions: boolean;
 }
 
 /**
  * Glass contact form. Validates in the browser for instant, accessible
- * feedback (labelled errors, first invalid field focused), then submits to
- * a Server Action that validates again and delivers the message.
+ * feedback (labelled errors, first invalid field focused), then inserts
+ * straight into Supabase (Row Level Security is the real gate, so this
+ * needs no server runtime — see lib/contact-submit.ts).
  */
-export function ContactForm({ copy }: ContactFormProps) {
+export function ContactForm({ copy, storeSubmissions }: ContactFormProps) {
   const locale = useLocale();
   const t = useDictionary();
   const { contact } = useSite();
@@ -116,7 +119,7 @@ export function ContactForm({ copy }: ContactFormProps) {
       return;
     }
     startTransition(async () => {
-      const response = await submitContactForm(clean, locale);
+      const response = await submitContact(clean, locale, storeSubmissions);
       if (response.status === "invalid") {
         setErrors(response.errors);
         focusFirstError(response.errors);

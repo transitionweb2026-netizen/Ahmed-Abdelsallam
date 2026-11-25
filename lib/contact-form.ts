@@ -31,7 +31,7 @@ export type ContactResult =
   | { status: "idle" }
   | { status: "success" }
   | { status: "invalid"; errors: ContactErrors }
-  /** No delivery endpoint configured yet (see CONTACT_FORM_ENDPOINT). */
+  /** The CMS's "save messages in the dashboard" setting is off. */
   | { status: "not-configured" }
   | { status: "error" };
 

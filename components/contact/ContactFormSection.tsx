@@ -12,7 +12,7 @@ import styles from "./ContactFormSection.module.css";
 /** The glass form card, with WhatsApp and call buttons underneath it. */
 export async function ContactFormSection({ content }: { content: ContactPageContent["form"] }) {
   const { locale, t } = await getI18n();
-  const { contact } = await getSite(locale);
+  const { contact, storeSubmissions } = await getSite(locale);
   return (
     <section id="contact-form" className="page-section" aria-labelledby="contact-form-title">
       <Orb className="top-1/4 start-[-14rem] h-[36rem] w-[36rem]" color="lavender" />
@@ -25,7 +25,7 @@ export async function ContactFormSection({ content }: { content: ContactPageCont
         <div className={styles.stage}>
           <GlassRing className={styles.ring} />
           <Reveal variant="up" amount={0.1} className={styles.card}>
-            <ContactForm copy={content.copy} />
+            <ContactForm copy={content.copy} storeSubmissions={storeSubmissions} />
           </Reveal>
 
           <Reveal variant="fade" delay={0.1} className={styles.direct}>
