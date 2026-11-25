@@ -3,7 +3,6 @@
 import { ArrowLeft } from "lucide-react";
 import { useSyncExternalStore } from "react";
 import { Orb, GlassRing } from "@/components/ui/Decor";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import buttonStyles from "@/components/ui/GlassButton.module.css";
 import { defaultLocale, isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
@@ -50,7 +49,6 @@ export default function RootNotFound() {
       <GlassRing className="top-44 end-[12%] hidden h-32 w-32 md:block" />
 
       <div className="site-container relative flex flex-col items-center gap-5 text-center">
-        <Eyebrow>{t.eyebrow}</Eyebrow>
         <h1 id={titleId} className="type-h2">
           {t.titleStart} <span className="text-accent-gradient">{t.titleAccent}</span>
         </h1>

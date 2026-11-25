@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { Reveal } from "@/components/motion/Reveal";
 import { TiltCard } from "@/components/motion/TiltCard";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { RichTitle } from "@/components/ui/RichTitle";
 import { getI18n } from "@/i18n/server";
@@ -62,7 +61,6 @@ export async function SiteCTA({ content, headingId = "site-cta-title", id }: Sit
 
               <div className={styles.grid}>
                 <div className={styles.content}>
-                  <Eyebrow tone="light">{content.eyebrow}</Eyebrow>
                   <h2 id={headingId} className={cn("type-h2", styles.title)}>
                     <RichTitle title={content.title} tone="light" />
                   </h2>

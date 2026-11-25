@@ -2,7 +2,6 @@ import type { CSSProperties } from "react";
 import { SocialPhonePanel } from "@/components/contact/SocialPhonePanel";
 import { ArtDirectedImage } from "@/components/media/ArtDirectedImage";
 import { CurveLines } from "@/components/ui/Decor";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { Icon } from "@/components/ui/Icon";
 import { RichTitle } from "@/components/ui/RichTitle";
@@ -21,7 +20,7 @@ interface HeroProps {
   scrollTarget?: string;
   /** Show the social links + phone panel under the actions. */
   showContactPanel?: boolean;
-  /** Inner pages: skip the name/role eyebrow badge (home keeps it, smaller). */
+  /** No longer rendered (the eyebrow badge was removed everywhere); kept so existing callers still typecheck. */
   breadcrumb?: boolean;
   headingId?: string;
   /** Extra class on the section, for a page whose own photo needs its own crop tuning. */
@@ -54,7 +53,6 @@ export async function Hero({
   size = "full",
   scrollTarget,
   showContactPanel = size === "full",
-  breadcrumb = false,
   headingId = "hero-title",
   className,
 }: HeroProps) {
@@ -98,11 +96,6 @@ export async function Hero({
 
       <div className={cn("site-container", styles.inner)}>
         <div className={styles.content}>
-          {!breadcrumb && (
-            <div className={cn("anim-rise", styles.homeEyebrow)} style={delay(0.05)}>
-              <Eyebrow small>{content.eyebrow}</Eyebrow>
-            </div>
-          )}
           <h1 id={headingId} className={cn("type-display", styles.title, "anim-rise")} style={delay(0.14)}>
             <RichTitle title={content.title} />
           </h1>

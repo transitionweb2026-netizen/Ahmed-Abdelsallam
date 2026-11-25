@@ -1,5 +1,4 @@
 import { Reveal } from "@/components/motion/Reveal";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import { RichTitle } from "@/components/ui/RichTitle";
 import { cn } from "@/lib/utils";
 import type { SectionHeading as SectionHeadingValue } from "@/types/content";
@@ -23,7 +22,6 @@ export function SectionHeading({ heading, id, align = "center", as: Tag = "h2", 
         className,
       )}
     >
-      <Eyebrow>{heading.eyebrow}</Eyebrow>
       <Tag id={id} className="type-h2">
         <RichTitle title={heading.title} />
       </Tag>

@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { GlassRing, Orb } from "@/components/ui/Decor";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Icon } from "@/components/ui/Icon";
 import { RichTitle } from "@/components/ui/RichTitle";
 import { getI18n } from "@/i18n/server";
@@ -43,7 +42,6 @@ export async function Philosophy({ content }: { content: AboutPageContent["philo
       <div className={cn("site-container", styles.grid)}>
         <div className={styles.quoteCol}>
           <Reveal variant="blur" className={styles.heading}>
-            <Eyebrow>{content.eyebrow}</Eyebrow>
             <h2 id="philosophy-title" className="type-h2">
               <RichTitle title={content.title} />
             </h2>

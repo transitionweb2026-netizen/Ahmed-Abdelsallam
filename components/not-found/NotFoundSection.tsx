@@ -1,6 +1,5 @@
 import { routes } from "@/config/routes";
 import { GlassRing, Orb } from "@/components/ui/Decor";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import { GlassButton } from "@/components/ui/GlassButton";
 import type { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
@@ -19,7 +18,6 @@ export function NotFoundSection({ locale }: { locale: Locale }) {
       <GlassRing className="top-44 end-[12%] hidden h-32 w-32 md:block" />
 
       <div className="site-container relative flex flex-col items-center gap-5 text-center">
-        <Eyebrow>{t.eyebrow}</Eyebrow>
         <h1 id={titleId} className="type-h2">
           {t.titleStart} <span className="text-accent-gradient">{t.titleAccent}</span>
         </h1>

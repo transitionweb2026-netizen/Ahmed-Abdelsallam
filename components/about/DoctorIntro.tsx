@@ -2,7 +2,6 @@ import { Check } from "lucide-react";
 import { DoctorStackCard } from "@/components/doctor/DoctorStackCard";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { GlassRing, Orb } from "@/components/ui/Decor";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { RichTitle } from "@/components/ui/RichTitle";
 import { cn } from "@/lib/utils";
@@ -31,7 +30,6 @@ export function DoctorIntro({ content }: { content: AboutPageContent["introducti
 
         <div className={styles.text}>
           <Reveal variant="blur" className={styles.heading}>
-            <Eyebrow>{content.eyebrow}</Eyebrow>
             <h2 id="doctor-intro-title" className="type-h2">
               <RichTitle title={content.title} />
             </h2>
