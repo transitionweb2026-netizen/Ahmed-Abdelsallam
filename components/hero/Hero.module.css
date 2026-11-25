@@ -252,12 +252,16 @@
 
 /* Home only: nudged a little further down from the photo above it, on top
    of the clearance the photo's own zoom already gives it. */
+/* The CMS eyebrow text is now long enough (name + role + specialty) that on
+   a phone-width photo it overlaps the face rather than sitting clear above
+   it, however it's positioned — hidden there; desktop has the room. */
 .homeEyebrow {
-  margin-top: 0.75rem;
+  display: none;
 }
 
 @media (min-width: 768px) {
   .homeEyebrow {
+    display: block;
     margin-top: 0;
   }
 }
