@@ -94,13 +94,13 @@ export async function SiteFooter() {
           </div>
 
           <div className={styles.creditRow}>
-            <div className={styles.credit}>
+            <a href="https://transitioneg.com/" target="_blank" rel="noopener noreferrer" className={styles.credit}>
               <span className={styles.creditText}>{t.footer.credit}</span>
               <span className={styles.creditMark}>
                 <Image src="/transition-mark.png" alt="Transition" width={18} height={18} />
               </span>
               <span className={styles.creditBrand}>Transition</span>
-            </div>
+            </a>
           </div>
 
           <div className={styles.bottom}>
