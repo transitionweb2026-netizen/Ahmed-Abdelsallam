@@ -6,13 +6,16 @@ import { absoluteUrl } from "@/lib/utils";
 export const dynamic = "force-static";
 
 export default function robots(): MetadataRoute.Robots {
-  // The admin dashboard's own deployment (admin.<domain>) — nothing there
-  // is a public page, so it must never be crawled or listed.
-  if (process.env.DEPLOYMENT_TARGET === "admin") {
-    return { rules: { userAgent: "*", disallow: "/" } };
-  }
+  // Crawling stays allowed everywhere, including the admin dashboard's own
+  // deployment (admin.<domain>) — lib/seo.ts and app/admin/layout.tsx put
+  // noindex,nofollow on every page served there, but a blanket Disallow
+  // would stop Google from ever fetching those pages to find that out, so
+  // any URL indexed before this was wired up would have no way to drop
+  // back out of the index. No sitemap there either way: nothing on that
+  // deployment is meant to be listed.
+  const isAdminDeployment = process.env.DEPLOYMENT_TARGET === "admin";
   return {
     rules: { userAgent: "*", allow: "/" },
-    sitemap: absoluteUrl("/sitemap.xml"),
+    ...(isAdminDeployment ? {} : { sitemap: absoluteUrl("/sitemap.xml") }),
   };
 }

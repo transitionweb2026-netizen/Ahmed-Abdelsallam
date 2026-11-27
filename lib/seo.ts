@@ -24,6 +24,19 @@ export const DEFAULT_OG_IMAGE: Record<Locale, { src: string; width: number; heig
   en: { src: "/images/og/og-default-en.jpg", width: 1200, height: 630 },
 };
 
+/**
+ * The admin dashboard's own Vercel deployment (admin.<domain>) renders the
+ * exact same public-look-alike routes as the real site (there is no server
+ * to run `output: 'export'` on, so nothing strips them there) — none of
+ * those are the real public pages, so they must never be indexable no
+ * matter what the CMS's own index toggle says. `follow: false` too: a
+ * crawler should not chase links across this mirror either.
+ */
+export function resolvePageRobots(indexable: boolean): NonNullable<Metadata["robots"]> {
+  if (process.env.DEPLOYMENT_TARGET === "admin") return { index: false, follow: false };
+  return indexable ? { index: true, follow: true } : { index: false, follow: true };
+}
+
 /** Equivalent URLs of a page in every language, plus x-default (Arabic). */
 export function languageAlternates(path: string): Record<string, string> {
   return {
@@ -66,6 +79,6 @@ export async function pageMetadata({ locale, page, path, absoluteTitle = false }
       description: seo.description,
       images: [og.src],
     },
-    robots: indexable ? { index: true, follow: true } : { index: false, follow: true },
+    robots: resolvePageRobots(indexable),
   };
 }

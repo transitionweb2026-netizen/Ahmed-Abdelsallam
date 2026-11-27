@@ -40,6 +40,19 @@ export function physicianJsonLd(locale: Locale, site: SiteData, otherNames: stri
   };
 }
 
+/** Site-wide entity, linked to the Physician entity rather than repeating its facts. */
+export function websiteJsonLd(locale: Locale, site: SiteData) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": absoluteUrl("/#website"),
+    url: absoluteUrl(localizeHref(routes.home, locale)),
+    name: site.identity.name,
+    inLanguage: locale,
+    publisher: { "@id": absoluteUrl("/#physician") },
+  };
+}
+
 export function faqJsonLd(items: Faq[], locale: Locale) {
   return {
     "@context": "https://schema.org",

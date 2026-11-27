@@ -10,7 +10,7 @@ import { localeSettings, locales } from "@/i18n/config";
 import { getI18n } from "@/i18n/server";
 import { getSite } from "@/lib/content";
 import { DEFAULT_OG_IMAGE } from "@/lib/seo";
-import { jsonLdString, physicianJsonLd } from "@/lib/structured-data";
+import { jsonLdString, physicianJsonLd, websiteJsonLd } from "@/lib/structured-data";
 import "../fonts.css";
 import "../globals.css";
 
@@ -117,6 +117,10 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: jsonLdString(physicianJsonLd(locale, site, otherNames)) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: jsonLdString(websiteJsonLd(locale, site)) }}
         />
       </body>
     </html>
