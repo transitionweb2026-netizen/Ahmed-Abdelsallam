@@ -48,7 +48,9 @@ const nextConfig: NextConfig = {
     // AVIF first (smaller), WebP fallback.
     formats: ["image/avif", "image/webp"],
     remotePatterns: supabaseHost ? [{ protocol: "https", hostname: supabaseHost, pathname: "/storage/v1/object/public/**" }] : [],
-    ...(isExport ? { unoptimized: true } : {}),
+    // Export mode: a custom loader (see lib/image-loader.export.ts) instead
+    // of the default pipeline, which needs a server this build doesn't have.
+    ...(isExport ? { loader: "custom", loaderFile: "./lib/image-loader.export.ts" } : {}),
   },
   // `headers()` and `redirects()` have no effect in export mode (no server
   // to run them on) and next build refuses to start with output:'export' if

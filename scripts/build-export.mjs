@@ -40,6 +40,27 @@ const ADMIN_CLOSURE = [
   ["app/[lang]/[...rest]", "app-lang-rest"],
 ].map(([real, parkedName]) => [path.join(root, real), path.join(parkingRoot, parkedName)]);
 
+// These image/video paths exist only for buildBundledSnapshot() (lib/cms/
+// bundled.ts) — the content shown when Supabase isn't configured at all,
+// which production never is (confirmed: nothing in out/ references them —
+// every real page serves Supabase-hosted media instead). `public/` is
+// copied into the export wholesale, so without this they'd still ship:
+// confirmed at ~9.8MB, about 80% of the deployed package, for files no
+// visitor's browser ever requests.
+const BUNDLED_ONLY_OUTPUT_PATHS = [
+  "images/articles",
+  "images/certificates",
+  "images/conditions",
+  "images/doctor",
+  "images/hero",
+  "images/services",
+  "images/specialties",
+  "videos/placeholder-landscape.webm",
+  "videos/placeholder-landscape-en.webm",
+  "videos/placeholder-portrait.webm",
+  "videos/placeholder-portrait-en.webm",
+];
+
 function run(command, args, env) {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, {
@@ -103,6 +124,19 @@ async function main() {
   } finally {
     await restoreAdminClosure();
   }
+
+  for (const rel of BUNDLED_ONLY_OUTPUT_PATHS) {
+    await rm(path.join(root, "out", rel), { recursive: true, force: true });
+  }
+
+  // Next's own JS/CSS chunks are content-hashed (a changed file always gets
+  // a new name), so caching them forever is always safe. public/ has no
+  // _next/ folder to carry this .htaccess from — the directory doesn't
+  // exist until this build generates it, with names not known ahead of time.
+  await writeFile(
+    path.join(root, "out", "_next", "static", ".htaccess"),
+    '<IfModule mod_expires.c>\n  ExpiresActive On\n  ExpiresDefault "access plus 1 year"\n</IfModule>\n<IfModule mod_headers.c>\n  Header set Cache-Control "public, max-age=31536000, immutable"\n</IfModule>\n',
+  );
 
   // The deploy workflow fetches this from the live site after uploading, to
   // confirm the upload actually took (not just that FTP reported success).

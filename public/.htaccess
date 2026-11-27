@@ -21,6 +21,11 @@ DirectoryIndex index.html
   AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
 </IfModule>
 
+# _next/static/.htaccess (content-hashed JS/CSS, cached immutably) is
+# written by scripts/build-export.mjs after the build, not copied from
+# public/ — that directory doesn't exist until Next generates it, with
+# filenames that aren't known ahead of time.
+#
 # Per-directory cache lifetimes (matching next.config.ts's headers() on
 # Vercel, which output: 'export' has no server to run) live in fonts/.htaccess
 # and videos/.htaccess — <FilesMatch> here would match by filename only, not
