@@ -33,6 +33,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { signOut } from "@/app/admin/_actions/auth";
 import { FeedbackProvider } from "./Feedback";
+import { PublishButton } from "./PublishButton";
 
 type NavItem = { href: string; label: string; icon: LucideIcon; badge?: number; ownerOnly?: boolean };
 
@@ -193,6 +194,7 @@ export function AdminShell({ email, role, unread, children }: { email: string; r
               {email} <span className="adm-badge adm-badge-gray ms-1 capitalize">{role}</span>
             </span>
             <div className="ms-auto flex items-center gap-2">
+              <PublishButton />
               <a href="/ar" target="_blank" rel="noopener noreferrer" className="adm-btn adm-btn-secondary">
                 <ExternalLink size={15} aria-hidden />
                 <span className="hidden sm:inline">View site</span>

@@ -1,0 +1,208 @@
+name: Publish live site
+
+# Triggered by the admin dashboard's "Publish Live Site" button (via the
+# GitHub API, using a token that only that Server Action holds), or manually
+# from this tab for a rollback. Never runs on a push — see
+# docs/deploy/publish-pipeline.md for the full design and the one-time setup
+# this needs before it can actually run.
+on:
+  workflow_dispatch:
+    inputs:
+      rollback:
+        description: "Re-deploy the last known-good build instead of building fresh (emergency rollback)"
+        type: boolean
+        default: false
+
+# Never two deploys at once; a second trigger waits for the first to finish
+# rather than cancelling it mid-upload.
+concurrency:
+  group: publish-production
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: ${{ github.event.inputs.rollback != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build the static export
+        run: npm run build:export
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site-export
+          path: out/
+          retention-days: 7
+          # v4's default EXCLUDES dotfiles — without this, .htaccess would
+          # silently never reach the deploy job at all.
+          include-hidden-files: true
+
+  deploy:
+    needs: build
+    if: ${{ github.event.inputs.rollback != 'true' && needs.build.result == 'success' }}
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      SFTP_HOST: ${{ secrets.SFTP_HOST }}
+      SFTP_PORT: ${{ secrets.SFTP_PORT }}
+      SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
+      SFTP_PRIVATE_KEY: ${{ secrets.SFTP_PRIVATE_KEY }}
+      SFTP_REMOTE_DIR: ${{ secrets.SFTP_REMOTE_DIR }}
+      SFTP_HOST_KEY_FINGERPRINT: ${{ vars.SFTP_HOST_KEY_FINGERPRINT }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: site-export
+          path: out
+
+      - name: Set up the SSH key and a verified-only known_hosts
+        run: |
+          mkdir -p -m 700 ~/.ssh
+          printf '%s\n' "$SFTP_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          # Pin the host key to the confirmed fingerprint — never trust
+          # ssh-keyscan's output on its own, since that's exactly what a
+          # MITM would also return.
+          ssh-keyscan -p "$SFTP_PORT" -t ed25519 "$SFTP_HOST" > /tmp/scanned_host_key 2>/dev/null
+          actual_fp=$(ssh-keygen -lf /tmp/scanned_host_key | awk '{print $2}')
+          if [ "$actual_fp" != "$SFTP_HOST_KEY_FINGERPRINT" ]; then
+            echo "::error::SSH host key fingerprint mismatch. Got $actual_fp, expected $SFTP_HOST_KEY_FINGERPRINT. Refusing to connect."
+            exit 1
+          fi
+          cp /tmp/scanned_host_key ~/.ssh/known_hosts
+
+      - name: Back up the current live site
+        run: |
+          mkdir -p backup
+          rsync -rltvz --itemize-changes \
+            -e "ssh -p $SFTP_PORT -i ~/.ssh/deploy_key -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o StrictHostKeyChecking=yes" \
+            "$SFTP_USERNAME@$SFTP_HOST:$SFTP_REMOTE_DIR/" backup/
+
+      - name: Refuse to continue if the backup looks wrong
+        run: |
+          count=$(find backup -type f | wc -l)
+          echo "Backed up $count file(s) from the live site."
+          if [ "$count" -lt 5 ]; then
+            echo "::error::Backup has only $count file(s) — refusing to deploy. This usually means SFTP_REMOTE_DIR is wrong, the account lacks permission, or the directory is genuinely empty. Nothing on the live site has been touched."
+            exit 1
+          fi
+          if [ ! -f "backup/.htaccess" ]; then
+            echo "::warning::backup/.htaccess is missing. Either the live site has none yet, or it genuinely isn't there — confirm which before relying on this backup for rollback."
+          fi
+
+      - name: Save that backup (90-day retention — this is the rollback source)
+        uses: actions/upload-artifact@v4
+        with:
+          name: pre-deploy-backup-${{ github.run_id }}
+          path: backup/
+          retention-days: 90
+          include-hidden-files: true
+
+      - name: Upload the new build
+        id: upload
+        run: |
+          rsync -rltvz --itemize-changes \
+            -e "ssh -p $SFTP_PORT -i ~/.ssh/deploy_key -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o StrictHostKeyChecking=yes" \
+            out/ "$SFTP_USERNAME@$SFTP_HOST:$SFTP_REMOTE_DIR/"
+
+      - name: Verify the live site actually updated
+        id: verify
+        run: |
+          # Resolves the production domain straight to Hostinger's IP for
+          # this one request, bypassing whatever DNS currently says — so
+          # this check is meaningful even before the domain's DNS is
+          # switched over, not just after. -k: we're pinning the server by
+          # IP on purpose, so there's nothing for certificate validation to
+          # add for this one diagnostic request.
+          site_url="${{ vars.NEXT_PUBLIC_SITE_URL }}"
+          host=$(echo "$site_url" | sed -E 's#^[a-z]+://##; s#/.*##')
+          sleep 5
+          actual=$(curl -fsSk --resolve "$host:443:$SFTP_HOST" --resolve "$host:80:$SFTP_HOST" "$site_url/build-id.txt")
+          expected="${{ github.sha }}"
+          echo "live build-id: $actual"
+          echo "expected:      $expected"
+          [ "$actual" = "$expected" ]
+
+      - name: Roll back — the upload or the verification above failed
+        if: always() && (steps.upload.outcome == 'failure' || steps.verify.outcome == 'failure')
+        run: |
+          rsync -rltvz --itemize-changes \
+            -e "ssh -p $SFTP_PORT -i ~/.ssh/deploy_key -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o StrictHostKeyChecking=yes" \
+            backup/ "$SFTP_USERNAME@$SFTP_HOST:$SFTP_REMOTE_DIR/"
+          echo "::error::Deploy failed and was rolled back to the pre-deploy backup. See the 'pre-deploy-backup-${{ github.run_id }}' artifact."
+          exit 1
+
+      - name: Record this build as the last known-good (for rollback)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan export-last-known-good
+          # Clear everything except .git and the out/ we just deployed —
+          # the orphan checkout keeps the old branch's working-tree files on
+          # disk, and this branch must hold only the static export.
+          find . -mindepth 1 -maxdepth 1 ! -name .git ! -name out -exec rm -rf {} +
+          cp -r out/. .
+          rm -rf out
+          git add -A
+          git commit -m "Live export at ${{ github.sha }}"
+          git push --force origin export-last-known-good
+
+  rollback:
+    if: ${{ github.event.inputs.rollback == 'true' }}
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      SFTP_HOST: ${{ secrets.SFTP_HOST }}
+      SFTP_PORT: ${{ secrets.SFTP_PORT }}
+      SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
+      SFTP_PRIVATE_KEY: ${{ secrets.SFTP_PRIVATE_KEY }}
+      SFTP_REMOTE_DIR: ${{ secrets.SFTP_REMOTE_DIR }}
+      SFTP_HOST_KEY_FINGERPRINT: ${{ vars.SFTP_HOST_KEY_FINGERPRINT }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: export-last-known-good
+
+      - name: Refuse to continue if this branch looks wrong
+        run: |
+          if [ ! -f "index.html" ] || [ ! -f "build-id.txt" ]; then
+            echo "::error::export-last-known-good doesn't look like a complete export (missing index.html or build-id.txt) — refusing to roll back onto the live site."
+            exit 1
+          fi
+
+      - name: Set up the SSH key and a verified-only known_hosts
+        run: |
+          mkdir -p -m 700 ~/.ssh
+          printf '%s\n' "$SFTP_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$SFTP_PORT" -t ed25519 "$SFTP_HOST" > /tmp/scanned_host_key 2>/dev/null
+          actual_fp=$(ssh-keygen -lf /tmp/scanned_host_key | awk '{print $2}')
+          if [ "$actual_fp" != "$SFTP_HOST_KEY_FINGERPRINT" ]; then
+            echo "::error::SSH host key fingerprint mismatch. Got $actual_fp, expected $SFTP_HOST_KEY_FINGERPRINT. Refusing to connect."
+            exit 1
+          fi
+          cp /tmp/scanned_host_key ~/.ssh/known_hosts
+
+      - name: Re-deploy the last known-good export
+        run: |
+          rsync -rltvz --itemize-changes --exclude ".git/" \
+            -e "ssh -p $SFTP_PORT -i ~/.ssh/deploy_key -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o StrictHostKeyChecking=yes" \
+            ./ "$SFTP_USERNAME@$SFTP_HOST:$SFTP_REMOTE_DIR/"
