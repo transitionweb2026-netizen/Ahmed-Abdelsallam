@@ -1,5 +1,19 @@
 # Static export (out/) deployed to Hostinger. See docs/deploy/static-export.md.
 
+# Hostinger serves www.<domain> as a live alias of the bare domain (both
+# return 200 directly, no redirect) — Google was indexing them as two
+# separate URLs with independent cached snippets/favicons, even though
+# every page's own canonical tag already points at the bare domain (that's
+# a hint, not a rule Google always follows while both stay crawlable).
+# One real host must answer for requests, not two, so this is the only
+# fix: a server-level 301 to the exact host lib/seo.ts already treats as
+# canonical.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^www\.dr-ahmedabdelsalam\.com$ [NC]
+  RewriteRule ^(.*)$ https://dr-ahmedabdelsalam.com/$1 [R=301,L]
+</IfModule>
+
 # Branded 404: Apache serves this file's content for any request that
 # doesn't match a real file or directory, while keeping the ORIGINAL
 # requested URL in the browser's address bar (this is a local path, not an
