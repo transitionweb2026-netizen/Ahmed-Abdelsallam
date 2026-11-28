@@ -240,7 +240,9 @@
   bottom: -22px;
   left: 50%;
   translate: -50% 0;
-  white-space: nowrap;
+  /* No white-space:nowrap — a long CMS title/role wrapped instead of
+     stretching the badge wider than the card itself. */
+  max-width: min(86%, 280px);
 }
 
 .offset .caption {
@@ -255,26 +257,33 @@
 }
 
 @media (max-width: 639px) {
-  .offset .caption {
-    inset-inline-start: 4%;
-    bottom: -14px;
+  .offset .caption,
+  .fan .caption {
     max-width: 68%;
     gap: 0.5rem;
     padding: 0.45rem;
     padding-inline-end: 0.85rem;
   }
 
-  .offset .captionIcon {
+  .offset .caption {
+    inset-inline-start: 4%;
+    bottom: -14px;
+  }
+
+  .offset .captionIcon,
+  .fan .captionIcon {
     width: 32px;
     height: 32px;
     border-radius: 11px;
   }
 
-  .offset .captionTitle {
+  .offset .captionTitle,
+  .fan .captionTitle {
     font-size: 0.85rem;
   }
 
-  .offset .captionSub {
+  .offset .captionSub,
+  .fan .captionSub {
     font-size: 0.75rem;
   }
 }
@@ -306,4 +315,7 @@
 .captionSub {
   font-size: 0.8125rem;
   color: var(--text-muted);
+  /* No clamp — the full title must stay readable. The badge grows taller
+     instead of cutting it off; max-width on .caption keeps it from
+     stretching wider than the card. */
 }
